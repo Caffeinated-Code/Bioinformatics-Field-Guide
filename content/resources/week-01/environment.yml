@@ -1,0 +1,33 @@
+name: bioinfo-starter
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.12
+  - pip
+  - r-base
+  - r-irkernel
+  - jupyterlab
+  - notebook
+  - ipykernel
+  - pandas
+  - numpy
+  - scipy
+  - matplotlib
+  - seaborn
+  - scikit-learn
+  - biopython
+  - fastqc
+  - multiqc
+  - samtools
+  - bcftools
+  - bedtools
+  - seqkit
+  - sra-tools
+  - openjdk=17
+  - nextflow
+  - git
+  - curl
+  - wget
+  - tree
+  - ripgrep

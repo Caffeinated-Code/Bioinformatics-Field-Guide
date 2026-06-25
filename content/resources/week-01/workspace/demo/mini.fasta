@@ -1,0 +1,6 @@
+>control_gene_fragment
+ATGCGTACGTAGCTAGCTAGCTAGGCTA
+>treated_gene_fragment
+ATGCGTACGTAGCTAGATAGCTAGGCTA
+>short_quality_check_sequence
+ATGCGTACGTAG

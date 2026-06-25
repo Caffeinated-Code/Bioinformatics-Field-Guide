@@ -1,0 +1,78 @@
+name: Bioinformatics Local Assistant
+version: 1.0.0
+schema: v1
+
+models:
+  - name: Qwen2.5 Coder 7B Local
+    provider: ollama
+    model: qwen2.5-coder:7b
+    apiBase: http://localhost:11434
+    roles:
+      - chat
+      - edit
+      - apply
+      - autocomplete
+    defaultCompletionOptions:
+      contextLength: 4096
+
+context:
+  - provider: code
+  - provider: docs
+  - provider: diff
+  - provider: terminal
+  - provider: problems
+  - provider: folder
+  - provider: tree
+
+rules:
+  - name: Bioinformatics safety and accuracy
+    rule: |
+      Do not invent scientific claims, citations, gene functions, clinical implications, or tool behavior.
+      Ask for the relevant paper, documentation, command output, or dataset description when evidence is missing.
+      Do not include protected health information, private credentials, unpublished collaborator data, or proprietary files in prompts.
+      Prefer small, reproducible scripts and explain assumptions clearly.
+
+prompts:
+  - name: bioinformatics-review
+    description: Review bioinformatics code or documentation for accuracy, reproducibility, and safety.
+    prompt: |
+      Review the selected bioinformatics code, command, notebook, or documentation.
+
+      Check for:
+      - scientific claims that need citations
+      - invented or unsupported gene, disease, tool, or clinical statements
+      - missing input/output assumptions
+      - data privacy risks
+      - hard-coded paths
+      - fragile package or environment assumptions
+      - unclear beginner-facing explanations
+      - missing reproducibility details
+
+      Return required fixes first, then optional improvements.
+
+  - name: workflow-debug
+    description: Debug a bioinformatics command or workflow error cautiously.
+    prompt: |
+      Help debug this bioinformatics workflow issue.
+
+      Use the command, error message, environment file, and file paths provided.
+      Do not guess tool behavior if documentation or command output is needed.
+
+      Return:
+      - likely cause
+      - first three checks to run
+      - smallest safe fix
+      - what not to change yet
+
+  - name: paper-to-code-check
+    description: Check whether code or commands faithfully match a paper or protocol.
+    prompt: |
+      Compare this code, command, or workflow against the described paper, protocol, or method.
+
+      Identify:
+      - assumptions copied from the paper
+      - assumptions not supported by the paper
+      - missing parameters
+      - missing versions or references
+      - places where results could diverge
+      - minimum reproducibility notes to add

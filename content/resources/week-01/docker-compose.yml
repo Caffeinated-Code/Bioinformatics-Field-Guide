@@ -1,0 +1,12 @@
+services:
+  bioinfo-starter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: bioinfo-starter:week-01
+    container_name: bioinfo-starter-week-01
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./workspace:/workspace
+    working_dir: /workspace
