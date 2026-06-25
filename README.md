@@ -1,42 +1,55 @@
 # Bioinformatics Field Guide
 
-**Bioinformatics Field Guide** is a public learning and reproducibility project for practical bioinformatics, computational biology, and omics analysis.
+**Bioinformatics Field Guide** is a practical resource for learning and applying bioinformatics with reproducible tools, clear explanations, and working examples.
 
-The goal is to help beginners, researchers, and industry teams move from raw biological data to trustworthy interpretation using clear explanations, reproducible notebooks, tested environments, and reusable decision frameworks.
+The field can feel overwhelming at first: many file formats, many tools, many biological assumptions, and many ways for an analysis to go quietly wrong. This project is designed to make the path easier to follow.
 
-## What This Repository Contains
+## What You Will Find Here
 
-- `content/posts/`: draft blog posts for the first 12-week launch sequence.
-- `content/resources/`: reproducible assets, environment files, Docker files, notebooks, and demo data.
-- `content/launch-tracker.md`: editorial and impact planning for the first 3 months.
+- Beginner-friendly bioinformatics guides.
+- Reproducible setup files for Conda, Docker, and JupyterLab.
+- Small examples that can be run locally.
+- Method explainers for omics workflows.
+- Practical notes on interpreting results carefully.
 
-## Current Launch Sequence
+## Start Here
+
+The first guide helps you set up a laptop for bioinformatics:
+
+- [How to Set Up Your Laptop for Bioinformatics](content/posts/week-01-laptop-setup-for-bioinformatics.md)
+
+It includes:
+
+- A Conda environment.
+- A Docker/JupyterLab setup.
+- A tiny FASTA demo.
+- Local coding-assistant configuration.
+- A BioChatter + Ollama example.
+
+## Guide Roadmap
 
 1. Laptop setup for bioinformatics.
 2. Programming languages for bioinformatics.
-3. Biology prerequisites.
+3. Biology foundations for computational work.
 4. How to think like a bioinformatician.
-5. Bioinformatics file types.
-6. Reproducible project templates.
-7. RNA-seq in 7 minutes.
+5. Common bioinformatics file types.
+6. Reproducible project structure.
+7. RNA-seq workflow basics.
 8. Differential expression interpretation.
 9. PCA in bioinformatics.
-10. Single-cell RNA-seq vs bulk RNA-seq.
-11. How to read a bioinformatics paper.
+10. Bulk vs single-cell RNA-seq.
+11. How to read bioinformatics papers critically.
 12. Foundation models in bioinformatics.
 
-## Editorial Standard
+## Repository Structure
 
-Every public article should be:
+- `content/posts/`: field guides and method explainers.
+- `content/resources/`: reusable setup files, demo data, and supporting code.
 
-- Accurate and properly credited.
-- Readable in about 7 minutes.
-- Useful to both beginners and practicing scientists.
-- Paired with a visual, notebook, checklist, template, or other reusable asset.
-- Reviewed for scientific correctness before publication.
+## Status
 
-## Long-Term Direction
+This repository is in active development. Early guides are being expanded with visuals, notebooks, tested examples, and additional references.
 
-The canonical site is planned as an Astro + MDX publication hosted on Cloudflare Pages, with this GitHub repository as the source of truth for public documentation, reproducible resources, and impact tracking.
+## License And Citation
 
-Major reusable assets will be released through GitHub Releases and archived with Zenodo DOI when appropriate.
+License and citation files will be added before the first formal release.

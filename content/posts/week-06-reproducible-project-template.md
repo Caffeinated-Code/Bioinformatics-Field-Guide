@@ -2,7 +2,6 @@
 title: "The Bioinformatics Project Template"
 subtitle: "Folder structure, README, Git, Conda, and reproducibility"
 week: 6
-status: "draft"
 audience: ["practitioner", "researcher", "industry"]
 reading_time: "7 minutes"
 asset: "GitHub-ready project template"

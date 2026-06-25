@@ -2,7 +2,6 @@
 title: "RNA-seq in 7 Minutes"
 subtitle: "From reads to differential expression"
 week: 7
-status: "draft"
 audience: ["beginner", "practitioner", "researcher"]
 reading_time: "7 minutes"
 asset: "RNA-seq workflow map"

@@ -2,7 +2,6 @@
 title: "How to Set Up Your Laptop for Bioinformatics"
 subtitle: "A tested beginner stack for Mac, Windows, Conda, Docker, notebooks, and a local coding assistant"
 week: 1
-status: "draft"
 audience: ["beginner", "practitioner"]
 reading_time: "7 minutes"
 asset: "Bioinformatics starter environment, Docker setup, and offline coding assistant config"
@@ -67,7 +66,7 @@ If this feels like a lot, do it in stages:
 | Next | Docker and JupyterLab | Makes the setup easier to share and rerun |
 | Optional | Ollama, Continue, BioChatter | Adds local coding help after the basics work |
 
-Tested setup for this draft: macOS, Conda, Docker/Colima, JupyterLab, Ollama, Continue, and BioChatter.
+Tested setup for this guide: macOS, Conda, Docker/Colima, JupyterLab, Ollama, Continue, and BioChatter.
 
 ## Step 1: Choose Your Terminal Path
 

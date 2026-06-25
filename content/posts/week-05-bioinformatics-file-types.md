@@ -2,7 +2,6 @@
 title: "The Bioinformatics File Types You Must Know"
 subtitle: "FASTQ, BAM, VCF, GTF, count matrices, and why they matter"
 week: 5
-status: "draft"
 audience: ["beginner", "practitioner"]
 reading_time: "7 minutes"
 asset: "File-format atlas"

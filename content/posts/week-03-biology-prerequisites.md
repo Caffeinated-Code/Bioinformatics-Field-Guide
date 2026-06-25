@@ -2,7 +2,6 @@
 title: "What Biology Do You Need for Bioinformatics?"
 subtitle: "A practical map for computational learners"
 week: 3
-status: "draft"
 audience: ["beginner", "career-switcher", "practitioner"]
 reading_time: "7 minutes"
 asset: "Biology prerequisite map"

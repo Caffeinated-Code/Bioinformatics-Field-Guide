@@ -2,7 +2,6 @@
 title: "PCA in Bioinformatics"
 subtitle: "Why everyone uses it and how people misread it"
 week: 9
-status: "draft"
 audience: ["beginner", "practitioner", "researcher"]
 reading_time: "7 minutes"
 asset: "Visual PCA notebook"

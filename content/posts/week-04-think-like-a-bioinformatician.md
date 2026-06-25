@@ -2,7 +2,6 @@
 title: "How to Think Like a Bioinformatician"
 subtitle: "Data, biology, statistics, and skepticism"
 week: 4
-status: "draft"
 audience: ["beginner", "practitioner", "researcher", "industry"]
 reading_time: "7 minutes"
 asset: "Bioinformatics thinking framework"

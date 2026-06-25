@@ -2,7 +2,6 @@
 title: "What Languages Should a Bioinformatician Know?"
 subtitle: "Python, R, Bash, SQL, and when each one matters"
 week: 2
-status: "draft"
 audience: ["beginner", "practitioner"]
 reading_time: "7 minutes"
 asset: "Language decision tree"

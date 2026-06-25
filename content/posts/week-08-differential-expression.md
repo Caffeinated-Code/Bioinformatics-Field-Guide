@@ -2,7 +2,6 @@
 title: "Differential Expression: What It Tells You and What It Does Not"
 subtitle: "A practical interpretation guide for RNA-seq results"
 week: 8
-status: "draft"
 audience: ["practitioner", "researcher", "industry"]
 reading_time: "7 minutes"
 asset: "Differential expression interpretation rubric"

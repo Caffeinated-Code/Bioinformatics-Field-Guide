@@ -2,7 +2,6 @@
 title: "How to Read a Bioinformatics Paper Without Getting Fooled"
 subtitle: "A practical scorecard for methods, benchmarks, and claims"
 week: 11
-status: "draft"
 audience: ["practitioner", "researcher", "industry"]
 reading_time: "7 minutes"
 asset: "Paper-reading scorecard"

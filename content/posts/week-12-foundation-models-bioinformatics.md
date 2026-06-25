@@ -2,7 +2,6 @@
 title: "Foundation Models in Bioinformatics"
 subtitle: "What is useful, what is hype, and what needs better benchmarks"
 week: 12
-status: "draft"
 audience: ["practitioner", "researcher", "industry"]
 reading_time: "7 minutes"
 asset: "Foundation model research-gap map"

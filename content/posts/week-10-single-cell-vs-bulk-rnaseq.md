@@ -2,7 +2,6 @@
 title: "Single-Cell RNA-seq vs Bulk RNA-seq"
 subtitle: "What changes when every cell becomes a data point"
 week: 10
-status: "draft"
 audience: ["beginner", "practitioner", "researcher"]
 reading_time: "7 minutes"
 asset: "Bulk vs single-cell comparison map"
