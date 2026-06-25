@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A tested beginner stack for Mac, Windows, Conda, Docker,
+notebooks, and a local coding assistant"
+    />
+    <meta property="og:title" content="How to Set Up Your Laptop for
+Bioinformatics" />
+    <meta
+      property="og:description"
+      content="A tested beginner stack for Mac, Windows, Conda, Docker,
+notebooks, and a local coding assistant"
+    />
+    <meta property="og:type" content="article" />
+    <title>How to Set Up Your Laptop for
+Bioinformatics | Bioinformatics Field Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/site.css" />
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      window.mermaid = mermaid;
+      window.dispatchEvent(new Event("mermaid-ready"));
+    </script>
+  </head>
+  <body class="article-page">
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <header class="site-header" id="site-header">
+      <nav class="nav container" aria-label="Primary navigation">
+        <a href="index.html" class="nav__brand">Bioinformatics Field Guide</a>
+        <div class="nav__links" id="nav-links">
+          <a href="index.html#guides">Guides</a>
+          <a href="index.html#resources">Resources</a>
+          <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+        <div class="nav__actions">
+          <button class="icon-button" id="theme-toggle" aria-label="Toggle color theme">
+            <i class="ri-moon-line" aria-hidden="true"></i>
+          </button>
+          <button class="icon-button nav__toggle" id="nav-toggle" aria-label="Open menu">
+            <i class="ri-menu-line" aria-hidden="true"></i>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="article-hero">
+        <div class="container article-hero__grid">
+          <div>
+            <a class="back-link" href="index.html"><i class="ri-arrow-left-line" aria-hidden="true"></i> Field Guide home</a>
+            <p class="eyebrow">Week 1 · 7 minutes</p>
+            <h1>How to Set Up Your Laptop for Bioinformatics</h1>
+                        <p class="article-hero__subtitle">A tested
+beginner stack for Mac, Windows, Conda, Docker, notebooks, and a local
+coding assistant</p>
+                        <div class="article-meta">
+              <span><i class="ri-user-smile-line" aria-hidden="true"></i> Beginner friendly</span>
+              <span><i class="ri-terminal-box-line" aria-hidden="true"></i> Tested commands</span>
+              <span><i class="ri-git-repository-line" aria-hidden="true"></i> Reproducible assets</span>
+            </div>
+          </div>
+          <aside class="article-card">
+            <span class="article-card__label">Original asset</span>
+            <p>Bioinformatics starter environment, Docker setup, and
+offline coding assistant config</p>
+            <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide/tree/main/content/resources/week-01" target="_blank" rel="noreferrer">
+              View Week 1 files <i class="ri-external-link-line" aria-hidden="true"></i>
+            </a>
+          </aside>
+        </div>
+      </section>
+
+      <div class="container article-layout">
+        <aside class="toc" aria-label="Table of contents">
+          <p class="toc__title">On this page</p>
+          <ul>
+          <li><a href="#how-to-set-up-your-laptop-for-bioinformatics"
+          id="toc-how-to-set-up-your-laptop-for-bioinformatics">How to
+          Set Up Your Laptop for Bioinformatics</a>
+          <ul>
+          <li><a href="#why-this-setup-matters"
+          id="toc-why-this-setup-matters">Why This Setup
+          Matters</a></li>
+          <li><a href="#prerequisites"
+          id="toc-prerequisites">Prerequisites</a></li>
+          <li><a href="#the-mental-model" id="toc-the-mental-model">The
+          Mental Model</a></li>
+          <li><a href="#step-1-choose-your-terminal-path"
+          id="toc-step-1-choose-your-terminal-path">Step 1: Choose Your
+          Terminal Path</a></li>
+          <li><a href="#step-2-create-one-project-folder"
+          id="toc-step-2-create-one-project-folder">Step 2: Create One
+          Project Folder</a></li>
+          <li><a href="#step-3-set-up-conda-correctly"
+          id="toc-step-3-set-up-conda-correctly">Step 3: Set Up Conda
+          Correctly</a></li>
+          <li><a href="#step-4-run-the-sanity-check"
+          id="toc-step-4-run-the-sanity-check">Step 4: Run the Sanity
+          Check</a></li>
+          <li><a href="#step-5-understand-docker-before-you-use-it"
+          id="toc-step-5-understand-docker-before-you-use-it">Step 5:
+          Understand Docker Before You Use It</a></li>
+          <li><a href="#step-6-build-the-docker-version"
+          id="toc-step-6-build-the-docker-version">Step 6: Build the
+          Docker Version</a></li>
+          <li><a href="#step-7-add-a-local-coding-assistant"
+          id="toc-step-7-add-a-local-coding-assistant">Step 7: Add a
+          Local Coding Assistant</a></li>
+          <li><a href="#step-8-add-a-bioinformatics-specific-ai-sidecar"
+          id="toc-step-8-add-a-bioinformatics-specific-ai-sidecar">Step
+          8: Add a Bioinformatics-Specific AI Sidecar</a></li>
+          <li><a href="#what-success-looks-like"
+          id="toc-what-success-looks-like">What Success Looks
+          Like</a></li>
+          <li><a href="#what-experts-still-debate"
+          id="toc-what-experts-still-debate">What Experts Still
+          Debate</a></li>
+          <li><a href="#original-asset" id="toc-original-asset">Original
+          Asset</a></li>
+          <li><a href="#credits-and-references"
+          id="toc-credits-and-references">Credits and
+          References</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+
+        <article class="article-content">
+          <h1 id="how-to-set-up-your-laptop-for-bioinformatics">How to
+          Set Up Your Laptop for Bioinformatics</h1>
+          <p><strong>Takeaway:</strong> A good bioinformatics setup is
+          not a pile of tools. It is a small, repeatable system that
+          lets you start a project, install packages, run notebooks,
+          test command-line tools, and get local coding help without
+          turning your laptop into a mystery box.</p>
+          <h2 id="why-this-setup-matters">Why This Setup Matters</h2>
+          <p>Most beginners do not get stuck because they are bad at
+          biology or coding. They get stuck because the setup becomes
+          impossible to reason about: one tool came from
+          <code>pip</code>, another from a random installer, the
+          notebook worked last month, and the results are scattered
+          across <code>Downloads</code> and Desktop.</p>
+          <p>By the end, you will have:</p>
+          <ul>
+          <li>One clean project folder.</li>
+          <li>One Conda environment for everyday bioinformatics.</li>
+          <li>One Docker setup for reproducible notebooks.</li>
+          <li>One sanity check that proves the tools work.</li>
+          <li>One local coding assistant using Ollama and Continue.</li>
+          </ul>
+          <p>Save this post. Week 2 builds on it.</p>
+          <h2 id="prerequisites">Prerequisites</h2>
+          <p>None. You only need to open a terminal and copy commands
+          carefully.</p>
+          <h2 id="the-mental-model">The Mental Model</h2>
+          <p>Think of your setup as four layers:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Layer</th>
+          <th>Plain-English job</th>
+          <th>Tool in this guide</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>Project folder</td>
+          <td>Keeps files findable</td>
+          <td>A standard folder template</td>
+          </tr>
+          <tr>
+          <td>Conda environment</td>
+          <td>Installs analysis tools</td>
+          <td><code>environment.yml</code></td>
+          </tr>
+          <tr>
+          <td>Docker container</td>
+          <td>Makes the setup portable</td>
+          <td><code>Dockerfile</code> and
+          <code>docker-compose.yml</code></td>
+          </tr>
+          <tr>
+          <td>Local assistant</td>
+          <td>Helps with code and errors</td>
+          <td>Ollama plus Continue</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>Use Conda while learning. Use Docker when sharing or
+          teaching. Use Git for anything you might want to explain
+          later.</p>
+          <pre class="mermaid"><code>flowchart LR
+  A[&quot;Laptop&quot;] --&gt; B[&quot;Project folder&quot;]
+  B --&gt; C[&quot;Conda environment&quot;]
+  C --&gt; D[&quot;Docker image&quot;]
+  D --&gt; E[&quot;JupyterLab in browser&quot;]
+  B --&gt; F[&quot;VS Code + Ollama&quot;]
+  F --&gt; G[&quot;BioChatter demo&quot;]</code></pre>
+          <p>If this feels like a lot, do it in stages:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Stage</th>
+          <th>Do this first</th>
+          <th>Why</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>Required</td>
+          <td>Project folder, Conda environment, sanity check</td>
+          <td>Enough to start Week 2 safely</td>
+          </tr>
+          <tr>
+          <td>Next</td>
+          <td>Docker and JupyterLab</td>
+          <td>Makes the setup easier to share and rerun</td>
+          </tr>
+          <tr>
+          <td>Optional</td>
+          <td>Ollama, Continue, BioChatter</td>
+          <td>Adds local coding help after the basics work</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>Tested setup for this guide: macOS, Conda, Docker/Colima,
+          JupyterLab, Ollama, Continue, and BioChatter.</p>
+          <h2 id="step-1-choose-your-terminal-path">Step 1: Choose Your
+          Terminal Path</h2>
+          <h3 id="if-you-use-a-mac">If You Use a Mac</h3>
+          <p>Recommended tools: Terminal or iTerm2, Homebrew, Miniforge
+          or Anaconda, VS Code, Docker Desktop or Docker CLI plus
+          Colima, and Ollama. For a fresh machine, I prefer Miniforge
+          because it starts close to the <code>conda-forge</code>
+          ecosystem that bioinformatics often relies on.</p>
+          <h3 id="if-you-use-windows">If You Use Windows</h3>
+          <p>Use WSL2 with Ubuntu. Most bioinformatics tools expect a
+          Linux-like shell, and WSL2 lets you follow nearly the same
+          commands as Mac and Linux users. Install Windows Terminal,
+          Ubuntu through WSL2, Miniforge inside Ubuntu, VS Code with the
+          WSL extension, Docker Desktop with WSL integration, and
+          Ollama.</p>
+          <p>Keep early projects inside your WSL home folder:</p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinformatics/projects</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinformatics/projects</span></code></pre></div>
+          <p>Keep early projects inside WSL, not the Windows Desktop,
+          until you understand how WSL handles files.</p>
+          <h2 id="step-2-create-one-project-folder">Step 2: Create One
+          Project Folder</h2>
+          <p>Before installing more tools, create a place where work
+          belongs:</p>
+          <div class="sourceCode" id="cb3"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinformatics/projects/week-01-setup</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinformatics/projects/week-01-setup</span></code></pre></div>
+          <p>Every real project should eventually look like this:</p>
+          <pre class="text"><code>project-name/
+  README.md
+  environment.yml
+  Dockerfile
+  docker-compose.yml
+  data/
+    raw/
+    processed/
+  metadata/
+  notebooks/
+  scripts/
+  results/
+  figures/
+  references/</code></pre>
+          <p>The rule that saves you later: <code>data/raw/</code> is
+          original input and should not be edited by hand. Put scripts
+          in <code>scripts/</code>, notebooks in
+          <code>notebooks/</code>, tables in <code>results/</code>, and
+          plots in <code>figures/</code>.</p>
+          <h2 id="step-3-set-up-conda-correctly">Step 3: Set Up Conda
+          Correctly</h2>
+          <p>Conda creates named software environments. That matters
+          because bioinformatics tools often need specific versions of
+          Python, R, command-line tools, and libraries. One global
+          environment becomes fragile fast.</p>
+          <p>Configure channels once:</p>
+          <div class="sourceCode" id="cb5"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> config <span class="at">--add</span> channels bioconda</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> config <span class="at">--add</span> channels conda-forge</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> config <span class="at">--set</span> channel_priority strict</span></code></pre></div>
+          <p>This looks backward at first, so here is the key detail:
+          <code>conda config --add channels ...</code> adds each new
+          channel to the top of the priority list. That means after the
+          two commands above, <code>conda-forge</code> should appear
+          above <code>bioconda</code>.</p>
+          <p>Check it:</p>
+          <div class="sourceCode" id="cb6"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> config <span class="at">--show</span> channels</span></code></pre></div>
+          <p>You want to see:</p>
+          <pre class="text"><code>channels:
+  - conda-forge
+  - bioconda</code></pre>
+          <p>Why this order? Bioconda packages depend heavily on
+          <code>conda-forge</code>, so <code>conda-forge</code> should
+          have higher priority. Strict channel priority tells Conda to
+          respect that order, which usually makes dependency solving
+          more predictable.</p>
+          <p>Create the starter environment:</p>
+          <div class="sourceCode" id="cb8"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env create <span class="at">-f</span> content/resources/week-01/environment.yml</span></code></pre></div>
+          <p>This may take several minutes. It installs Python, R,
+          JupyterLab, scientific Python packages, and tools including
+          <code>samtools</code>, <code>bcftools</code>,
+          <code>bedtools</code>, <code>seqkit</code>,
+          <code>fastqc</code>, <code>multiqc</code>, and
+          <code>nextflow</code>.</p>
+          <p>Activate it:</p>
+          <div class="sourceCode" id="cb9"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate bioinfo-starter</span></code></pre></div>
+          <p>When you are done working:</p>
+          <div class="sourceCode" id="cb10"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> deactivate</span></code></pre></div>
+          <p>For future projects, commit <code>environment.yml</code>
+          with Git. It is the receipt for what the project needed.</p>
+          <h2 id="step-4-run-the-sanity-check">Step 4: Run the Sanity
+          Check</h2>
+          <p>Run this after activating <code>bioinfo-starter</code>:</p>
+          <div class="sourceCode" id="cb11"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">--version</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span> <span class="at">--version</span> <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n</span> 1</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> <span class="at">--version</span> <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n</span> 1</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="ex">seqkit</span> version</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="ex">multiqc</span> <span class="at">--version</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> <span class="at">-version</span> <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n</span> 3</span></code></pre></div>
+          <p>You should see version numbers, not "command not
+          found."</p>
+          <p>Then test a tiny Python table:</p>
+          <div class="sourceCode" id="cb12"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-</span> <span class="op">&lt;&lt;&#39;PY&#39;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="st">import pandas as pd</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="st">df = pd.DataFrame({</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;sample&quot;: [&quot;control&quot;, &quot;treated&quot;],</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;reads&quot;: [1000, 1500],</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="st">})</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="st">print(df)</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="op">PY</span></span></code></pre></div>
+          <p>If that works, your everyday analysis environment is
+          ready.</p>
+          <h2 id="step-5-understand-docker-before-you-use-it">Step 5:
+          Understand Docker Before You Use It</h2>
+          <p>Docker packages an environment into a container: a
+          repeatable software room with its own tools, versions, and
+          startup command. Conda asks, "Can I install the tools I need
+          here?" Docker asks, "Can someone else run this same setup
+          without rebuilding their laptop?"</p>
+          <p>Use Conda for learning and most local analysis. Use Docker
+          for tutorials, workshops, reproducible demos, and anything you
+          want another person to rerun.</p>
+          <h2 id="step-6-build-the-docker-version">Step 6: Build the
+          Docker Version</h2>
+          <p>If you use Docker Desktop, open Docker Desktop first.</p>
+          <p>If Docker Desktop is not available or is awkward to install
+          on Mac, use Homebrew with Colima:</p>
+          <div class="sourceCode" id="cb13"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install docker docker-compose colima</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">colima</span> start <span class="at">--cpu</span> 2 <span class="at">--memory</span> 4 <span class="at">--disk</span> 20</span></code></pre></div>
+          <p>Build the image:</p>
+          <div class="sourceCode" id="cb14"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> content/resources/week-01</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose build</span></code></pre></div>
+          <p>This can take several minutes. Docker is creating an image:
+          a reusable package that contains Linux plus the
+          <code>bioinfo-starter</code> Conda environment. In other
+          words, Conda is being installed inside the Docker image so the
+          same tools can run later without depending on your laptop's
+          base setup.</p>
+          <p>Now start JupyterLab. Run this in your normal terminal,
+          still inside the <code>content/resources/week-01</code>
+          folder:</p>
+          <div class="sourceCode" id="cb15"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose up</span></code></pre></div>
+          <p>This command is not typed inside JupyterLab. It starts
+          JupyterLab for you.</p>
+          <p>What this does:</p>
+          <ul>
+          <li>Reads <code>docker-compose.yml</code>.</li>
+          <li>Starts the <code>bioinfo-starter</code> service.</li>
+          <li>Runs the software stack from the Docker image, not from
+          your laptop's global setup.</li>
+          <li>Connects port <code>8888</code> inside the container to
+          port <code>8888</code> on your laptop.</li>
+          <li>Mounts the local <code>workspace/</code> folder into the
+          container at <code>/workspace</code>.</li>
+          </ul>
+          <p>After <code>docker compose up</code> starts, keep that
+          terminal open. Then open this URL in your web browser:</p>
+          <pre class="text"><code>http://localhost:8888/lab?token=bioinfo</code></pre>
+          <p>What is happening here?</p>
+          <ul>
+          <li>JupyterLab is running inside the Docker container.</li>
+          <li>Your browser is only the window you use to interact with
+          it.</li>
+          <li>The token <code>bioinfo</code> is the simple password set
+          by this tutorial's Docker command.</li>
+          </ul>
+          <p>Why JupyterLab? It gives beginners a friendly browser
+          workspace for notebooks, terminals, small Python/R checks, and
+          quick plots. In this Docker setup, you get that workspace
+          without installing the notebook stack directly into your base
+          laptop environment.</p>
+          <p>Inside JupyterLab, open <strong>Terminal</strong> and
+          run:</p>
+          <div class="sourceCode" id="cb17"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">seqkit</span> stats /workspace/demo/mini.fasta</span></code></pre></div>
+          <p>You should see a small table describing the FASTA file,
+          including the number of sequences and total length. That is
+          the Docker idea in miniature: your files stay local, but the
+          software environment is controlled.</p>
+          <p>The important part is the mounted folder. Anything you save
+          under <code>/workspace</code> in JupyterLab is really saved in
+          this local folder:</p>
+          <pre class="text"><code>content/resources/week-01/workspace/</code></pre>
+          <p>That means your notebooks, scripts, and toy data stay on
+          your computer even if the container stops or gets rebuilt.</p>
+          <p>When you are done, stop the container:</p>
+          <div class="sourceCode" id="cb19"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose down</span></code></pre></div>
+          <p>This removes the running container and its temporary
+          network. It does not delete the files you saved in
+          <code>workspace/</code>.</p>
+          <p>Prefer a no-browser Docker test? From the same
+          <code>content/resources/week-01</code> folder, run:</p>
+          <div class="sourceCode" id="cb20"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose run <span class="at">--rm</span> bioinfo-starter <span class="dt">\</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  conda run <span class="at">-n</span> bioinfo-starter seqkit stats /workspace/demo/mini.fasta</span></code></pre></div>
+          <p>Here, <code>docker compose run</code> starts a temporary
+          container, <code>seqkit stats</code> runs inside it, and
+          <code>--rm</code> cleans up afterward.</p>
+          <h2 id="step-7-add-a-local-coding-assistant">Step 7: Add a
+          Local Coding Assistant</h2>
+          <p>A local coding assistant can explain terminal errors, draft
+          small Python or R scripts, clean up READMEs, and help turn
+          notebooks into reusable scripts without sending every question
+          to a cloud service.</p>
+          <p>Install Ollama and pull a coding model:</p>
+          <div class="sourceCode" id="cb21"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install ollama</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="va">OLLAMA_FLASH_ATTENTION</span><span class="op">=</span>1 <span class="va">OLLAMA_KV_CACHE_TYPE</span><span class="op">=</span>q8_0 <span class="ex">ollama</span> serve</span></code></pre></div>
+          <p>Leave that terminal open. In a second terminal, run:</p>
+          <div class="sourceCode" id="cb22"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ollama</span> pull qwen2.5-coder:7b</span></code></pre></div>
+          <p>Install the Continue extension in VS Code:</p>
+          <div class="sourceCode" id="cb23"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">code</span> <span class="at">--install-extension</span> continue.continue</span></code></pre></div>
+          <p>Then copy the included Continue config:</p>
+          <div class="sourceCode" id="cb24"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/.continue</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> content/resources/week-01/continue-config.yaml ~/.continue/config.yaml</span></code></pre></div>
+          <p>Open VS Code from the blog folder:</p>
+          <div class="sourceCode" id="cb25"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="ex">code</span> .</span></code></pre></div>
+          <p>In VS Code:</p>
+          <ol type="1">
+          <li>Open the Continue panel.</li>
+          <li>Select <code>Qwen2.5 Coder 7B Local</code>.</li>
+          <li>Ask a small setup question, such as:</li>
+          </ol>
+          <pre class="text"><code>Explain what the environment.yml file in this folder installs. Flag anything that looks unnecessary for a beginner.</code></pre>
+          <p>You can also highlight the Docker demo command and ask:</p>
+          <pre class="text"><code>Explain this command line by line for a beginner.</code></pre>
+          <p>To check that Ollama is reachable:</p>
+          <div class="sourceCode" id="cb28"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ollama</span> list</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ollama</span> run qwen2.5-coder:7b <span class="st">&quot;In one sentence, what is samtools used for?&quot;</span></span></code></pre></div>
+          <h2 id="step-8-add-a-bioinformatics-specific-ai-sidecar">Step
+          8: Add a Bioinformatics-Specific AI Sidecar</h2>
+          <p>Keep the AI setup simple: use Continue + Ollama for coding
+          inside VS Code, then add one bioinformatics-specific sidecar
+          for domain-aware experiments. The included
+          <code>continue-config.yaml</code> adds guardrails: do not
+          invent citations, do not overinterpret biology, ask for
+          evidence when missing, and prefer reproducible scripts.</p>
+          <p>In Continue, try one review prompt:</p>
+          <pre class="text"><code>/bioinformatics-review
+Review this script for reproducibility, biological assumptions, missing citations, data privacy risks, and beginner clarity.</code></pre>
+          <p>This works well because Continue stays close to your files,
+          terminal output, Git diff, and notebooks.</p>
+          <p>For a free bioinformatics agent, the best choice depends on
+          the job:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Tool</th>
+          <th>Use it when</th>
+          <th>Beginner verdict</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>BioChatter</td>
+          <td>You want to build biomedical chat or knowledge-graph-aware
+          workflows in Python, with local LLM support through
+          Ollama.</td>
+          <td>Best Week 1 choice because the demo can stay small, local,
+          and inspectable.</td>
+          </tr>
+          <tr>
+          <td>BRAD</td>
+          <td>You want a bioinformatics assistant for
+          literature/database search, RAG, gene enrichment, software
+          execution, or GUI-style exploration.</td>
+          <td>More directly agent-shaped, but heavier than this first
+          setup.</td>
+          </tr>
+          <tr>
+          <td>ClawBio</td>
+          <td>You want runnable, reproducible bioinformatics skills and
+          demo workflows.</td>
+          <td>Promising for skill-based workflows; verify outputs
+          carefully because the ecosystem is newer.</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>For Week 1, use BioChatter. It is a Python framework for
+          biomedical chat workflows, and it can connect to local Ollama
+          models. Keep it in a separate Conda environment so your core
+          analysis setup stays clean.</p>
+          <p>Create the environment:</p>
+          <div class="sourceCode" id="cb30"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> create <span class="at">-n</span> biochatter-agent python=3.12 pip</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate biochatter-agent</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install biochatter</span></code></pre></div>
+          <p>Run the tiny demo:</p>
+          <div class="sourceCode" id="cb31"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> content/resources/week-01/biochatter_ollama_demo.py</span></code></pre></div>
+          <p>The demo connects BioChatter to your local
+          <code>qwen2.5-coder:7b</code> Ollama model and asks it to
+          explain columns from the <code>seqkit stats</code> output.
+          This is deliberately small: first make the assistant explain
+          observed output, then build toward more complex workflows
+          later.</p>
+          <p>Run this from the VS Code terminal, not inside your main
+          <code>bioinfo-starter</code> environment. Keeping agent
+          experiments separate makes your analysis environment easier to
+          debug.</p>
+          <p>Important: local does not automatically mean risk-free. Do
+          not paste protected health information, private credentials,
+          unpublished manuscripts, collaborator data, or proprietary
+          files into any assistant unless you understand the data
+          boundary and policy. For biology, statistics, and clinical
+          claims, go back to the paper, documentation, or dataset.</p>
+          <h2 id="what-success-looks-like">What Success Looks Like</h2>
+          <p>You are ready for Week 2 when <code>bioinfo-starter</code>
+          activates,
+          Python/R/<code>samtools</code>/<code>seqkit</code>/<code>multiqc</code>/<code>nextflow</code>
+          return versions, Docker can run the tiny FASTA demo,
+          JupyterLab opens from the container, and Continue, Ollama, and
+          the BioChatter demo work locally.</p>
+          <h2 id="what-experts-still-debate">What Experts Still
+          Debate</h2>
+          <p>People disagree about the best first setup: Conda first,
+          containers first, or workflows first. My staged recommendation
+          is simpler: learn folders and the terminal, use Conda for
+          first analyses, use Docker when sharing or teaching, add
+          Nextflow or Snakemake when a workflow must run repeatedly, and
+          treat AI assistants as support rather than authority.</p>
+          <h2 id="original-asset">Original Asset</h2>
+          <p>This post includes five starter files:</p>
+          <ul>
+          <li><code>environment.yml</code>: a Conda environment for
+          beginner bioinformatics.</li>
+          <li><code>Dockerfile</code>: a portable container image for
+          the same starter stack.</li>
+          <li><code>docker-compose.yml</code>: a one-command JupyterLab
+          workspace.</li>
+          <li><code>continue-config.yaml</code>: a local coding
+          assistant configuration for VS Code and Ollama.</li>
+          <li><code>biochatter_ollama_demo.py</code>: a tiny BioChatter
+          demo that talks to a local Ollama model.</li>
+          </ul>
+          <h2 id="credits-and-references">Credits and References</h2>
+          <ul>
+          <li>Bioconda documentation: <a
+          href="https://bioconda.github.io/">https://bioconda.github.io/</a></li>
+          <li>Conda channel priority documentation: <a
+          href="https://docs.conda.io/projects/conda/en/stable/user-guide/tasks/manage-channels.html">https://docs.conda.io/projects/conda/en/stable/user-guide/tasks/manage-channels.html</a></li>
+          <li>Miniforge: <a
+          href="https://github.com/conda-forge/miniforge">https://github.com/conda-forge/miniforge</a></li>
+          <li>Dockerfile reference: <a
+          href="https://docs.docker.com/reference/dockerfile/">https://docs.docker.com/reference/dockerfile/</a></li>
+          <li>Docker Compose documentation: <a
+          href="https://docs.docker.com/compose/">https://docs.docker.com/compose/</a></li>
+          <li>Colima: <a
+          href="https://github.com/abiosoft/colima">https://github.com/abiosoft/colima</a></li>
+          <li>Ollama quickstart: <a
+          href="https://docs.ollama.com/quickstart">https://docs.ollama.com/quickstart</a></li>
+          <li>Continue Ollama guide: <a
+          href="https://docs.continue.dev/guides/ollama-guide">https://docs.continue.dev/guides/ollama-guide</a></li>
+          <li>Continue config reference: <a
+          href="https://docs.continue.dev/reference">https://docs.continue.dev/reference</a></li>
+          <li>BioChatter: <a
+          href="https://biochatter.org/">https://biochatter.org/</a></li>
+          <li>BioChatter local Ollama models: <a
+          href="https://biocypher.org/BioChatter/features/open-llm/">https://biocypher.org/BioChatter/features/open-llm/</a></li>
+          <li>BRAD bioinformatics assistant: <a
+          href="https://github.com/jpickard1/brad">https://github.com/jpickard1/brad</a></li>
+          <li>ClawBio: <a
+          href="https://clawbio.ai/">https://clawbio.ai/</a></li>
+          <li>Visual Studio Code: <a
+          href="https://code.visualstudio.com/">https://code.visualstudio.com/</a></li>
+          <li>Windows Subsystem for Linux documentation: <a
+          href="https://learn.microsoft.com/windows/wsl/">https://learn.microsoft.com/windows/wsl/</a></li>
+          </ul>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer__grid">
+        <div>
+          <strong>Bioinformatics Field Guide</strong>
+          <p>Practical bioinformatics guides with reproducible examples.</p>
+        </div>
+        <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+          GitHub repository <i class="ri-external-link-line" aria-hidden="true"></i>
+        </a>
+      </div>
+    </footer>
+
+    <script src="assets/site.js"></script>
+  </body>
+</html>

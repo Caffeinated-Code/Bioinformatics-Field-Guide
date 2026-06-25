@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Bioinformatics Field Guide: practical, reproducible bioinformatics guides for learners and working scientists."
+    />
+    <meta property="og:title" content="Bioinformatics Field Guide" />
+    <meta
+      property="og:description"
+      content="Practical bioinformatics guides with reproducible setup files, small examples, and clear explanations."
+    />
+    <title>Bioinformatics Field Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/site.css" />
+  </head>
+  <body>
+    <header class="site-header" id="site-header">
+      <nav class="nav container" aria-label="Primary navigation">
+        <a href="index.html" class="nav__brand">Bioinformatics Field Guide</a>
+        <div class="nav__links" id="nav-links">
+          <a href="#guides">Guides</a>
+          <a href="#resources">Resources</a>
+          <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+        <div class="nav__actions">
+          <button class="icon-button" id="theme-toggle" aria-label="Toggle color theme">
+            <i class="ri-moon-line" aria-hidden="true"></i>
+          </button>
+          <button class="icon-button nav__toggle" id="nav-toggle" aria-label="Open menu">
+            <i class="ri-menu-line" aria-hidden="true"></i>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero__grid">
+          <div>
+            <p class="eyebrow">Practical bioinformatics, from setup to interpretation</p>
+            <h1>Bioinformatics Field Guide</h1>
+            <p class="hero__subtitle">
+              Clear, reproducible guides for learners and working scientists who want to move
+              from raw biological data to careful, trustworthy analysis.
+            </p>
+            <div class="hero__actions">
+              <a class="button" href="week-01-laptop-setup-for-bioinformatics.html">
+                Read Week 1 <i class="ri-arrow-right-line" aria-hidden="true"></i>
+              </a>
+              <a class="button button--ghost" href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+                View GitHub
+              </a>
+            </div>
+          </div>
+          <aside class="hero-panel">
+            <span class="hero-panel__label">Start here</span>
+            <h2>A setup that will not collapse later.</h2>
+            <ul>
+              <li>Conda environment for everyday analysis.</li>
+              <li>Docker and JupyterLab for reproducible practice.</li>
+              <li>Tiny FASTA demo to prove the stack works.</li>
+              <li>Local AI assistant configuration for coding support.</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section" id="guides">
+        <div class="container">
+          <div class="section__heading">
+            <p class="eyebrow">Published guide</p>
+            <h2>Week 1 is ready to read.</h2>
+          </div>
+          <div class="card-grid">
+            <article class="guide-card">
+              <p class="eyebrow">Week 1 · 7 minutes</p>
+              <h3>How to Set Up Your Laptop for Bioinformatics</h3>
+              <p>
+                A beginner-friendly setup path for Mac, Windows, Conda, Docker, JupyterLab,
+                VS Code, Ollama, and BioChatter.
+              </p>
+              <a href="week-01-laptop-setup-for-bioinformatics.html">
+                Read the guide <i class="ri-arrow-right-line" aria-hidden="true"></i>
+              </a>
+            </article>
+            <article class="guide-card">
+              <p class="eyebrow">Next</p>
+              <h3>What Languages Should a Bioinformatician Know?</h3>
+              <p>
+                A practical map for choosing Python, R, Bash, SQL, and workflow tools without
+                getting lost in tool anxiety.
+              </p>
+            </article>
+            <article class="guide-card">
+              <p class="eyebrow">Coming soon</p>
+              <h3>Biology Foundations For Computational Work</h3>
+              <p>
+                The biology concepts that help computational scientists ask better questions
+                and avoid shallow interpretation.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--soft" id="resources">
+        <div class="container">
+          <div class="section__heading">
+            <p class="eyebrow">Week 1 resources</p>
+            <h2>Run the setup, not just the article.</h2>
+          </div>
+          <div class="card-grid">
+            <article class="resource-card">
+              <h3>Environment</h3>
+              <p>Conda environment file for the starter bioinformatics stack.</p>
+              <a href="content/resources/week-01/environment.yml">environment.yml</a>
+            </article>
+            <article class="resource-card">
+              <h3>Docker</h3>
+              <p>Dockerfile and Compose setup for the JupyterLab workspace.</p>
+              <a href="content/resources/week-01/docker-compose.yml">docker-compose.yml</a>
+            </article>
+            <article class="resource-card">
+              <h3>BioChatter demo</h3>
+              <p>A tiny local BioChatter + Ollama example for explaining observed output.</p>
+              <a href="content/resources/week-01/biochatter_ollama_demo.py">demo script</a>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer__grid">
+        <div>
+          <strong>Bioinformatics Field Guide</strong>
+          <p>Built for practical, reproducible bioinformatics learning.</p>
+        </div>
+        <a href="https://github.com/Caffeinated-Code" target="_blank" rel="noreferrer">
+          Caffeinated-Code <i class="ri-external-link-line" aria-hidden="true"></i>
+        </a>
+      </div>
+    </footer>
+
+    <script src="assets/site.js"></script>
+  </body>
+</html>
