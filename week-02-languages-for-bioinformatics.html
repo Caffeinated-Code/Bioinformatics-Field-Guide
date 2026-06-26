@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Python, R, Bash, SQL, and how to choose without getting
-stuck"
+      content="A beginner-friendly map for Bash, Python, R, SQL, and
+workflow tools"
     />
-    <meta property="og:title" content="What Languages Should a
-Bioinformatician Know?" />
+    <meta property="og:title" content="What Programming Languages Should
+a Bioinformatician Know?" />
     <meta
       property="og:description"
-      content="Python, R, Bash, SQL, and how to choose without getting
-stuck"
+      content="A beginner-friendly map for Bash, Python, R, SQL, and
+workflow tools"
     />
     <meta property="og:type" content="article" />
-    <title>What Languages Should a Bioinformatician
+    <title>What Programming Languages Should a Bioinformatician
 Know? | Bioinformatics Field Guide</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -58,9 +58,10 @@ Know? | Bioinformatics Field Guide</title>
           <div>
             <a class="back-link" href="index.html"><i class="ri-arrow-left-line" aria-hidden="true"></i> Field Guide home</a>
             <p class="eyebrow">Week 2 · 7 minutes</p>
-            <h1>What Languages Should a Bioinformatician Know?</h1>
-                        <p class="article-hero__subtitle">Python, R,
-Bash, SQL, and how to choose without getting stuck</p>
+            <h1>What Programming Languages Should a Bioinformatician
+Know?</h1>
+                        <p class="article-hero__subtitle">A
+beginner-friendly map for Bash, Python, R, SQL, and workflow tools</p>
                         <div class="article-meta">
               <span><i class="ri-user-smile-line" aria-hidden="true"></i> Beginner friendly</span>
               <span><i class="ri-terminal-box-line" aria-hidden="true"></i> Tested commands</span>
@@ -69,7 +70,8 @@ Bash, SQL, and how to choose without getting stuck</p>
           </div>
           <aside class="article-card">
             <span class="article-card__label">Original asset</span>
-            <p>Bioinformatics language decision map</p>
+            <p>Bioinformatics language decision map and four-week
+starter plan</p>
             <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
               View repository <i class="ri-external-link-line" aria-hidden="true"></i>
             </a>
@@ -81,9 +83,10 @@ Bash, SQL, and how to choose without getting stuck</p>
         <aside class="toc" aria-label="Table of contents">
           <p class="toc__title">On this page</p>
           <ul>
-          <li><a href="#what-languages-should-a-bioinformatician-know"
-          id="toc-what-languages-should-a-bioinformatician-know">What
-          Languages Should a Bioinformatician Know?</a>
+          <li><a
+          href="#what-programming-languages-should-a-bioinformatician-know"
+          id="toc-what-programming-languages-should-a-bioinformatician-know">What
+          Programming Languages Should a Bioinformatician Know?</a>
           <ul>
           <li><a href="#start-with-the-job-not-the-language"
           id="toc-start-with-the-job-not-the-language">Start With The
@@ -98,9 +101,14 @@ Bash, SQL, and how to choose without getting stuck</p>
           <li><a href="#r-the-statistical-genomics-workbench"
           id="toc-r-the-statistical-genomics-workbench">R: The
           Statistical Genomics Workbench</a></li>
+          <li><a href="#python-or-r-first"
+          id="toc-python-or-r-first">Python Or R First?</a></li>
           <li><a href="#sql-the-metadata-superpower"
           id="toc-sql-the-metadata-superpower">SQL: The Metadata
           Superpower</a></li>
+          <li><a href="#workflow-tools-not-first-but-soon"
+          id="toc-workflow-tools-not-first-but-soon">Workflow Tools: Not
+          First, But Soon</a></li>
           <li><a href="#the-decision-map" id="toc-the-decision-map">The
           Decision Map</a></li>
           <li><a href="#common-mistakes" id="toc-common-mistakes">Common
@@ -118,21 +126,25 @@ Bash, SQL, and how to choose without getting stuck</p>
         </aside>
 
         <article class="article-content">
-          <h1 id="what-languages-should-a-bioinformatician-know">What
-          Languages Should a Bioinformatician Know?</h1>
+          <h1
+          id="what-programming-languages-should-a-bioinformatician-know">What
+          Programming Languages Should a Bioinformatician Know?</h1>
           <p><strong>Takeaway:</strong> You do not need to learn every
-          language at once. Learn enough Bash to move through files,
-          enough Python or R to analyze data, enough SQL to respect
-          metadata, and enough workflow thinking to make your work
-          repeatable.</p>
+          language at once. Learn Bash to move through files, choose
+          Python or R as your first analysis language, use SQL to
+          protect your metadata, and add workflow tools when your
+          analysis needs to run again.</p>
           <h2 id="start-with-the-job-not-the-language">Start With The
           Job, Not The Language</h2>
-          <p>Beginners often ask, "Should I learn Python or R?" A better
-          question is:</p>
+          <p>Beginners usually ask, "Should I learn Python or R?"</p>
+          <p>That question matters, but it is not the first question.
+          Start here:</p>
           <pre class="text"><code>What kind of bioinformatics work am I trying to do?</code></pre>
-          <p>Languages are tools. The goal is not to collect them. The
-          goal is to know which one fits the problem in front of
-          you.</p>
+          <p>Bioinformatics is not one job. Some days you inspect
+          sequencing files. Some days you clean metadata. Some days you
+          fit statistical models. Some days you rerun a pipeline because
+          one sample failed quality control.</p>
+          <p>Different jobs need different tools.</p>
           <table>
           <thead>
           <tr>
@@ -143,29 +155,33 @@ Bash, SQL, and how to choose without getting stuck</p>
           </thead>
           <tbody>
           <tr>
-          <td>Move around files and run bioinformatics tools</td>
+          <td>Move around files and run command-line tools</td>
           <td>Bash</td>
-          <td>Most command-line tools expect a Unix-like shell</td>
+          <td>Most bioinformatics tools expect a Unix-like shell</td>
           </tr>
           <tr>
-          <td>Clean tables, write scripts, call APIs, use ML</td>
+          <td>Clean tables, call APIs, automate work, use ML</td>
           <td>Python</td>
-          <td>General-purpose, readable, and strong for automation</td>
+          <td>General-purpose, readable, and strong for reusable
+          scripts</td>
           </tr>
           <tr>
-          <td>RNA-seq statistics, plots, Bioconductor workflows</td>
+          <td>Run statistical genomics methods and make publication
+          plots</td>
           <td>R</td>
-          <td>Excellent statistical genomics ecosystem</td>
+          <td>Excellent ecosystem for statistics, visualization, and
+          Bioconductor</td>
           </tr>
           <tr>
-          <td>Query sample sheets, clinical tables, warehouses</td>
+          <td>Check sample sheets, clinical tables, and study
+          metadata</td>
           <td>SQL</td>
-          <td>Forces precise thinking about metadata and joins</td>
+          <td>Makes joins, duplicates, and missing values explicit</td>
           </tr>
           <tr>
-          <td>Rerun the same analysis many times</td>
+          <td>Rerun the same analysis across many samples</td>
           <td>Nextflow or Snakemake</td>
-          <td>Turns commands into reproducible workflows</td>
+          <td>Turns one-off commands into reproducible workflows</td>
           </tr>
           </tbody>
           </table>
@@ -174,22 +190,28 @@ Bash, SQL, and how to choose without getting stuck</p>
           <p>If you are starting from zero, use this order:</p>
           <ol type="1">
           <li><strong>Bash basics:</strong> paths, files, pipes, and
-          running tools.</li>
+          running tools from the terminal.</li>
           <li><strong>Python or R:</strong> choose one as your first
           analysis language.</li>
           <li><strong>The other analysis language:</strong> add it after
-          you can finish small tasks.</li>
+          you can finish small tasks without copying blindly.</li>
           <li><strong>SQL:</strong> learn joins and grouping before your
-          metadata gets messy.</li>
+          metadata becomes a quiet source of errors.</li>
           <li><strong>Workflow systems:</strong> add Nextflow or
-          Snakemake when you repeat analyses.</li>
+          Snakemake when you repeat the same commands across
+          samples.</li>
           </ol>
           <p>Do not try to master everything in one month. Aim for
           useful fluency.</p>
+          <p>If you read <a
+          href="week-01-laptop-setup-for-bioinformatics.html">Week
+          1</a>, you already have the setup you need: a project folder,
+          Conda environment, terminal, and editor. This week is about
+          deciding what to learn first.</p>
           <h2 id="bash-the-glue-layer">Bash: The Glue Layer</h2>
           <p>Bash is how you talk to files and command-line tools.
           Sequencing data is often too large for spreadsheets, and many
-          bioinformatics tools are designed for the terminal.</p>
+          bioinformatics tools are designed to run from a terminal.</p>
           <p>Learn these first:</p>
           <div class="sourceCode" id="cb2"><pre
           class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">pwd</span></span>
@@ -207,9 +229,13 @@ Bash, SQL, and how to choose without getting stuck</p>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">uniq</span></span></code></pre></div>
           <p>Then learn pipes:</p>
           <div class="sourceCode" id="cb3"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> samples.tsv <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f2</span> <span class="kw">|</span> <span class="fu">sort</span> <span class="kw">|</span> <span class="fu">uniq</span> <span class="at">-c</span></span></code></pre></div>
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cut</span> <span class="at">-f2</span> samples.tsv <span class="kw">|</span> <span class="fu">sort</span> <span class="kw">|</span> <span class="fu">uniq</span> <span class="at">-c</span></span></code></pre></div>
+          <p>That command means: take column 2, sort the values, and
+          count each unique value.</p>
           <p>You do not need to become a systems engineer. You do need
-          to stop being afraid of paths, files, and command output.</p>
+          to stop being afraid of paths, files, and command output. If
+          you can find files, inspect headers, count rows, and run one
+          tool safely, you are already doing real bioinformatics.</p>
           <h2 id="python-the-builder">Python: The Builder</h2>
           <p>Python is a strong first analysis language if you want to
           clean data, automate work, build tools, use APIs, or learn
@@ -247,10 +273,18 @@ Bash, SQL, and how to choose without getting stuck</p>
           <td><code>biopython</code></td>
           <td>sequence and biological file utilities</td>
           </tr>
+          <tr>
+          <td><code>scanpy</code> / <code>anndata</code></td>
+          <td>single-cell data structures and analysis</td>
+          </tr>
           </tbody>
           </table>
           <p>Python is often the best choice when you need to build
-          something reusable for yourself or a team.</p>
+          something reusable for yourself or a team: a data-cleaning
+          script, a small command-line utility, a dashboard prototype, a
+          model-training workflow, or an API client.</p>
+          <p>Choose Python first if your instinct is, "I want to
+          automate this."</p>
           <h2 id="r-the-statistical-genomics-workbench">R: The
           Statistical Genomics Workbench</h2>
           <p>R is especially strong when the analysis is close to
@@ -292,7 +326,49 @@ Bash, SQL, and how to choose without getting stuck</p>
           </table>
           <p>R is often the best choice when a trusted method already
           exists in Bioconductor or when the question is statistical
-          first.</p>
+          first: differential expression, linear modeling, enrichment
+          analysis, careful plotting, and many single-cell
+          workflows.</p>
+          <p>Choose R first if your instinct is, "I need the right
+          statistical method."</p>
+          <h2 id="python-or-r-first">Python Or R First?</h2>
+          <p>Here is the practical answer:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>If your first goal is...</th>
+          <th>Start with...</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>Automating files, APIs, scripts, or ML</td>
+          <td>Python</td>
+          </tr>
+          <tr>
+          <td>RNA-seq statistics, Bioconductor, or publication
+          plots</td>
+          <td>R</td>
+          </tr>
+          <tr>
+          <td>Single-cell analysis</td>
+          <td>Either, but learn the ecosystem your lab or team uses</td>
+          </tr>
+          <tr>
+          <td>Getting hired broadly across data roles</td>
+          <td>Python first, then R</td>
+          </tr>
+          <tr>
+          <td>Reading bioinformatics papers and reproducing common
+          workflows</td>
+          <td>R and Python eventually</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>Do not turn this into an identity. Strong bioinformaticians
+          are not "Python people" or "R people." They are evidence
+          people. They pick the tool that makes the analysis easier to
+          trust.</p>
           <h2 id="sql-the-metadata-superpower">SQL: The Metadata
           Superpower</h2>
           <p>Bioinformatics fails quietly when metadata is messy. SQL
@@ -313,6 +389,33 @@ Bash, SQL, and how to choose without getting stuck</p>
           </ul>
           <p>SQL makes you better at spotting duplicated samples,
           inconsistent labels, missing covariates, and broken joins.</p>
+          <p>Even if you never become a database engineer, learn enough
+          SQL to answer questions like:</p>
+          <ul>
+          <li>How many samples are in each condition?</li>
+          <li>Do any sample IDs appear twice?</li>
+          <li>Which samples have missing age, sex, batch, treatment, or
+          tissue labels?</li>
+          <li>Did my count matrix and metadata table join
+          correctly?</li>
+          </ul>
+          <p>Those checks can save an entire analysis.</p>
+          <h2 id="workflow-tools-not-first-but-soon">Workflow Tools: Not
+          First, But Soon</h2>
+          <p>Workflow systems such as Nextflow and Snakemake help you
+          turn commands into a repeatable pipeline. They are powerful
+          because they track inputs, outputs, software environments, and
+          steps across many samples.</p>
+          <p>Do not start here on day one. First, understand the
+          commands your workflow will run. Then use a workflow tool when
+          you catch yourself saying:</p>
+          <ul>
+          <li>"I need to rerun this on 40 samples."</li>
+          <li>"I changed one parameter and do not remember what I
+          already ran."</li>
+          <li>"I need someone else to reproduce this."</li>
+          <li>"This should run on a cluster or cloud later."</li>
+          </ul>
           <h2 id="the-decision-map">The Decision Map</h2>
           <pre class="mermaid"><code>flowchart TD
   question[What are you trying to do] --&gt; files[Run tools or inspect files]
@@ -325,6 +428,9 @@ Bash, SQL, and how to choose without getting stuck</p>
   stats --&gt; rlang[Use R]
   metadata --&gt; sql[Use SQL]
   repeat --&gt; workflow[Use Nextflow or Snakemake]</code></pre>
+          <p>The reusable version of this map is in the Week 2 resources
+          folder: <a
+          href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide/blob/main/content/resources/week-02/language-decision-map.md"><code>content/resources/week-02/language-decision-map.md</code></a>.</p>
           <h2 id="common-mistakes">Common Mistakes</h2>
           <ul>
           <li>Learning syntax without learning file paths.</li>
@@ -337,6 +443,8 @@ Bash, SQL, and how to choose without getting stuck</p>
           <li>Ignoring metadata until the end.</li>
           <li>Starting workflow systems before understanding the
           commands they run.</li>
+          <li>Confusing "I installed a package" with "I understand the
+          assumptions of the method."</li>
           </ul>
           <h2 id="save-this-a-four-week-starter-plan">Save This: A
           Four-Week Starter Plan</h2>
@@ -376,11 +484,22 @@ Bash, SQL, and how to choose without getting stuck</p>
           </table>
           <p>By the end, you should be able to explain what each
           language is doing in one sentence.</p>
+          <p>That sentence is the test. If you cannot explain the role
+          of a tool, slow down and make the task smaller.</p>
           <h2 id="what-to-watch-next">What To Watch Next</h2>
-          <p>The mature answer is not Python vs R. Real bioinformatics
-          teams use whatever combination makes the analysis correct,
-          readable, and reproducible. The best analysts are
-          language-flexible but evidence-strict.</p>
+          <p>The mature answer is not Python versus R. Real
+          bioinformatics teams use whatever combination makes the
+          analysis correct, readable, and reproducible.</p>
+          <p>The best next step is to practice with tiny data:</p>
+          <ol type="1">
+          <li>Use Bash to inspect files.</li>
+          <li>Use Python or R to read a table and make one plot.</li>
+          <li>Use SQL to check sample metadata.</li>
+          <li>Write down what each step changed.</li>
+          </ol>
+          <p>Week 3 will step backward again and ask: what biology do
+          you actually need to know before the code starts making
+          sense?</p>
           <h2 id="credits-and-references">Credits and References</h2>
           <ul>
           <li>Python: <a
@@ -395,6 +514,8 @@ Bash, SQL, and how to choose without getting stuck</p>
           href="https://www.tidyverse.org/">https://www.tidyverse.org/</a></li>
           <li>Scanpy documentation: <a
           href="https://scanpy.readthedocs.io/">https://scanpy.readthedocs.io/</a></li>
+          <li>AnnData documentation: <a
+          href="https://anndata.readthedocs.io/">https://anndata.readthedocs.io/</a></li>
           <li>Seurat documentation: <a
           href="https://satijalab.org/seurat/">https://satijalab.org/seurat/</a></li>
           <li>Nextflow: <a

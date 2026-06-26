@@ -1,49 +1,55 @@
 ---
-title: "What Languages Should a Bioinformatician Know?"
-subtitle: "Python, R, Bash, SQL, and how to choose without getting stuck"
+title: "What Programming Languages Should a Bioinformatician Know?"
+subtitle: "A beginner-friendly map for Bash, Python, R, SQL, and workflow tools"
 week: 2
 audience: ["beginner", "practitioner"]
 reading_time: "7 minutes"
-asset: "Bioinformatics language decision map"
+asset: "Bioinformatics language decision map and four-week starter plan"
 ---
 
-# What Languages Should a Bioinformatician Know?
+# What Programming Languages Should a Bioinformatician Know?
 
-**Takeaway:** You do not need to learn every language at once. Learn enough Bash to move through files, enough Python or R to analyze data, enough SQL to respect metadata, and enough workflow thinking to make your work repeatable.
+**Takeaway:** You do not need to learn every language at once. Learn Bash to move through files, choose Python or R as your first analysis language, use SQL to protect your metadata, and add workflow tools when your analysis needs to run again.
 
 ## Start With The Job, Not The Language
 
-Beginners often ask, "Should I learn Python or R?" A better question is:
+Beginners usually ask, "Should I learn Python or R?"
+
+That question matters, but it is not the first question. Start here:
 
 ```text
 What kind of bioinformatics work am I trying to do?
 ```
 
-Languages are tools. The goal is not to collect them. The goal is to know which one fits the problem in front of you.
+Bioinformatics is not one job. Some days you inspect sequencing files. Some days you clean metadata. Some days you fit statistical models. Some days you rerun a pipeline because one sample failed quality control.
+
+Different jobs need different tools.
 
 | Job | Best first tool | Why |
 |---|---|---|
-| Move around files and run bioinformatics tools | Bash | Most command-line tools expect a Unix-like shell |
-| Clean tables, write scripts, call APIs, use ML | Python | General-purpose, readable, and strong for automation |
-| RNA-seq statistics, plots, Bioconductor workflows | R | Excellent statistical genomics ecosystem |
-| Query sample sheets, clinical tables, warehouses | SQL | Forces precise thinking about metadata and joins |
-| Rerun the same analysis many times | Nextflow or Snakemake | Turns commands into reproducible workflows |
+| Move around files and run command-line tools | Bash | Most bioinformatics tools expect a Unix-like shell |
+| Clean tables, call APIs, automate work, use ML | Python | General-purpose, readable, and strong for reusable scripts |
+| Run statistical genomics methods and make publication plots | R | Excellent ecosystem for statistics, visualization, and Bioconductor |
+| Check sample sheets, clinical tables, and study metadata | SQL | Makes joins, duplicates, and missing values explicit |
+| Rerun the same analysis across many samples | Nextflow or Snakemake | Turns one-off commands into reproducible workflows |
 
 ## The Beginner Order That Works
 
 If you are starting from zero, use this order:
 
-1. **Bash basics:** paths, files, pipes, and running tools.
+1. **Bash basics:** paths, files, pipes, and running tools from the terminal.
 2. **Python or R:** choose one as your first analysis language.
-3. **The other analysis language:** add it after you can finish small tasks.
-4. **SQL:** learn joins and grouping before your metadata gets messy.
-5. **Workflow systems:** add Nextflow or Snakemake when you repeat analyses.
+3. **The other analysis language:** add it after you can finish small tasks without copying blindly.
+4. **SQL:** learn joins and grouping before your metadata becomes a quiet source of errors.
+5. **Workflow systems:** add Nextflow or Snakemake when you repeat the same commands across samples.
 
 Do not try to master everything in one month. Aim for useful fluency.
 
+If you read [Week 1](week-01-laptop-setup-for-bioinformatics.html), you already have the setup you need: a project folder, Conda environment, terminal, and editor. This week is about deciding what to learn first.
+
 ## Bash: The Glue Layer
 
-Bash is how you talk to files and command-line tools. Sequencing data is often too large for spreadsheets, and many bioinformatics tools are designed for the terminal.
+Bash is how you talk to files and command-line tools. Sequencing data is often too large for spreadsheets, and many bioinformatics tools are designed to run from a terminal.
 
 Learn these first:
 
@@ -66,10 +72,12 @@ uniq
 Then learn pipes:
 
 ```bash
-cat samples.tsv | cut -f2 | sort | uniq -c
+cut -f2 samples.tsv | sort | uniq -c
 ```
 
-You do not need to become a systems engineer. You do need to stop being afraid of paths, files, and command output.
+That command means: take column 2, sort the values, and count each unique value.
+
+You do not need to become a systems engineer. You do need to stop being afraid of paths, files, and command output. If you can find files, inspect headers, count rows, and run one tool safely, you are already doing real bioinformatics.
 
 ## Python: The Builder
 
@@ -85,8 +93,11 @@ Start with:
 | `scipy` | statistics and scientific computing |
 | `scikit-learn` | machine learning |
 | `biopython` | sequence and biological file utilities |
+| `scanpy` / `anndata` | single-cell data structures and analysis |
 
-Python is often the best choice when you need to build something reusable for yourself or a team.
+Python is often the best choice when you need to build something reusable for yourself or a team: a data-cleaning script, a small command-line utility, a dashboard prototype, a model-training workflow, or an API client.
+
+Choose Python first if your instinct is, "I want to automate this."
 
 ## R: The Statistical Genomics Workbench
 
@@ -103,7 +114,23 @@ Start with:
 | `limma` | linear modeling and omics workflows |
 | `Seurat` | single-cell analysis |
 
-R is often the best choice when a trusted method already exists in Bioconductor or when the question is statistical first.
+R is often the best choice when a trusted method already exists in Bioconductor or when the question is statistical first: differential expression, linear modeling, enrichment analysis, careful plotting, and many single-cell workflows.
+
+Choose R first if your instinct is, "I need the right statistical method."
+
+## Python Or R First?
+
+Here is the practical answer:
+
+| If your first goal is... | Start with... |
+|---|---|
+| Automating files, APIs, scripts, or ML | Python |
+| RNA-seq statistics, Bioconductor, or publication plots | R |
+| Single-cell analysis | Either, but learn the ecosystem your lab or team uses |
+| Getting hired broadly across data roles | Python first, then R |
+| Reading bioinformatics papers and reproducing common workflows | R and Python eventually |
+
+Do not turn this into an identity. Strong bioinformaticians are not "Python people" or "R people." They are evidence people. They pick the tool that makes the analysis easier to trust.
 
 ## SQL: The Metadata Superpower
 
@@ -127,6 +154,26 @@ Learn:
 
 SQL makes you better at spotting duplicated samples, inconsistent labels, missing covariates, and broken joins.
 
+Even if you never become a database engineer, learn enough SQL to answer questions like:
+
+- How many samples are in each condition?
+- Do any sample IDs appear twice?
+- Which samples have missing age, sex, batch, treatment, or tissue labels?
+- Did my count matrix and metadata table join correctly?
+
+Those checks can save an entire analysis.
+
+## Workflow Tools: Not First, But Soon
+
+Workflow systems such as Nextflow and Snakemake help you turn commands into a repeatable pipeline. They are powerful because they track inputs, outputs, software environments, and steps across many samples.
+
+Do not start here on day one. First, understand the commands your workflow will run. Then use a workflow tool when you catch yourself saying:
+
+- "I need to rerun this on 40 samples."
+- "I changed one parameter and do not remember what I already ran."
+- "I need someone else to reproduce this."
+- "This should run on a cluster or cloud later."
+
 ## The Decision Map
 
 ```mermaid
@@ -143,6 +190,8 @@ flowchart TD
   repeat --> workflow[Use Nextflow or Snakemake]
 ```
 
+The reusable version of this map is in the Week 2 resources folder: [`content/resources/week-02/language-decision-map.md`](https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide/blob/main/content/resources/week-02/language-decision-map.md).
+
 ## Common Mistakes
 
 - Learning syntax without learning file paths.
@@ -152,6 +201,7 @@ flowchart TD
 - Using R for everything because a package exists.
 - Ignoring metadata until the end.
 - Starting workflow systems before understanding the commands they run.
+- Confusing "I installed a package" with "I understand the assumptions of the method."
 
 ## Save This: A Four-Week Starter Plan
 
@@ -164,9 +214,20 @@ flowchart TD
 
 By the end, you should be able to explain what each language is doing in one sentence.
 
+That sentence is the test. If you cannot explain the role of a tool, slow down and make the task smaller.
+
 ## What To Watch Next
 
-The mature answer is not Python vs R. Real bioinformatics teams use whatever combination makes the analysis correct, readable, and reproducible. The best analysts are language-flexible but evidence-strict.
+The mature answer is not Python versus R. Real bioinformatics teams use whatever combination makes the analysis correct, readable, and reproducible.
+
+The best next step is to practice with tiny data:
+
+1. Use Bash to inspect files.
+2. Use Python or R to read a table and make one plot.
+3. Use SQL to check sample metadata.
+4. Write down what each step changed.
+
+Week 3 will step backward again and ask: what biology do you actually need to know before the code starts making sense?
 
 ## Credits and References
 
@@ -176,6 +237,7 @@ The mature answer is not Python vs R. Real bioinformatics teams use whatever com
 - pandas documentation: https://pandas.pydata.org/docs/
 - tidyverse: https://www.tidyverse.org/
 - Scanpy documentation: https://scanpy.readthedocs.io/
+- AnnData documentation: https://anndata.readthedocs.io/
 - Seurat documentation: https://satijalab.org/seurat/
 - Nextflow: https://www.nextflow.io/
 - Snakemake: https://snakemake.readthedocs.io/
