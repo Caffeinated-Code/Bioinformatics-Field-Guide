@@ -134,16 +134,16 @@ If you ignore the experiment, your analysis can be elegant and wrong.
 
 ```mermaid
 flowchart LR
-  A["DNA"] --> B["RNA"]
-  B --> C["Protein"]
-  A --> D["Variants and regulation"]
-  B --> E["Expression and splicing"]
-  C --> F["Function and pathways"]
-  G["Cell type"] --> E
-  H["Experiment"] --> A
-  H --> B
-  H --> G
-  H --> I["Interpretation limits"]
+  dna[DNA] --> rna[RNA]
+  rna --> protein[Protein]
+  dna --> variants[Variants and regulation]
+  rna --> expression[Expression and splicing]
+  protein --> function[Function and pathways]
+  cell[Cell type] --> expression
+  experiment[Experiment] --> dna
+  experiment --> rna
+  experiment --> cell
+  experiment --> limits[Interpretation limits]
 ```
 
 ## Common Mistakes

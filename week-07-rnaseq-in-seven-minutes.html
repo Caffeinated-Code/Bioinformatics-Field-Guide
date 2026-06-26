@@ -25,11 +25,6 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="assets/site.css" />
-    <script type="module">
-      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
-      window.mermaid = mermaid;
-      window.dispatchEvent(new Event("mermaid-ready"));
-    </script>
   </head>
   <body class="article-page">
     <div class="reading-progress" id="reading-progress"></div>
@@ -133,15 +128,15 @@ differential expression</p>
           interpretation important.</p>
           <h2 id="the-workflow">The Workflow</h2>
           <pre class="mermaid"><code>flowchart LR
-  A[&quot;Samples&quot;] --&gt; B[&quot;RNA extraction&quot;]
-  B --&gt; C[&quot;Sequencing&quot;]
-  C --&gt; D[&quot;FASTQ&quot;]
-  D --&gt; E[&quot;QC&quot;]
-  E --&gt; F[&quot;Alignment or quantification&quot;]
-  F --&gt; G[&quot;Count matrix&quot;]
-  H[&quot;Metadata&quot;] --&gt; G
-  G --&gt; I[&quot;Differential expression&quot;]
-  I --&gt; J[&quot;Biological interpretation&quot;]</code></pre>
+  samples[Samples] --&gt; extraction[RNA extraction]
+  extraction --&gt; sequencing[Sequencing]
+  sequencing --&gt; fastq[FASTQ]
+  fastq --&gt; qc[QC]
+  qc --&gt; quant[Alignment or quantification]
+  quant --&gt; matrix[Count matrix]
+  metadata[Metadata] --&gt; matrix
+  matrix --&gt; de[Differential expression]
+  de --&gt; interpretation[Biological interpretation]</code></pre>
           <p>Every arrow is a place where bias can enter.</p>
           <h2 id="step-1-experimental-design">Step 1: Experimental
           Design</h2>
@@ -329,6 +324,12 @@ treated_2    treated      B</code></pre>
       </div>
     </footer>
 
-    <script src="assets/site.js"></script>
+    <script src="assets/site.js?v=20260625-mermaid"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: false });
+      window.mermaid = mermaid;
+      window.dispatchEvent(new Event("mermaid-ready"));
+    </script>
   </body>
 </html>

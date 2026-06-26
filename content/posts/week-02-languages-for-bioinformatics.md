@@ -131,16 +131,16 @@ SQL makes you better at spotting duplicated samples, inconsistent labels, missin
 
 ```mermaid
 flowchart TD
-  A["What are you trying to do?"] --> B["Run tools or inspect files"]
-  A --> C["Analyze tables or automate work"]
-  A --> D["Use statistical genomics packages"]
-  A --> E["Query structured metadata"]
-  A --> F["Repeat the full analysis"]
-  B --> G["Use Bash"]
-  C --> H["Use Python"]
-  D --> I["Use R"]
-  E --> J["Use SQL"]
-  F --> K["Use Nextflow or Snakemake"]
+  question[What are you trying to do] --> files[Run tools or inspect files]
+  question --> tables[Analyze tables or automate work]
+  question --> stats[Use statistical genomics packages]
+  question --> metadata[Query structured metadata]
+  question --> repeat[Repeat the full analysis]
+  files --> bash[Use Bash]
+  tables --> python[Use Python]
+  stats --> rlang[Use R]
+  metadata --> sql[Use SQL]
+  repeat --> workflow[Use Nextflow or Snakemake]
 ```
 
 ## Common Mistakes

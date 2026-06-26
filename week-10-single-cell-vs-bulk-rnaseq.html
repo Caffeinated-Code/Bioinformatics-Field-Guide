@@ -27,11 +27,6 @@ RNA-seq | Bioinformatics Field Guide</title>
       rel="stylesheet"
     />
     <link rel="stylesheet" href="assets/site.css" />
-    <script type="module">
-      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
-      window.mermaid = mermaid;
-      window.dispatchEvent(new Event("mermaid-ready"));
-    </script>
   </head>
   <body class="article-page">
     <div class="reading-progress" id="reading-progress"></div>
@@ -176,15 +171,15 @@ when every cell becomes a data point</p>
           cells, not averaged tissue.</p>
           <h2 id="the-workflow">The Workflow</h2>
           <pre class="mermaid"><code>flowchart LR
-  A[&quot;Cells&quot;] --&gt; B[&quot;Barcoding&quot;]
-  B --&gt; C[&quot;Sequencing&quot;]
-  C --&gt; D[&quot;Count matrix&quot;]
-  D --&gt; E[&quot;QC&quot;]
-  E --&gt; F[&quot;Normalization&quot;]
-  F --&gt; G[&quot;Dimensionality reduction&quot;]
-  G --&gt; H[&quot;Clustering&quot;]
-  H --&gt; I[&quot;Annotation&quot;]
-  I --&gt; J[&quot;Biological interpretation&quot;]</code></pre>
+  cells[Cells] --&gt; barcoding[Barcoding]
+  barcoding --&gt; sequencing[Sequencing]
+  sequencing --&gt; matrix[Count matrix]
+  matrix --&gt; qc[QC]
+  qc --&gt; normalization[Normalization]
+  normalization --&gt; reduction[Dimensionality reduction]
+  reduction --&gt; clustering[Clustering]
+  clustering --&gt; annotation[Annotation]
+  annotation --&gt; interpretation[Biological interpretation]</code></pre>
           <p>Each step contains choices that can change the result.</p>
           <h2 id="the-hard-part-annotation">The Hard Part:
           Annotation</h2>
@@ -308,6 +303,12 @@ when every cell becomes a data point</p>
       </div>
     </footer>
 
-    <script src="assets/site.js"></script>
+    <script src="assets/site.js?v=20260625-mermaid"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: false });
+      window.mermaid = mermaid;
+      window.dispatchEvent(new Event("mermaid-ready"));
+    </script>
   </body>
 </html>

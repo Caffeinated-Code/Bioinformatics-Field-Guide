@@ -29,11 +29,6 @@ Know? | Bioinformatics Field Guide</title>
       rel="stylesheet"
     />
     <link rel="stylesheet" href="assets/site.css" />
-    <script type="module">
-      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
-      window.mermaid = mermaid;
-      window.dispatchEvent(new Event("mermaid-ready"));
-    </script>
   </head>
   <body class="article-page">
     <div class="reading-progress" id="reading-progress"></div>
@@ -320,16 +315,16 @@ Bash, SQL, and how to choose without getting stuck</p>
           inconsistent labels, missing covariates, and broken joins.</p>
           <h2 id="the-decision-map">The Decision Map</h2>
           <pre class="mermaid"><code>flowchart TD
-  A[&quot;What are you trying to do?&quot;] --&gt; B[&quot;Run tools or inspect files&quot;]
-  A --&gt; C[&quot;Analyze tables or automate work&quot;]
-  A --&gt; D[&quot;Use statistical genomics packages&quot;]
-  A --&gt; E[&quot;Query structured metadata&quot;]
-  A --&gt; F[&quot;Repeat the full analysis&quot;]
-  B --&gt; G[&quot;Use Bash&quot;]
-  C --&gt; H[&quot;Use Python&quot;]
-  D --&gt; I[&quot;Use R&quot;]
-  E --&gt; J[&quot;Use SQL&quot;]
-  F --&gt; K[&quot;Use Nextflow or Snakemake&quot;]</code></pre>
+  question[What are you trying to do] --&gt; files[Run tools or inspect files]
+  question --&gt; tables[Analyze tables or automate work]
+  question --&gt; stats[Use statistical genomics packages]
+  question --&gt; metadata[Query structured metadata]
+  question --&gt; repeat[Repeat the full analysis]
+  files --&gt; bash[Use Bash]
+  tables --&gt; python[Use Python]
+  stats --&gt; rlang[Use R]
+  metadata --&gt; sql[Use SQL]
+  repeat --&gt; workflow[Use Nextflow or Snakemake]</code></pre>
           <h2 id="common-mistakes">Common Mistakes</h2>
           <ul>
           <li>Learning syntax without learning file paths.</li>
@@ -423,6 +418,12 @@ Bash, SQL, and how to choose without getting stuck</p>
       </div>
     </footer>
 
-    <script src="assets/site.js"></script>
+    <script src="assets/site.js?v=20260625-mermaid"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: false });
+      window.mermaid = mermaid;
+      window.dispatchEvent(new Event("mermaid-ready"));
+    </script>
   </body>
 </html>

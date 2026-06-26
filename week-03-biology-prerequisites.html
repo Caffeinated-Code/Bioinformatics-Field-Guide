@@ -27,11 +27,6 @@ Bioinformatics? | Bioinformatics Field Guide</title>
       rel="stylesheet"
     />
     <link rel="stylesheet" href="assets/site.css" />
-    <script type="module">
-      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
-      window.mermaid = mermaid;
-      window.dispatchEvent(new Event("mermaid-ready"));
-    </script>
   </head>
   <body class="article-page">
     <div class="reading-progress" id="reading-progress"></div>
@@ -271,16 +266,16 @@ map for computational learners</p>
           and wrong.</p>
           <h2 id="a-beginner-biology-map">A Beginner Biology Map</h2>
           <pre class="mermaid"><code>flowchart LR
-  A[&quot;DNA&quot;] --&gt; B[&quot;RNA&quot;]
-  B --&gt; C[&quot;Protein&quot;]
-  A --&gt; D[&quot;Variants and regulation&quot;]
-  B --&gt; E[&quot;Expression and splicing&quot;]
-  C --&gt; F[&quot;Function and pathways&quot;]
-  G[&quot;Cell type&quot;] --&gt; E
-  H[&quot;Experiment&quot;] --&gt; A
-  H --&gt; B
-  H --&gt; G
-  H --&gt; I[&quot;Interpretation limits&quot;]</code></pre>
+  dna[DNA] --&gt; rna[RNA]
+  rna --&gt; protein[Protein]
+  dna --&gt; variants[Variants and regulation]
+  rna --&gt; expression[Expression and splicing]
+  protein --&gt; function[Function and pathways]
+  cell[Cell type] --&gt; expression
+  experiment[Experiment] --&gt; dna
+  experiment --&gt; rna
+  experiment --&gt; cell
+  experiment --&gt; limits[Interpretation limits]</code></pre>
           <h2 id="common-mistakes">Common Mistakes</h2>
           <ul>
           <li>Treating gene symbols as stable and universal.</li>
@@ -367,6 +362,12 @@ map for computational learners</p>
       </div>
     </footer>
 
-    <script src="assets/site.js"></script>
+    <script src="assets/site.js?v=20260625-mermaid"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: false });
+      window.mermaid = mermaid;
+      window.dispatchEvent(new Event("mermaid-ready"));
+    </script>
   </body>
 </html>

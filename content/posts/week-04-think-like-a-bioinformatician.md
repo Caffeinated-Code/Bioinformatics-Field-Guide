@@ -90,13 +90,13 @@ Ask:
 
 ```mermaid
 flowchart LR
-  A["Biological question"] --> B["Assay"]
-  B --> C["Raw data"]
-  C --> D["Quality control"]
-  D --> E["Model"]
-  E --> F["Result"]
-  F --> G["Biological interpretation"]
-  G --> H["Validation or next experiment"]
+  question[Biological question] --> assay[Assay]
+  assay --> data[Raw data]
+  data --> qc[Quality control]
+  qc --> model[Model]
+  model --> result[Result]
+  result --> interpretation[Biological interpretation]
+  interpretation --> validation[Validation or next experiment]
 ```
 
 At each arrow, write down what could go wrong.

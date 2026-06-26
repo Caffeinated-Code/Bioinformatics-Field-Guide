@@ -50,12 +50,12 @@ Use Conda while learning. Use Docker when sharing or teaching. Use Git for anyth
 
 ```mermaid
 flowchart LR
-  A["Laptop"] --> B["Project folder"]
-  B --> C["Conda environment"]
-  C --> D["Docker image"]
-  D --> E["JupyterLab in browser"]
-  B --> F["VS Code + Ollama"]
-  F --> G["BioChatter demo"]
+  laptop[Laptop] --> project[Project folder]
+  project --> conda[Conda environment]
+  conda --> docker[Docker image]
+  docker --> jupyter[JupyterLab in browser]
+  project --> vscode[VS Code and Ollama]
+  vscode --> biochatter[BioChatter demo]
 ```
 
 If this feels like a lot, do it in stages:

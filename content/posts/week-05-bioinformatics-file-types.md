@@ -27,14 +27,14 @@ If you know what each file type represents, the workflow becomes much easier to 
 
 ```mermaid
 flowchart LR
-  A["FASTQ raw reads"] --> B["BAM aligned reads"]
-  B --> C["Feature counts"]
-  A --> D["Direct quantification"]
-  C --> E["Count matrix"]
-  D --> E
-  F["Metadata"] --> E
-  E --> G["Statistical results"]
-  G --> H["Biological interpretation"]
+  fastq[FASTQ raw reads] --> bam[BAM aligned reads]
+  bam --> counts[Feature counts]
+  fastq --> quant[Direct quantification]
+  counts --> matrix[Count matrix]
+  quant --> matrix
+  metadata[Metadata] --> matrix
+  matrix --> stats[Statistical results]
+  stats --> interpretation[Biological interpretation]
 ```
 
 The files change because the question changes:

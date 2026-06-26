@@ -41,15 +41,15 @@ It is powerful because biology often happens in specific cells, not averaged tis
 
 ```mermaid
 flowchart LR
-  A["Cells"] --> B["Barcoding"]
-  B --> C["Sequencing"]
-  C --> D["Count matrix"]
-  D --> E["QC"]
-  E --> F["Normalization"]
-  F --> G["Dimensionality reduction"]
-  G --> H["Clustering"]
-  H --> I["Annotation"]
-  I --> J["Biological interpretation"]
+  cells[Cells] --> barcoding[Barcoding]
+  barcoding --> sequencing[Sequencing]
+  sequencing --> matrix[Count matrix]
+  matrix --> qc[QC]
+  qc --> normalization[Normalization]
+  normalization --> reduction[Dimensionality reduction]
+  reduction --> clustering[Clustering]
+  clustering --> annotation[Annotation]
+  annotation --> interpretation[Biological interpretation]
 ```
 
 Each step contains choices that can change the result.

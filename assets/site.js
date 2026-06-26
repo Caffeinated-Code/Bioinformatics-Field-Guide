@@ -39,7 +39,7 @@ updateProgress();
 
 document.querySelectorAll("pre").forEach((pre) => {
   const code = pre.querySelector("code");
-  if (!code || code.className.includes("mermaid")) return;
+  if (!code || pre.classList.contains("mermaid") || code.className.includes("mermaid")) return;
 
   const button = document.createElement("button");
   button.className = "copy-code";
@@ -56,7 +56,7 @@ document.querySelectorAll("pre").forEach((pre) => {
 });
 
 function prepareMermaid() {
-  document.querySelectorAll("pre > code.language-mermaid").forEach((code) => {
+  document.querySelectorAll("pre.mermaid > code, pre > code.language-mermaid").forEach((code) => {
     const wrapper = document.createElement("div");
     wrapper.className = "mermaid";
     wrapper.textContent = code.textContent;

@@ -21,15 +21,15 @@ That limitation does not make RNA-seq weak. It makes interpretation important.
 
 ```mermaid
 flowchart LR
-  A["Samples"] --> B["RNA extraction"]
-  B --> C["Sequencing"]
-  C --> D["FASTQ"]
-  D --> E["QC"]
-  E --> F["Alignment or quantification"]
-  F --> G["Count matrix"]
-  H["Metadata"] --> G
-  G --> I["Differential expression"]
-  I --> J["Biological interpretation"]
+  samples[Samples] --> extraction[RNA extraction]
+  extraction --> sequencing[Sequencing]
+  sequencing --> fastq[FASTQ]
+  fastq --> qc[QC]
+  qc --> quant[Alignment or quantification]
+  quant --> matrix[Count matrix]
+  metadata[Metadata] --> matrix
+  matrix --> de[Differential expression]
+  de --> interpretation[Biological interpretation]
 ```
 
 Every arrow is a place where bias can enter.
