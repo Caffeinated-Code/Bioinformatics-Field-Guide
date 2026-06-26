@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Why everyone uses it and how people misread it"
+    />
+    <meta property="og:title" content="PCA in Bioinformatics" />
+    <meta
+      property="og:description"
+      content="Why everyone uses it and how people misread it"
+    />
+    <meta property="og:type" content="article" />
+    <title>PCA in Bioinformatics | Bioinformatics Field Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/site.css" />
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      window.mermaid = mermaid;
+      window.dispatchEvent(new Event("mermaid-ready"));
+    </script>
+  </head>
+  <body class="article-page">
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <header class="site-header" id="site-header">
+      <nav class="nav container" aria-label="Primary navigation">
+        <a href="index.html" class="nav__brand">Bioinformatics Field Guide</a>
+        <div class="nav__links" id="nav-links">
+          <a href="index.html#guides">Guides</a>
+          <a href="index.html#resources">Resources</a>
+          <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+        <div class="nav__actions">
+          <button class="icon-button" id="theme-toggle" aria-label="Toggle color theme">
+            <i class="ri-moon-line" aria-hidden="true"></i>
+          </button>
+          <button class="icon-button nav__toggle" id="nav-toggle" aria-label="Open menu">
+            <i class="ri-menu-line" aria-hidden="true"></i>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="article-hero">
+        <div class="container article-hero__grid">
+          <div>
+            <a class="back-link" href="index.html"><i class="ri-arrow-left-line" aria-hidden="true"></i> Field Guide home</a>
+            <p class="eyebrow">Week 9 · 7 minutes</p>
+            <h1>PCA in Bioinformatics</h1>
+                        <p class="article-hero__subtitle">Why everyone
+uses it and how people misread it</p>
+                        <div class="article-meta">
+              <span><i class="ri-user-smile-line" aria-hidden="true"></i> Beginner friendly</span>
+              <span><i class="ri-terminal-box-line" aria-hidden="true"></i> Tested commands</span>
+              <span><i class="ri-git-repository-line" aria-hidden="true"></i> Reproducible assets</span>
+            </div>
+          </div>
+          <aside class="article-card">
+            <span class="article-card__label">Original asset</span>
+            <p>Visual PCA notebook</p>
+            <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+              View repository <i class="ri-external-link-line" aria-hidden="true"></i>
+            </a>
+          </aside>
+        </div>
+      </section>
+
+      <div class="container article-layout">
+        <aside class="toc" aria-label="Table of contents">
+          <p class="toc__title">On this page</p>
+          <ul>
+          <li><a href="#pca-in-bioinformatics"
+          id="toc-pca-in-bioinformatics">PCA in Bioinformatics</a>
+          <ul>
+          <li><a href="#why-pca-shows-up-everywhere"
+          id="toc-why-pca-shows-up-everywhere">Why PCA Shows Up
+          Everywhere</a></li>
+          <li><a href="#the-plain-english-version"
+          id="toc-the-plain-english-version">The Plain-English
+          Version</a></li>
+          <li><a href="#what-pca-can-help-with"
+          id="toc-what-pca-can-help-with">What PCA Can Help
+          With</a></li>
+          <li><a href="#what-pca-cannot-prove"
+          id="toc-what-pca-cannot-prove">What PCA Cannot Prove</a></li>
+          <li><a href="#the-most-important-question"
+          id="toc-the-most-important-question">The Most Important
+          Question</a></li>
+          <li><a href="#why-the-same-data-can-give-different-pca-plots"
+          id="toc-why-the-same-data-can-give-different-pca-plots">Why
+          The Same Data Can Give Different PCA Plots</a></li>
+          <li><a href="#a-mini-interpretation-example"
+          id="toc-a-mini-interpretation-example">A Mini Interpretation
+          Example</a></li>
+          <li><a href="#common-mistakes" id="toc-common-mistakes">Common
+          Mistakes</a></li>
+          <li><a href="#save-this-pca-review-checklist"
+          id="toc-save-this-pca-review-checklist">Save This: PCA Review
+          Checklist</a></li>
+          <li><a href="#what-to-watch-next"
+          id="toc-what-to-watch-next">What To Watch Next</a></li>
+          <li><a href="#credits-and-references"
+          id="toc-credits-and-references">Credits and
+          References</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+
+        <article class="article-content">
+          <h1 id="pca-in-bioinformatics">PCA in Bioinformatics</h1>
+          <p><strong>Takeaway:</strong> PCA summarizes major patterns in
+          high-dimensional data, but it does not tell you automatically
+          whether those patterns are biological, technical, or
+          accidental.</p>
+          <h2 id="why-pca-shows-up-everywhere">Why PCA Shows Up
+          Everywhere</h2>
+          <p>Bioinformatics datasets often have thousands of
+          features:</p>
+          <ul>
+          <li>genes</li>
+          <li>variants</li>
+          <li>peaks</li>
+          <li>proteins</li>
+          <li>cells</li>
+          </ul>
+          <p>PCA, or principal component analysis, compresses many
+          features into a few axes that explain large sources of
+          variation.</p>
+          <h2 id="the-plain-english-version">The Plain-English
+          Version</h2>
+          <p>Imagine each sample has 20,000 gene expression values. You
+          cannot plot 20,000 dimensions.</p>
+          <p>PCA finds new axes that summarize the strongest patterns
+          across those genes.</p>
+          <ul>
+          <li><strong>PC1</strong> explains the largest amount of
+          variation.</li>
+          <li><strong>PC2</strong> explains the next largest amount,
+          separate from PC1.</li>
+          </ul>
+          <p>The plot is a map of variation, not a map of truth.</p>
+          <h2 id="what-pca-can-help-with">What PCA Can Help With</h2>
+          <p>PCA can reveal:</p>
+          <ul>
+          <li>treatment separation</li>
+          <li>batch effects</li>
+          <li>outlier samples</li>
+          <li>tissue differences</li>
+          <li>sample swaps</li>
+          <li>strong technical artifacts</li>
+          </ul>
+          <p>It is often used early because it gives a fast
+          overview.</p>
+          <h2 id="what-pca-cannot-prove">What PCA Cannot Prove</h2>
+          <p>PCA cannot prove:</p>
+          <ul>
+          <li>causality</li>
+          <li>mechanism</li>
+          <li>cell identity by itself</li>
+          <li>clinical relevance</li>
+          <li>that visual groups are real biological clusters</li>
+          </ul>
+          <p>It is an exploratory tool.</p>
+          <h2 id="the-most-important-question">The Most Important
+          Question</h2>
+          <p>When you see a PCA plot, ask:</p>
+          <pre class="text"><code>What explains the separation?</code></pre>
+          <p>Then check metadata:</p>
+          <ul>
+          <li>condition</li>
+          <li>batch</li>
+          <li>donor</li>
+          <li>sex</li>
+          <li>tissue</li>
+          <li>time point</li>
+          <li>sequencing depth</li>
+          <li>quality metrics</li>
+          </ul>
+          <p>If PC1 separates by batch, your treatment result may be in
+          trouble.</p>
+          <h2 id="why-the-same-data-can-give-different-pca-plots">Why
+          The Same Data Can Give Different PCA Plots</h2>
+          <p>PCA changes when you change:</p>
+          <ul>
+          <li>normalization</li>
+          <li>transformation</li>
+          <li>feature selection</li>
+          <li>scaling</li>
+          <li>outlier handling</li>
+          <li>batch correction</li>
+          </ul>
+          <p>This is not a flaw in PCA. It is a reminder that
+          preprocessing is part of the analysis.</p>
+          <h2 id="a-mini-interpretation-example">A Mini Interpretation
+          Example</h2>
+          <table>
+          <thead>
+          <tr>
+          <th>Pattern</th>
+          <th>First question</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>disease and control separate</td>
+          <td>Is disease confounded with batch or tissue quality?</td>
+          </tr>
+          <tr>
+          <td>one sample sits far away</td>
+          <td>Is it a biological outlier or QC failure?</td>
+          </tr>
+          <tr>
+          <td>PC1 tracks sequencing depth</td>
+          <td>Was normalization adequate?</td>
+          </tr>
+          <tr>
+          <td>cell types separate strongly</td>
+          <td>Is this expected from marker biology?</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>The plot starts the investigation. It does not end it.</p>
+          <h2 id="common-mistakes">Common Mistakes</h2>
+          <ul>
+          <li>Calling groups "clusters" just because points are near
+          each other.</li>
+          <li>Forgetting that transformation changes PCA.</li>
+          <li>Ignoring batch labels.</li>
+          <li>Overinterpreting PC1 and PC2 while other PCs matter.</li>
+          <li>Using PCA as final evidence.</li>
+          <li>Forgetting that outliers can dominate.</li>
+          <li>Reading UMAP-style intuition into PCA axes.</li>
+          </ul>
+          <h2 id="save-this-pca-review-checklist">Save This: PCA Review
+          Checklist</h2>
+          <table>
+          <thead>
+          <tr>
+          <th>Check</th>
+          <th>Question</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>input</td>
+          <td>What matrix was used?</td>
+          </tr>
+          <tr>
+          <td>transformation</td>
+          <td>Were counts normalized or transformed?</td>
+          </tr>
+          <tr>
+          <td>features</td>
+          <td>Which genes/features were included?</td>
+          </tr>
+          <tr>
+          <td>labels</td>
+          <td>Are condition, batch, donor, and QC shown?</td>
+          </tr>
+          <tr>
+          <td>variance</td>
+          <td>How much variance do PC1 and PC2 explain?</td>
+          </tr>
+          <tr>
+          <td>outliers</td>
+          <td>Are individual samples driving the plot?</td>
+          </tr>
+          <tr>
+          <td>interpretation</td>
+          <td>Is the claim exploratory or confirmatory?</td>
+          </tr>
+          </tbody>
+          </table>
+          <h2 id="what-to-watch-next">What To Watch Next</h2>
+          <p>Experts debate preprocessing choices before PCA, especially
+          for sparse, compositional, or single-cell data. The best
+          practice is not to hide those choices. Show them, justify
+          them, and avoid making claims the plot cannot support.</p>
+          <h2 id="credits-and-references">Credits and References</h2>
+          <ul>
+          <li>scikit-learn PCA documentation: <a
+          href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html">https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html</a></li>
+          <li>Bioconductor RNA-seq workflow: <a
+          href="https://www.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html">https://www.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html</a></li>
+          <li>Scanpy documentation: <a
+          href="https://scanpy.readthedocs.io/">https://scanpy.readthedocs.io/</a></li>
+          <li>Seurat PBMC tutorial: <a
+          href="https://satijalab.org/seurat/articles/pbmc3k_tutorial">https://satijalab.org/seurat/articles/pbmc3k_tutorial</a></li>
+          </ul>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer__grid">
+        <div>
+          <strong>Bioinformatics Field Guide</strong>
+          <p>Practical bioinformatics guides with reproducible examples.</p>
+        </div>
+        <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+          GitHub repository <i class="ri-external-link-line" aria-hidden="true"></i>
+        </a>
+      </div>
+    </footer>
+
+    <script src="assets/site.js"></script>
+  </body>
+</html>

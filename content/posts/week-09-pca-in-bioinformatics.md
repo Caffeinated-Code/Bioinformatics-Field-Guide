@@ -9,15 +9,12 @@ asset: "Visual PCA notebook"
 
 # PCA in Bioinformatics
 
-**Takeaway:** PCA is a way to summarize major patterns in high-dimensional data, but it does not tell you automatically whether those patterns are biological, technical, or accidental.
-
-## Prerequisites
-
-Read Week 4 for analysis thinking and Week 7 for RNA-seq context.
+**Takeaway:** PCA summarizes major patterns in high-dimensional data, but it does not tell you automatically whether those patterns are biological, technical, or accidental.
 
 ## Why PCA Shows Up Everywhere
 
 Bioinformatics datasets often have thousands of features:
+
 - genes
 - variants
 - peaks
@@ -28,13 +25,19 @@ PCA, or principal component analysis, compresses many features into a few axes t
 
 ## The Plain-English Version
 
-Imagine each sample has 20,000 gene expression values. You cannot plot 20,000 dimensions. PCA finds new axes that summarize the strongest patterns across those genes.
+Imagine each sample has 20,000 gene expression values. You cannot plot 20,000 dimensions.
 
-The first principal component, PC1, explains the largest amount of variation. PC2 explains the next largest amount, under the constraint that it is separate from PC1.
+PCA finds new axes that summarize the strongest patterns across those genes.
+
+- **PC1** explains the largest amount of variation.
+- **PC2** explains the next largest amount, separate from PC1.
+
+The plot is a map of variation, not a map of truth.
 
 ## What PCA Can Help With
 
 PCA can reveal:
+
 - treatment separation
 - batch effects
 - outlier samples
@@ -42,16 +45,17 @@ PCA can reveal:
 - sample swaps
 - strong technical artifacts
 
-It is often used early in analysis because it gives a fast overview.
+It is often used early because it gives a fast overview.
 
 ## What PCA Cannot Prove
 
 PCA cannot prove:
+
 - causality
 - mechanism
 - cell identity by itself
 - clinical relevance
-- that clusters are real biological groups
+- that visual groups are real biological clusters
 
 It is an exploratory tool.
 
@@ -64,8 +68,10 @@ What explains the separation?
 ```
 
 Then check metadata:
+
 - condition
 - batch
+- donor
 - sex
 - tissue
 - time point
@@ -74,31 +80,55 @@ Then check metadata:
 
 If PC1 separates by batch, your treatment result may be in trouble.
 
+## Why The Same Data Can Give Different PCA Plots
+
+PCA changes when you change:
+
+- normalization
+- transformation
+- feature selection
+- scaling
+- outlier handling
+- batch correction
+
+This is not a flaw in PCA. It is a reminder that preprocessing is part of the analysis.
+
+## A Mini Interpretation Example
+
+| Pattern | First question |
+|---|---|
+| disease and control separate | Is disease confounded with batch or tissue quality? |
+| one sample sits far away | Is it a biological outlier or QC failure? |
+| PC1 tracks sequencing depth | Was normalization adequate? |
+| cell types separate strongly | Is this expected from marker biology? |
+
+The plot starts the investigation. It does not end it.
+
 ## Common Mistakes
 
 - Calling groups "clusters" just because points are near each other.
-- Forgetting that scaling and transformation change PCA.
+- Forgetting that transformation changes PCA.
 - Ignoring batch labels.
 - Overinterpreting PC1 and PC2 while other PCs matter.
 - Using PCA as final evidence.
 - Forgetting that outliers can dominate.
+- Reading UMAP-style intuition into PCA axes.
 
-## What Experts Still Debate
+## Save This: PCA Review Checklist
 
-Experts debate preprocessing choices before PCA, especially normalization, transformation, feature selection, scaling, and whether PCA is appropriate for sparse or compositional data.
+| Check | Question |
+|---|---|
+| input | What matrix was used? |
+| transformation | Were counts normalized or transformed? |
+| features | Which genes/features were included? |
+| labels | Are condition, batch, donor, and QC shown? |
+| variance | How much variance do PC1 and PC2 explain? |
+| outliers | Are individual samples driving the plot? |
+| interpretation | Is the claim exploratory or confirmatory? |
 
-## Research Gap
+## What To Watch Next
 
-A useful public resource would show the same dataset under different PCA preprocessing choices and explain why the plot changes.
-
-## Original Asset
-
-Create a visual notebook that:
-- simulates gene expression data
-- adds a biological signal
-- adds a batch effect
-- runs PCA
-- shows how interpretation changes
+Experts debate preprocessing choices before PCA, especially for sparse, compositional, or single-cell data. The best practice is not to hide those choices. Show them, justify them, and avoid making claims the plot cannot support.
 
 ## Credits and References
 
@@ -106,9 +136,3 @@ Create a visual notebook that:
 - Bioconductor RNA-seq workflow: https://www.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html
 - Scanpy documentation: https://scanpy.readthedocs.io/
 - Seurat PBMC tutorial: https://satijalab.org/seurat/articles/pbmc3k_tutorial
-
-## Expert Review Checklist
-
-- Build the notebook before publication.
-- Add an annotated PCA figure.
-- Include a caution about sparse single-cell matrices.

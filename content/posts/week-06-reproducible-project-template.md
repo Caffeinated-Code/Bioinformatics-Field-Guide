@@ -11,15 +11,13 @@ asset: "GitHub-ready project template"
 
 **Takeaway:** A reproducible bioinformatics project is one where another person can find the data, understand the analysis, recreate the environment, rerun the code, and check the results.
 
-## Prerequisites
+## Why Structure Matters
 
-Read Week 1 for setup, Week 2 for languages, and Week 5 for file types.
+Bioinformatics projects fail quietly when files are scattered, package versions are forgotten, and important decisions live only in notebook history.
 
-## Why Project Structure Matters
+A good project structure reduces memory load. It also makes the work easier to review, reuse, hand off, and defend.
 
-Bioinformatics projects fail quietly when files are scattered, package versions are forgotten, and analysis steps live only in notebook history. A good structure reduces memory load and makes review easier.
-
-## A Simple Template
+## The Simple Template
 
 ```text
 project-name/
@@ -37,20 +35,22 @@ project-name/
   docs/
 ```
 
-This structure works for small projects and can grow into a pipeline later.
+This structure works for small projects and can grow into a workflow later.
 
 ## What Goes Where
 
 | Folder | Purpose |
 |---|---|
 | `data/raw/` | Original input data, never edited by hand |
-| `data/processed/` | Cleaned or transformed data |
-| `metadata/` | Sample sheets and data dictionaries |
-| `notebooks/` | Exploration and explanation |
+| `data/processed/` | Cleaned, filtered, or transformed data |
+| `metadata/` | Sample sheets, data dictionaries, covariates |
+| `notebooks/` | Exploration, explanation, and figures |
 | `scripts/` | Reusable code |
 | `results/` | Tables produced by analysis |
 | `figures/` | Plots and diagrams |
-| `docs/` | Notes, methods, and decisions |
+| `docs/` | Methods notes, assumptions, decisions |
+
+The rule: raw data stays raw. Every transformation should be reproducible.
 
 ## The README Should Answer Five Questions
 
@@ -60,7 +60,7 @@ This structure works for small projects and can grow into a pipeline later.
 4. How do I run the analysis?
 5. Where are the main results?
 
-If the README cannot answer those questions, the project is not ready for someone else.
+If the README cannot answer those questions, the project is not ready for another person.
 
 ## Environment Files
 
@@ -83,48 +83,73 @@ This is not perfect reproducibility, but it is much better than "it worked on my
 
 ## Git Without Overcomplication
 
-Use Git for code, documentation, and small metadata files. Do not commit large raw sequencing files unless there is a specific reason and the repository is designed for it.
+Use Git for code, documentation, environment files, small example data, and figures when useful.
 
-Commit:
+Usually commit:
+
 - scripts
 - notebooks
 - README files
 - environment files
 - small example data
-- figures when useful
+- small result tables
 
-Do not usually commit:
+Usually do not commit:
+
 - huge FASTQ or BAM files
-- private human data
+- protected human data
 - temporary files
 - credentials
+- raw collaborator data
+
+## A Useful `.gitignore`
+
+```text
+.DS_Store
+__pycache__/
+.ipynb_checkpoints/
+data/raw/
+data/large/
+*.bam
+*.fastq
+*.fastq.gz
+*.vcf.gz
+*.log
+.env
+```
+
+This keeps accidental clutter and sensitive files out of the repo.
+
+## Save This: Minimum Reproducibility Checklist
+
+| Check | Why it matters |
+|---|---|
+| README explains the question | prevents tool-first analysis |
+| raw data is separated | protects original input |
+| metadata is versioned | preserves sample meaning |
+| environment is recorded | makes setup inspectable |
+| scripts are reusable | avoids notebook-only logic |
+| results are labeled | prevents mystery outputs |
+| assumptions are written down | helps reviewers trust the work |
 
 ## Common Mistakes
 
 - Keeping final results only in a notebook.
-- Using file names like `final_final_v3.csv`.
+- Naming files `final_final_v3.csv`.
 - Forgetting sample metadata.
 - Committing private or protected data.
 - Reusing the same environment for every project.
 - Having no record of why parameters were chosen.
 
-## What Experts Still Debate
+## What To Watch Next
 
-Some groups prefer notebooks, others prefer scripts, and production teams prefer workflow systems. The practical answer is layered: notebooks for exploration, scripts for repeated logic, workflows for repeated execution.
+Notebooks, scripts, and workflows all have a place. A practical pattern is:
 
-## Research Gap
+```text
+notebooks for exploration -> scripts for repeated logic -> workflows for repeated execution
+```
 
-There is a need for more discipline-specific project templates. RNA-seq, single-cell, variant analysis, and spatial omics each need slightly different metadata fields, QC reports, and output conventions.
-
-## Original Asset
-
-Release a GitHub-ready starter template with:
-- README scaffold.
-- `environment.yml`.
-- `.gitignore`.
-- folder structure.
-- example sample sheet.
-- minimal Python and R sanity-check scripts.
+Do not make the project more complex than the question requires. Do make it clear enough that another person can inspect it.
 
 ## Credits and References
 
@@ -133,9 +158,4 @@ Release a GitHub-ready starter template with:
 - Bioconda documentation: https://bioconda.github.io/
 - Nextflow: https://www.nextflow.io/
 - Snakemake: https://snakemake.readthedocs.io/
-
-## Expert Review Checklist
-
-- Create the actual template before publication.
-- Test setup from a clean folder.
-- Add data privacy warning.
+- The Turing Way: https://the-turing-way.netlify.app/

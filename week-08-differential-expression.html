@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A practical interpretation guide for RNA-seq results"
+    />
+    <meta property="og:title" content="Differential Expression: What It
+Tells You and What It Does Not" />
+    <meta
+      property="og:description"
+      content="A practical interpretation guide for RNA-seq results"
+    />
+    <meta property="og:type" content="article" />
+    <title>Differential Expression: What It Tells You and What It Does
+Not | Bioinformatics Field Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/site.css" />
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      window.mermaid = mermaid;
+      window.dispatchEvent(new Event("mermaid-ready"));
+    </script>
+  </head>
+  <body class="article-page">
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <header class="site-header" id="site-header">
+      <nav class="nav container" aria-label="Primary navigation">
+        <a href="index.html" class="nav__brand">Bioinformatics Field Guide</a>
+        <div class="nav__links" id="nav-links">
+          <a href="index.html#guides">Guides</a>
+          <a href="index.html#resources">Resources</a>
+          <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+        <div class="nav__actions">
+          <button class="icon-button" id="theme-toggle" aria-label="Toggle color theme">
+            <i class="ri-moon-line" aria-hidden="true"></i>
+          </button>
+          <button class="icon-button nav__toggle" id="nav-toggle" aria-label="Open menu">
+            <i class="ri-menu-line" aria-hidden="true"></i>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="article-hero">
+        <div class="container article-hero__grid">
+          <div>
+            <a class="back-link" href="index.html"><i class="ri-arrow-left-line" aria-hidden="true"></i> Field Guide home</a>
+            <p class="eyebrow">Week 8 · 7 minutes</p>
+            <h1>Differential Expression: What It Tells You and What It
+Does Not</h1>
+                        <p class="article-hero__subtitle">A practical
+interpretation guide for RNA-seq results</p>
+                        <div class="article-meta">
+              <span><i class="ri-user-smile-line" aria-hidden="true"></i> Beginner friendly</span>
+              <span><i class="ri-terminal-box-line" aria-hidden="true"></i> Tested commands</span>
+              <span><i class="ri-git-repository-line" aria-hidden="true"></i> Reproducible assets</span>
+            </div>
+          </div>
+          <aside class="article-card">
+            <span class="article-card__label">Original asset</span>
+            <p>Differential expression interpretation rubric</p>
+            <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+              View repository <i class="ri-external-link-line" aria-hidden="true"></i>
+            </a>
+          </aside>
+        </div>
+      </section>
+
+      <div class="container article-layout">
+        <aside class="toc" aria-label="Table of contents">
+          <p class="toc__title">On this page</p>
+          <ul>
+          <li><a
+          href="#differential-expression-what-it-tells-you-and-what-it-does-not"
+          id="toc-differential-expression-what-it-tells-you-and-what-it-does-not">Differential
+          Expression: What It Tells You and What It Does Not</a>
+          <ul>
+          <li><a href="#what-the-test-actually-asks"
+          id="toc-what-the-test-actually-asks">What The Test Actually
+          Asks</a></li>
+          <li><a href="#the-columns-people-misread"
+          id="toc-the-columns-people-misread">The Columns People
+          Misread</a></li>
+          <li><a href="#a-better-interpretation-rubric"
+          id="toc-a-better-interpretation-rubric">A Better
+          Interpretation Rubric</a></li>
+          <li><a href="#volcano-plots-are-not-conclusions"
+          id="toc-volcano-plots-are-not-conclusions">Volcano Plots Are
+          Not Conclusions</a></li>
+          <li><a href="#a-tiny-example" id="toc-a-tiny-example">A Tiny
+          Example</a></li>
+          <li><a href="#design-formula-matters"
+          id="toc-design-formula-matters">Design Formula
+          Matters</a></li>
+          <li><a href="#common-mistakes" id="toc-common-mistakes">Common
+          Mistakes</a></li>
+          <li><a href="#save-this-de-result-triage"
+          id="toc-save-this-de-result-triage">Save This: DE Result
+          Triage</a></li>
+          <li><a href="#what-to-watch-next"
+          id="toc-what-to-watch-next">What To Watch Next</a></li>
+          <li><a href="#credits-and-references"
+          id="toc-credits-and-references">Credits and
+          References</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+
+        <article class="article-content">
+          <h1
+          id="differential-expression-what-it-tells-you-and-what-it-does-not">Differential
+          Expression: What It Tells You and What It Does Not</h1>
+          <p><strong>Takeaway:</strong> Differential expression can tell
+          you which genes changed between conditions, but it cannot by
+          itself prove mechanism, causality, or clinical relevance.</p>
+          <h2 id="what-the-test-actually-asks">What The Test Actually
+          Asks</h2>
+          <p>Differential expression asks whether observed gene counts
+          differ between groups more than expected under a statistical
+          model.</p>
+          <p>It depends on:</p>
+          <ul>
+          <li>count data</li>
+          <li>sample metadata</li>
+          <li>normalization</li>
+          <li>dispersion estimation</li>
+          <li>study design</li>
+          <li>multiple-testing correction</li>
+          </ul>
+          <p>The result is model-based evidence. It is not automatic
+          biology.</p>
+          <h2 id="the-columns-people-misread">The Columns People
+          Misread</h2>
+          <table>
+          <thead>
+          <tr>
+          <th>Column</th>
+          <th>Meaning</th>
+          <th>Common mistake</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>log fold change</td>
+          <td>size and direction of change</td>
+          <td>treating tiny effects as important</td>
+          </tr>
+          <tr>
+          <td>p-value</td>
+          <td>evidence under the model</td>
+          <td>ignoring multiple testing</td>
+          </tr>
+          <tr>
+          <td>adjusted p-value</td>
+          <td>corrected evidence across many tests</td>
+          <td>treating it as biological truth</td>
+          </tr>
+          <tr>
+          <td>base mean</td>
+          <td>average expression level</td>
+          <td>ignoring low-expression instability</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>The most useful genes are often not just statistically
+          significant. They are statistically supported, biologically
+          plausible, and relevant to the question.</p>
+          <h2 id="a-better-interpretation-rubric">A Better
+          Interpretation Rubric</h2>
+          <p>For each result, ask:</p>
+          <ol type="1">
+          <li>Is the gene expressed enough to trust the estimate?</li>
+          <li>Is the fold change large enough to matter?</li>
+          <li>Is the adjusted p-value convincing?</li>
+          <li>Is the direction biologically plausible?</li>
+          <li>Is the signal consistent across samples?</li>
+          <li>Is the result robust to reasonable preprocessing
+          choices?</li>
+          <li>Does independent evidence support it?</li>
+          </ol>
+          <h2 id="volcano-plots-are-not-conclusions">Volcano Plots Are
+          Not Conclusions</h2>
+          <p>Volcano plots are useful summaries, but they can encourage
+          shallow interpretation. A labeled point on a volcano plot is a
+          hypothesis, not an answer.</p>
+          <p>Always inspect:</p>
+          <ul>
+          <li>normalized counts</li>
+          <li>sample-level plots</li>
+          <li>batch structure</li>
+          <li>pathway context</li>
+          <li>known markers or controls</li>
+          <li>outliers</li>
+          </ul>
+          <h2 id="a-tiny-example">A Tiny Example</h2>
+          <p>Suppose <code>GENE1</code> has:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>gene</th>
+          <th style="text-align: right;">log2 fold change</th>
+          <th style="text-align: right;">adjusted p-value</th>
+          <th style="text-align: right;">base mean</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>GENE1</td>
+          <td style="text-align: right;">0.18</td>
+          <td style="text-align: right;">0.00001</td>
+          <td style="text-align: right;">900</td>
+          </tr>
+          <tr>
+          <td>GENE2</td>
+          <td style="text-align: right;">2.4</td>
+          <td style="text-align: right;">0.04</td>
+          <td style="text-align: right;">6</td>
+          </tr>
+          <tr>
+          <td>GENE3</td>
+          <td style="text-align: right;">1.2</td>
+          <td style="text-align: right;">0.003</td>
+          <td style="text-align: right;">180</td>
+          </tr>
+          </tbody>
+          </table>
+          <p><code>GENE1</code> is statistically strong but may have a
+          small effect. <code>GENE2</code> has a large effect but low
+          expression, so the estimate may be unstable.
+          <code>GENE3</code> may be the more interesting first follow-up
+          if the biology fits.</p>
+          <p>That is the point: interpretation needs more than one
+          column.</p>
+          <h2 id="design-formula-matters">Design Formula Matters</h2>
+          <p>A design formula tells the model what comparison to test
+          and what covariates to account for.</p>
+          <p>Examples:</p>
+          <div class="sourceCode" id="cb1"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sc">~</span> condition</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="sc">~</span> batch <span class="sc">+</span> condition</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="sc">~</span> donor <span class="sc">+</span> condition</span></code></pre></div>
+          <p>If batch is confounded with condition, no formula can
+          magically create a clean experiment. If donor pairing matters
+          and is ignored, the result can be misleading.</p>
+          <h2 id="common-mistakes">Common Mistakes</h2>
+          <ul>
+          <li>Ranking genes by p-value only.</li>
+          <li>Ignoring effect size.</li>
+          <li>Testing too many contrasts without a plan.</li>
+          <li>Using the wrong design formula.</li>
+          <li>Not accounting for paired samples.</li>
+          <li>Treating adjusted p-value cutoffs as universal laws.</li>
+          <li>Overinterpreting pathway enrichment.</li>
+          <li>Making clinical claims from exploratory results.</li>
+          </ul>
+          <h2 id="save-this-de-result-triage">Save This: DE Result
+          Triage</h2>
+          <table>
+          <thead>
+          <tr>
+          <th>Check</th>
+          <th>Good sign</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>expression</td>
+          <td>not driven by near-zero counts</td>
+          </tr>
+          <tr>
+          <td>effect size</td>
+          <td>large enough to matter biologically</td>
+          </tr>
+          <tr>
+          <td>adjusted p-value</td>
+          <td>survives multiple-testing correction</td>
+          </tr>
+          <tr>
+          <td>sample consistency</td>
+          <td>not driven by one outlier</td>
+          </tr>
+          <tr>
+          <td>design</td>
+          <td>covariates match the experiment</td>
+          </tr>
+          <tr>
+          <td>biology</td>
+          <td>direction fits known or testable biology</td>
+          </tr>
+          <tr>
+          <td>validation</td>
+          <td>independent data or experiment can support it</td>
+          </tr>
+          </tbody>
+          </table>
+          <h2 id="what-to-watch-next">What To Watch Next</h2>
+          <p>Experts still debate shrinkage, filtering, complex designs,
+          pseudobulk single-cell differential expression, and when
+          pathway-level interpretation should be primary or secondary. A
+          careful analyst treats differential expression as a
+          prioritized hypothesis list, not as final proof.</p>
+          <h2 id="credits-and-references">Credits and References</h2>
+          <ul>
+          <li>DESeq2: <a
+          href="https://bioconductor.org/packages/release/bioc/html/DESeq2.html">https://bioconductor.org/packages/release/bioc/html/DESeq2.html</a></li>
+          <li>DESeq2 paper: <a
+          href="https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8">https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8</a></li>
+          <li>edgeR: <a
+          href="https://bioconductor.org/packages/release/bioc/html/edgeR.html">https://bioconductor.org/packages/release/bioc/html/edgeR.html</a></li>
+          <li>limma: <a
+          href="https://bioconductor.org/packages/release/bioc/html/limma.html">https://bioconductor.org/packages/release/bioc/html/limma.html</a></li>
+          <li>Bioconductor RNA-seq workflow: <a
+          href="https://www.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html">https://www.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html</a></li>
+          </ul>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer__grid">
+        <div>
+          <strong>Bioinformatics Field Guide</strong>
+          <p>Practical bioinformatics guides with reproducible examples.</p>
+        </div>
+        <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+          GitHub repository <i class="ri-external-link-line" aria-hidden="true"></i>
+        </a>
+      </div>
+    </footer>
+
+    <script src="assets/site.js"></script>
+  </body>
+</html>

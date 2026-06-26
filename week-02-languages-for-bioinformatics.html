@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Python, R, Bash, SQL, and how to choose without getting
+stuck"
+    />
+    <meta property="og:title" content="What Languages Should a
+Bioinformatician Know?" />
+    <meta
+      property="og:description"
+      content="Python, R, Bash, SQL, and how to choose without getting
+stuck"
+    />
+    <meta property="og:type" content="article" />
+    <title>What Languages Should a Bioinformatician
+Know? | Bioinformatics Field Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/site.css" />
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      window.mermaid = mermaid;
+      window.dispatchEvent(new Event("mermaid-ready"));
+    </script>
+  </head>
+  <body class="article-page">
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <header class="site-header" id="site-header">
+      <nav class="nav container" aria-label="Primary navigation">
+        <a href="index.html" class="nav__brand">Bioinformatics Field Guide</a>
+        <div class="nav__links" id="nav-links">
+          <a href="index.html#guides">Guides</a>
+          <a href="index.html#resources">Resources</a>
+          <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+        <div class="nav__actions">
+          <button class="icon-button" id="theme-toggle" aria-label="Toggle color theme">
+            <i class="ri-moon-line" aria-hidden="true"></i>
+          </button>
+          <button class="icon-button nav__toggle" id="nav-toggle" aria-label="Open menu">
+            <i class="ri-menu-line" aria-hidden="true"></i>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="article-hero">
+        <div class="container article-hero__grid">
+          <div>
+            <a class="back-link" href="index.html"><i class="ri-arrow-left-line" aria-hidden="true"></i> Field Guide home</a>
+            <p class="eyebrow">Week 2 · 7 minutes</p>
+            <h1>What Languages Should a Bioinformatician Know?</h1>
+                        <p class="article-hero__subtitle">Python, R,
+Bash, SQL, and how to choose without getting stuck</p>
+                        <div class="article-meta">
+              <span><i class="ri-user-smile-line" aria-hidden="true"></i> Beginner friendly</span>
+              <span><i class="ri-terminal-box-line" aria-hidden="true"></i> Tested commands</span>
+              <span><i class="ri-git-repository-line" aria-hidden="true"></i> Reproducible assets</span>
+            </div>
+          </div>
+          <aside class="article-card">
+            <span class="article-card__label">Original asset</span>
+            <p>Bioinformatics language decision map</p>
+            <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+              View repository <i class="ri-external-link-line" aria-hidden="true"></i>
+            </a>
+          </aside>
+        </div>
+      </section>
+
+      <div class="container article-layout">
+        <aside class="toc" aria-label="Table of contents">
+          <p class="toc__title">On this page</p>
+          <ul>
+          <li><a href="#what-languages-should-a-bioinformatician-know"
+          id="toc-what-languages-should-a-bioinformatician-know">What
+          Languages Should a Bioinformatician Know?</a>
+          <ul>
+          <li><a href="#start-with-the-job-not-the-language"
+          id="toc-start-with-the-job-not-the-language">Start With The
+          Job, Not The Language</a></li>
+          <li><a href="#the-beginner-order-that-works"
+          id="toc-the-beginner-order-that-works">The Beginner Order That
+          Works</a></li>
+          <li><a href="#bash-the-glue-layer"
+          id="toc-bash-the-glue-layer">Bash: The Glue Layer</a></li>
+          <li><a href="#python-the-builder"
+          id="toc-python-the-builder">Python: The Builder</a></li>
+          <li><a href="#r-the-statistical-genomics-workbench"
+          id="toc-r-the-statistical-genomics-workbench">R: The
+          Statistical Genomics Workbench</a></li>
+          <li><a href="#sql-the-metadata-superpower"
+          id="toc-sql-the-metadata-superpower">SQL: The Metadata
+          Superpower</a></li>
+          <li><a href="#the-decision-map" id="toc-the-decision-map">The
+          Decision Map</a></li>
+          <li><a href="#common-mistakes" id="toc-common-mistakes">Common
+          Mistakes</a></li>
+          <li><a href="#save-this-a-four-week-starter-plan"
+          id="toc-save-this-a-four-week-starter-plan">Save This: A
+          Four-Week Starter Plan</a></li>
+          <li><a href="#what-to-watch-next"
+          id="toc-what-to-watch-next">What To Watch Next</a></li>
+          <li><a href="#credits-and-references"
+          id="toc-credits-and-references">Credits and
+          References</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+
+        <article class="article-content">
+          <h1 id="what-languages-should-a-bioinformatician-know">What
+          Languages Should a Bioinformatician Know?</h1>
+          <p><strong>Takeaway:</strong> You do not need to learn every
+          language at once. Learn enough Bash to move through files,
+          enough Python or R to analyze data, enough SQL to respect
+          metadata, and enough workflow thinking to make your work
+          repeatable.</p>
+          <h2 id="start-with-the-job-not-the-language">Start With The
+          Job, Not The Language</h2>
+          <p>Beginners often ask, "Should I learn Python or R?" A better
+          question is:</p>
+          <pre class="text"><code>What kind of bioinformatics work am I trying to do?</code></pre>
+          <p>Languages are tools. The goal is not to collect them. The
+          goal is to know which one fits the problem in front of
+          you.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Job</th>
+          <th>Best first tool</th>
+          <th>Why</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>Move around files and run bioinformatics tools</td>
+          <td>Bash</td>
+          <td>Most command-line tools expect a Unix-like shell</td>
+          </tr>
+          <tr>
+          <td>Clean tables, write scripts, call APIs, use ML</td>
+          <td>Python</td>
+          <td>General-purpose, readable, and strong for automation</td>
+          </tr>
+          <tr>
+          <td>RNA-seq statistics, plots, Bioconductor workflows</td>
+          <td>R</td>
+          <td>Excellent statistical genomics ecosystem</td>
+          </tr>
+          <tr>
+          <td>Query sample sheets, clinical tables, warehouses</td>
+          <td>SQL</td>
+          <td>Forces precise thinking about metadata and joins</td>
+          </tr>
+          <tr>
+          <td>Rerun the same analysis many times</td>
+          <td>Nextflow or Snakemake</td>
+          <td>Turns commands into reproducible workflows</td>
+          </tr>
+          </tbody>
+          </table>
+          <h2 id="the-beginner-order-that-works">The Beginner Order That
+          Works</h2>
+          <p>If you are starting from zero, use this order:</p>
+          <ol type="1">
+          <li><strong>Bash basics:</strong> paths, files, pipes, and
+          running tools.</li>
+          <li><strong>Python or R:</strong> choose one as your first
+          analysis language.</li>
+          <li><strong>The other analysis language:</strong> add it after
+          you can finish small tasks.</li>
+          <li><strong>SQL:</strong> learn joins and grouping before your
+          metadata gets messy.</li>
+          <li><strong>Workflow systems:</strong> add Nextflow or
+          Snakemake when you repeat analyses.</li>
+          </ol>
+          <p>Do not try to master everything in one month. Aim for
+          useful fluency.</p>
+          <h2 id="bash-the-glue-layer">Bash: The Glue Layer</h2>
+          <p>Bash is how you talk to files and command-line tools.
+          Sequencing data is often too large for spreadsheets, and many
+          bioinformatics tools are designed for the terminal.</p>
+          <p>Learn these first:</p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">pwd</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">wc</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">cut</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">uniq</span></span></code></pre></div>
+          <p>Then learn pipes:</p>
+          <div class="sourceCode" id="cb3"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> samples.tsv <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f2</span> <span class="kw">|</span> <span class="fu">sort</span> <span class="kw">|</span> <span class="fu">uniq</span> <span class="at">-c</span></span></code></pre></div>
+          <p>You do not need to become a systems engineer. You do need
+          to stop being afraid of paths, files, and command output.</p>
+          <h2 id="python-the-builder">Python: The Builder</h2>
+          <p>Python is a strong first analysis language if you want to
+          clean data, automate work, build tools, use APIs, or learn
+          machine learning.</p>
+          <p>Start with:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Package</th>
+          <th>Use</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td><code>pandas</code></td>
+          <td>tables and metadata</td>
+          </tr>
+          <tr>
+          <td><code>numpy</code></td>
+          <td>arrays and numerical work</td>
+          </tr>
+          <tr>
+          <td><code>matplotlib</code> / <code>seaborn</code></td>
+          <td>plotting</td>
+          </tr>
+          <tr>
+          <td><code>scipy</code></td>
+          <td>statistics and scientific computing</td>
+          </tr>
+          <tr>
+          <td><code>scikit-learn</code></td>
+          <td>machine learning</td>
+          </tr>
+          <tr>
+          <td><code>biopython</code></td>
+          <td>sequence and biological file utilities</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>Python is often the best choice when you need to build
+          something reusable for yourself or a team.</p>
+          <h2 id="r-the-statistical-genomics-workbench">R: The
+          Statistical Genomics Workbench</h2>
+          <p>R is especially strong when the analysis is close to
+          statistics, visualization, and Bioconductor.</p>
+          <p>Start with:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Package</th>
+          <th>Use</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td><code>tidyverse</code></td>
+          <td>data wrangling</td>
+          </tr>
+          <tr>
+          <td><code>ggplot2</code></td>
+          <td>visualization</td>
+          </tr>
+          <tr>
+          <td><code>DESeq2</code></td>
+          <td>RNA-seq differential expression</td>
+          </tr>
+          <tr>
+          <td><code>edgeR</code></td>
+          <td>count-based statistical modeling</td>
+          </tr>
+          <tr>
+          <td><code>limma</code></td>
+          <td>linear modeling and omics workflows</td>
+          </tr>
+          <tr>
+          <td><code>Seurat</code></td>
+          <td>single-cell analysis</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>R is often the best choice when a trusted method already
+          exists in Bioconductor or when the question is statistical
+          first.</p>
+          <h2 id="sql-the-metadata-superpower">SQL: The Metadata
+          Superpower</h2>
+          <p>Bioinformatics fails quietly when metadata is messy. SQL
+          helps you ask precise questions:</p>
+          <div class="sourceCode" id="cb4"><pre
+          class="sourceCode sql"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> condition, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> n_samples</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> samples</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> condition;</span></code></pre></div>
+          <p>Learn:</p>
+          <ul>
+          <li><code>SELECT</code></li>
+          <li><code>WHERE</code></li>
+          <li><code>GROUP BY</code></li>
+          <li><code>JOIN</code></li>
+          <li><code>ORDER BY</code></li>
+          <li>primary keys</li>
+          <li>sample identifiers</li>
+          </ul>
+          <p>SQL makes you better at spotting duplicated samples,
+          inconsistent labels, missing covariates, and broken joins.</p>
+          <h2 id="the-decision-map">The Decision Map</h2>
+          <pre class="mermaid"><code>flowchart TD
+  A[&quot;What are you trying to do?&quot;] --&gt; B[&quot;Run tools or inspect files&quot;]
+  A --&gt; C[&quot;Analyze tables or automate work&quot;]
+  A --&gt; D[&quot;Use statistical genomics packages&quot;]
+  A --&gt; E[&quot;Query structured metadata&quot;]
+  A --&gt; F[&quot;Repeat the full analysis&quot;]
+  B --&gt; G[&quot;Use Bash&quot;]
+  C --&gt; H[&quot;Use Python&quot;]
+  D --&gt; I[&quot;Use R&quot;]
+  E --&gt; J[&quot;Use SQL&quot;]
+  F --&gt; K[&quot;Use Nextflow or Snakemake&quot;]</code></pre>
+          <h2 id="common-mistakes">Common Mistakes</h2>
+          <ul>
+          <li>Learning syntax without learning file paths.</li>
+          <li>Treating notebooks as the only record of analysis.</li>
+          <li>Copying code without understanding objects and
+          inputs.</li>
+          <li>Using Python for everything because it feels
+          familiar.</li>
+          <li>Using R for everything because a package exists.</li>
+          <li>Ignoring metadata until the end.</li>
+          <li>Starting workflow systems before understanding the
+          commands they run.</li>
+          </ul>
+          <h2 id="save-this-a-four-week-starter-plan">Save This: A
+          Four-Week Starter Plan</h2>
+          <table>
+          <thead>
+          <tr>
+          <th>Week</th>
+          <th>Goal</th>
+          <th>Tiny project</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>1</td>
+          <td>Bash</td>
+          <td>Count rows, inspect FASTA/FASTQ-like files, summarize
+          sample names</td>
+          </tr>
+          <tr>
+          <td>2</td>
+          <td>Python</td>
+          <td>Read a metadata table, clean columns, make one plot</td>
+          </tr>
+          <tr>
+          <td>3</td>
+          <td>R</td>
+          <td>Read a count matrix, join metadata, make a basic
+          expression plot</td>
+          </tr>
+          <tr>
+          <td>4</td>
+          <td>SQL</td>
+          <td>Create two small tables and join samples to
+          annotations</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>By the end, you should be able to explain what each
+          language is doing in one sentence.</p>
+          <h2 id="what-to-watch-next">What To Watch Next</h2>
+          <p>The mature answer is not Python vs R. Real bioinformatics
+          teams use whatever combination makes the analysis correct,
+          readable, and reproducible. The best analysts are
+          language-flexible but evidence-strict.</p>
+          <h2 id="credits-and-references">Credits and References</h2>
+          <ul>
+          <li>Python: <a
+          href="https://www.python.org/">https://www.python.org/</a></li>
+          <li>R Project: <a
+          href="https://www.r-project.org/">https://www.r-project.org/</a></li>
+          <li>Bioconductor: <a
+          href="https://www.bioconductor.org/">https://www.bioconductor.org/</a></li>
+          <li>pandas documentation: <a
+          href="https://pandas.pydata.org/docs/">https://pandas.pydata.org/docs/</a></li>
+          <li>tidyverse: <a
+          href="https://www.tidyverse.org/">https://www.tidyverse.org/</a></li>
+          <li>Scanpy documentation: <a
+          href="https://scanpy.readthedocs.io/">https://scanpy.readthedocs.io/</a></li>
+          <li>Seurat documentation: <a
+          href="https://satijalab.org/seurat/">https://satijalab.org/seurat/</a></li>
+          <li>Nextflow: <a
+          href="https://www.nextflow.io/">https://www.nextflow.io/</a></li>
+          <li>Snakemake: <a
+          href="https://snakemake.readthedocs.io/">https://snakemake.readthedocs.io/</a></li>
+          </ul>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer__grid">
+        <div>
+          <strong>Bioinformatics Field Guide</strong>
+          <p>Practical bioinformatics guides with reproducible examples.</p>
+        </div>
+        <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+          GitHub repository <i class="ri-external-link-line" aria-hidden="true"></i>
+        </a>
+      </div>
+    </footer>
+
+    <script src="assets/site.js"></script>
+  </body>
+</html>

@@ -11,80 +11,119 @@ asset: "RNA-seq workflow map"
 
 **Takeaway:** RNA-seq turns RNA fragments into a count matrix, then uses statistics to ask which genes differ across biological conditions.
 
-## Prerequisites
-
-Read Week 3 for RNA basics, Week 5 for file types, and Week 6 for project structure.
-
 ## What RNA-seq Measures
 
-RNA-seq measures RNA abundance. It does not directly measure protein abundance, enzyme activity, or mechanism. It is powerful because it gives a broad view of transcription across thousands of genes.
+RNA-seq measures RNA abundance. It does not directly measure protein abundance, enzyme activity, mechanism, or clinical relevance.
+
+That limitation does not make RNA-seq weak. It makes interpretation important.
 
 ## The Workflow
 
-```text
-samples -> RNA extraction -> sequencing -> FASTQ -> QC -> alignment or quantification -> count matrix -> statistics -> interpretation
+```mermaid
+flowchart LR
+  A["Samples"] --> B["RNA extraction"]
+  B --> C["Sequencing"]
+  C --> D["FASTQ"]
+  D --> E["QC"]
+  E --> F["Alignment or quantification"]
+  F --> G["Count matrix"]
+  H["Metadata"] --> G
+  G --> I["Differential expression"]
+  I --> J["Biological interpretation"]
 ```
 
-Each step can introduce bias, so each step needs quality control.
+Every arrow is a place where bias can enter.
 
 ## Step 1: Experimental Design
 
 Before sequencing, decide:
+
 - What condition is being compared?
+- What tissue, cell type, or time point matters?
 - How many biological replicates are needed?
 - What batches might exist?
 - What covariates should be recorded?
-- What tissue, cell type, or time point is relevant?
+- What result would be biologically useful?
 
 Analysis cannot rescue a weak design.
 
 ## Step 2: FASTQ Quality Control
 
 FASTQ files should be checked for:
+
 - base quality
 - adapter contamination
 - duplication
 - overrepresented sequences
 - read length
 
-Tools such as FastQC and MultiQC are commonly used to summarize quality.
+FastQC and MultiQC are commonly used to summarize quality. The goal is not to panic at every warning. The goal is to understand whether the data is fit for the planned analysis.
 
-## Step 3: Alignment or Quantification
+## Step 3: Alignment Or Quantification
 
 There are two common paths:
 
-| Path | Example tools | Output |
+| Path | Example tools | Typical output |
 |---|---|---|
-| Align reads to genome | STAR, HISAT2 | BAM files |
+| Align reads to a genome | STAR, HISAT2 | BAM files |
 | Quantify transcripts directly | Salmon, kallisto | transcript abundance |
 
-Both paths can lead to gene-level analysis, but assumptions differ.
+Both can lead to gene-level analysis, but assumptions differ. Record the tool, version, reference, and annotation.
 
-## Step 4: Count Matrix
+## Step 4: Count Matrix Plus Metadata
 
-Most differential expression workflows use a matrix of counts per gene per sample. Counts must be paired with metadata. Without metadata, the model does not know which samples are control, treated, batch A, or batch B.
+Most differential expression workflows use a matrix of counts per gene per sample.
+
+```text
+gene_id    control_1    control_2    treated_1    treated_2
+GeneA      10           12           31           29
+GeneB      0            1            0            2
+GeneC      100          95           104          110
+```
+
+The count matrix must match metadata:
+
+```text
+sample_id    condition    batch
+control_1    control      A
+control_2    control      B
+treated_1    treated      A
+treated_2    treated      B
+```
+
+Without metadata, the model does not know what comparison to test.
 
 ## Step 5: Differential Expression
 
 Tools such as DESeq2, edgeR, and limma-voom model count data and test whether genes differ between conditions.
 
 The output usually includes:
+
 - gene ID
 - log fold change
 - p-value
 - adjusted p-value
-- base expression
+- average expression
 
 The adjusted p-value matters because thousands of genes are tested.
 
 ## Step 6: Interpretation
 
 Differential expression is not the endpoint. Ask:
+
 - Are the top genes biologically plausible?
 - Is the effect size meaningful?
 - Are results driven by one sample?
 - Do pathway results match the gene-level result?
 - Is validation needed?
+
+The safest phrase is often:
+
+```text
+This result suggests a transcriptional change consistent with...
+```
+
+That is stronger than overclaiming mechanism.
 
 ## Common Mistakes
 
@@ -94,24 +133,24 @@ Differential expression is not the endpoint. Ask:
 - Reporting only p-values without effect sizes.
 - Treating RNA change as proof of mechanism.
 - Forgetting gene annotation version.
+- Losing the sample sheet.
 
-## What Experts Still Debate
+## Save This: RNA-seq QC Map
 
-Experts still debate transcript-level vs gene-level analysis, alignment vs quasi-mapping, best normalization strategies for unusual designs, and how to integrate RNA-seq with proteomics or single-cell data.
+| Stage | Check |
+|---|---|
+| Design | biological replicates, batches, covariates |
+| FASTQ | read quality, adapters, read length |
+| Reference | genome build, annotation version |
+| Quantification | mapping rate, assignment rate |
+| Count matrix | sample names match metadata |
+| Model | design formula matches question |
+| Result | effect size, adjusted p-value, sample consistency |
+| Interpretation | claim does not exceed evidence |
 
-## Research Gap
+## What To Watch Next
 
-A useful public benchmark would compare beginner-friendly RNA-seq workflows on the same dataset, scoring them by correctness, transparency, runtime, memory use, and interpretability.
-
-## Original Asset
-
-Create a one-page RNA-seq workflow map:
-- input files
-- tools
-- outputs
-- QC checkpoints
-- common failure modes
-- interpretation questions
+Experts still debate transcript-level vs gene-level analysis, alignment vs lightweight quantification, best normalization strategies for unusual designs, and how to integrate RNA-seq with proteomics or single-cell data.
 
 ## Credits and References
 
@@ -120,9 +159,4 @@ Create a one-page RNA-seq workflow map:
 - FastQC: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
 - MultiQC: https://multiqc.info/
 - Salmon: https://combine-lab.github.io/salmon/
-
-## Expert Review Checklist
-
-- Add a real example dataset.
-- Verify all tool recommendations.
-- Add one figure explaining count matrices and metadata.
+- kallisto: https://pachterlab.github.io/kallisto/

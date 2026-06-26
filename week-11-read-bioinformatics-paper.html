@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A practical scorecard for methods, benchmarks, and
+claims"
+    />
+    <meta property="og:title" content="How to Read a Bioinformatics
+Paper Without Getting Fooled" />
+    <meta
+      property="og:description"
+      content="A practical scorecard for methods, benchmarks, and
+claims"
+    />
+    <meta property="og:type" content="article" />
+    <title>How to Read a Bioinformatics Paper Without Getting
+Fooled | Bioinformatics Field Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/site.css" />
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      window.mermaid = mermaid;
+      window.dispatchEvent(new Event("mermaid-ready"));
+    </script>
+  </head>
+  <body class="article-page">
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <header class="site-header" id="site-header">
+      <nav class="nav container" aria-label="Primary navigation">
+        <a href="index.html" class="nav__brand">Bioinformatics Field Guide</a>
+        <div class="nav__links" id="nav-links">
+          <a href="index.html#guides">Guides</a>
+          <a href="index.html#resources">Resources</a>
+          <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+        <div class="nav__actions">
+          <button class="icon-button" id="theme-toggle" aria-label="Toggle color theme">
+            <i class="ri-moon-line" aria-hidden="true"></i>
+          </button>
+          <button class="icon-button nav__toggle" id="nav-toggle" aria-label="Open menu">
+            <i class="ri-menu-line" aria-hidden="true"></i>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="article-hero">
+        <div class="container article-hero__grid">
+          <div>
+            <a class="back-link" href="index.html"><i class="ri-arrow-left-line" aria-hidden="true"></i> Field Guide home</a>
+            <p class="eyebrow">Week 11 · 7 minutes</p>
+            <h1>How to Read a Bioinformatics Paper Without Getting
+Fooled</h1>
+                        <p class="article-hero__subtitle">A practical
+scorecard for methods, benchmarks, and claims</p>
+                        <div class="article-meta">
+              <span><i class="ri-user-smile-line" aria-hidden="true"></i> Beginner friendly</span>
+              <span><i class="ri-terminal-box-line" aria-hidden="true"></i> Tested commands</span>
+              <span><i class="ri-git-repository-line" aria-hidden="true"></i> Reproducible assets</span>
+            </div>
+          </div>
+          <aside class="article-card">
+            <span class="article-card__label">Original asset</span>
+            <p>Paper-reading scorecard</p>
+            <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+              View repository <i class="ri-external-link-line" aria-hidden="true"></i>
+            </a>
+          </aside>
+        </div>
+      </section>
+
+      <div class="container article-layout">
+        <aside class="toc" aria-label="Table of contents">
+          <p class="toc__title">On this page</p>
+          <ul>
+          <li><a
+          href="#how-to-read-a-bioinformatics-paper-without-getting-fooled"
+          id="toc-how-to-read-a-bioinformatics-paper-without-getting-fooled">How
+          to Read a Bioinformatics Paper Without Getting Fooled</a>
+          <ul>
+          <li><a href="#start-with-the-claim"
+          id="toc-start-with-the-claim">Start With The Claim</a></li>
+          <li><a href="#read-in-this-order"
+          id="toc-read-in-this-order">Read In This Order</a></li>
+          <li><a href="#the-scorecard" id="toc-the-scorecard">The
+          Scorecard</a></li>
+          <li><a href="#watch-the-baselines"
+          id="toc-watch-the-baselines">Watch The Baselines</a></li>
+          <li><a href="#watch-the-dataset-split"
+          id="toc-watch-the-dataset-split">Watch The Dataset
+          Split</a></li>
+          <li><a href="#watch-the-biological-claim"
+          id="toc-watch-the-biological-claim">Watch The Biological
+          Claim</a></li>
+          <li><a href="#code-available-is-not-the-same-as-reproducible"
+          id="toc-code-available-is-not-the-same-as-reproducible">Code
+          Available Is Not The Same As Reproducible</a></li>
+          <li><a href="#common-mistakes" id="toc-common-mistakes">Common
+          Mistakes</a></li>
+          <li><a href="#save-this-paper-reading-scorecard"
+          id="toc-save-this-paper-reading-scorecard">Save This: Paper
+          Reading Scorecard</a></li>
+          <li><a href="#what-to-watch-next"
+          id="toc-what-to-watch-next">What To Watch Next</a></li>
+          <li><a href="#credits-and-references"
+          id="toc-credits-and-references">Credits and
+          References</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+
+        <article class="article-content">
+          <h1
+          id="how-to-read-a-bioinformatics-paper-without-getting-fooled">How
+          to Read a Bioinformatics Paper Without Getting Fooled</h1>
+          <p><strong>Takeaway:</strong> A bioinformatics paper should be
+          judged by its question, data, assumptions, benchmark design,
+          reproducibility, and whether its claims are proportional to
+          its evidence.</p>
+          <h2 id="start-with-the-claim">Start With The Claim</h2>
+          <p>Before reading the details, write the main claim in one
+          sentence.</p>
+          <p>Examples:</p>
+          <ul>
+          <li>This tool is more accurate.</li>
+          <li>This method scales better.</li>
+          <li>This model learns useful biological representations.</li>
+          <li>This dataset reveals a new cell state.</li>
+          <li>This pipeline improves reproducibility.</li>
+          </ul>
+          <p>Then ask:</p>
+          <pre class="text"><code>What evidence would have to be true for this claim to hold?</code></pre>
+          <p>That question keeps you from being carried away by polished
+          figures.</p>
+          <h2 id="read-in-this-order">Read In This Order</h2>
+          <p>Do not read every paper from line one to line last. Use a
+          triage pattern:</p>
+          <ol type="1">
+          <li>Abstract: identify the claim.</li>
+          <li>Main figures: identify the evidence.</li>
+          <li>Methods: check whether the evidence was produced
+          fairly.</li>
+          <li>Supplement: inspect details that affect trust.</li>
+          <li>Discussion: separate supported claims from
+          speculation.</li>
+          </ol>
+          <p>The methods are not decoration. In computational biology,
+          they often decide whether the paper is believable.</p>
+          <h2 id="the-scorecard">The Scorecard</h2>
+          <table>
+          <thead>
+          <tr>
+          <th>Dimension</th>
+          <th>Question</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>Problem</td>
+          <td>Is the problem important and clearly defined?</td>
+          </tr>
+          <tr>
+          <td>Data</td>
+          <td>Are datasets appropriate, diverse, and well
+          described?</td>
+          </tr>
+          <tr>
+          <td>Baselines</td>
+          <td>Are comparisons fair and strong?</td>
+          </tr>
+          <tr>
+          <td>Metrics</td>
+          <td>Do metrics match the biological task?</td>
+          </tr>
+          <tr>
+          <td>Reproducibility</td>
+          <td>Are code, data, parameters, and versions available?</td>
+          </tr>
+          <tr>
+          <td>Interpretation</td>
+          <td>Are claims proportional to evidence?</td>
+          </tr>
+          <tr>
+          <td>Usefulness</td>
+          <td>Would this change what a practitioner does?</td>
+          </tr>
+          </tbody>
+          </table>
+          <h2 id="watch-the-baselines">Watch The Baselines</h2>
+          <p>Weak baselines make new methods look better than they
+          are.</p>
+          <p>A serious methods paper should compare against:</p>
+          <ul>
+          <li>current standard tools</li>
+          <li>simple strong baselines</li>
+          <li>ablations</li>
+          <li>independent datasets</li>
+          <li>realistic failure cases</li>
+          </ul>
+          <p>In modern computational biology, a simple baseline can be
+          surprisingly hard to beat.</p>
+          <h2 id="watch-the-dataset-split">Watch The Dataset Split</h2>
+          <p>Data leakage is one of the easiest ways to inflate
+          performance.</p>
+          <p>Ask:</p>
+          <ul>
+          <li>Were train and test sets truly independent?</li>
+          <li>Are samples from the same donor split across train and
+          test?</li>
+          <li>Is the benchmark too similar to pretraining data?</li>
+          <li>Are labels circular?</li>
+          <li>Is batch confounded with outcome?</li>
+          <li>Was hyperparameter tuning done on the test set?</li>
+          </ul>
+          <p>If the split is weak, the performance number is weak.</p>
+          <h2 id="watch-the-biological-claim">Watch The Biological
+          Claim</h2>
+          <p>A model can predict labels without learning mechanism. A
+          cluster can appear without representing a real cell type. A
+          pathway can be enriched without proving causality.</p>
+          <p>Separate:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Claim type</th>
+          <th>Evidence needed</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>computational performance</td>
+          <td>fair benchmarks and strong baselines</td>
+          </tr>
+          <tr>
+          <td>biological interpretation</td>
+          <td>markers, metadata, perturbation, validation</td>
+          </tr>
+          <tr>
+          <td>mechanistic claim</td>
+          <td>causal or experimental support</td>
+          </tr>
+          <tr>
+          <td>clinical claim</td>
+          <td>clinical validation, regulatory context, safety
+          evidence</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>These are not the same.</p>
+          <h2 id="code-available-is-not-the-same-as-reproducible">Code
+          Available Is Not The Same As Reproducible</h2>
+          <p>Useful reproducibility includes:</p>
+          <ul>
+          <li>code</li>
+          <li>data access instructions</li>
+          <li>environment files</li>
+          <li>parameter settings</li>
+          <li>random seeds when relevant</li>
+          <li>versioned references</li>
+          <li>instructions that start from raw or minimally processed
+          data</li>
+          </ul>
+          <p>If the code cannot be run, it is a clue. If the data cannot
+          be accessed, it is a limit.</p>
+          <h2 id="common-mistakes">Common Mistakes</h2>
+          <ul>
+          <li>Reading only the abstract.</li>
+          <li>Trusting a method because figures look polished.</li>
+          <li>Ignoring supplementary methods.</li>
+          <li>Accepting "state of the art" without checking
+          baselines.</li>
+          <li>Confusing benchmark performance with biological
+          usefulness.</li>
+          <li>Treating code availability as full reproducibility.</li>
+          <li>Forgetting that preprints and peer-reviewed papers still
+          need critical reading.</li>
+          </ul>
+          <h2 id="save-this-paper-reading-scorecard">Save This: Paper
+          Reading Scorecard</h2>
+          <table>
+          <thead>
+          <tr>
+          <th>Score</th>
+          <th>Meaning</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>0</td>
+          <td>missing or weak</td>
+          </tr>
+          <tr>
+          <td>1</td>
+          <td>present but limited</td>
+          </tr>
+          <tr>
+          <td>2</td>
+          <td>strong and convincing</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>Rate:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Dimension</th>
+          <th style="text-align: right;">Score</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>clear problem</td>
+          <td style="text-align: right;">0-2</td>
+          </tr>
+          <tr>
+          <td>appropriate data</td>
+          <td style="text-align: right;">0-2</td>
+          </tr>
+          <tr>
+          <td>fair baselines</td>
+          <td style="text-align: right;">0-2</td>
+          </tr>
+          <tr>
+          <td>meaningful metrics</td>
+          <td style="text-align: right;">0-2</td>
+          </tr>
+          <tr>
+          <td>leakage control</td>
+          <td style="text-align: right;">0-2</td>
+          </tr>
+          <tr>
+          <td>reproducibility</td>
+          <td style="text-align: right;">0-2</td>
+          </tr>
+          <tr>
+          <td>proportional claims</td>
+          <td style="text-align: right;">0-2</td>
+          </tr>
+          <tr>
+          <td>practitioner usefulness</td>
+          <td style="text-align: right;">0-2</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>If a paper scores low on baselines, leakage, or
+          proportional claims, read it with extra caution.</p>
+          <h2 id="what-to-watch-next">What To Watch Next</h2>
+          <p>The field needs more public benchmark audits: short,
+          reproducible reviews that rerun key claims, compare them
+          against strong baselines, and explain what practitioners
+          should or should not change.</p>
+          <h2 id="credits-and-references">Credits and References</h2>
+          <ul>
+          <li>Nature reporting standards: <a
+          href="https://www.nature.com/nature-portfolio/editorial-policies/reporting-standards">https://www.nature.com/nature-portfolio/editorial-policies/reporting-standards</a></li>
+          <li>NIH rigor and reproducibility: <a
+          href="https://www.nih.gov/research-training/rigor-reproducibility">https://www.nih.gov/research-training/rigor-reproducibility</a></li>
+          <li>The Turing Way: <a
+          href="https://the-turing-way.netlify.app/">https://the-turing-way.netlify.app/</a></li>
+          <li>Papers with Code: <a
+          href="https://paperswithcode.com/">https://paperswithcode.com/</a></li>
+          <li>BioRxiv: <a
+          href="https://www.biorxiv.org/">https://www.biorxiv.org/</a></li>
+          <li>PubMed: <a
+          href="https://pubmed.ncbi.nlm.nih.gov/">https://pubmed.ncbi.nlm.nih.gov/</a></li>
+          </ul>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer__grid">
+        <div>
+          <strong>Bioinformatics Field Guide</strong>
+          <p>Practical bioinformatics guides with reproducible examples.</p>
+        </div>
+        <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+          GitHub repository <i class="ri-external-link-line" aria-hidden="true"></i>
+        </a>
+      </div>
+    </footer>
+
+    <script src="assets/site.js"></script>
+  </body>
+</html>

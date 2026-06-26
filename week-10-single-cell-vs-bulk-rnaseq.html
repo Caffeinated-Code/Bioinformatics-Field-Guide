@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="What changes when every cell becomes a data point"
+    />
+    <meta property="og:title" content="Single-Cell RNA-seq vs Bulk
+RNA-seq" />
+    <meta
+      property="og:description"
+      content="What changes when every cell becomes a data point"
+    />
+    <meta property="og:type" content="article" />
+    <title>Single-Cell RNA-seq vs Bulk
+RNA-seq | Bioinformatics Field Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/site.css" />
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      window.mermaid = mermaid;
+      window.dispatchEvent(new Event("mermaid-ready"));
+    </script>
+  </head>
+  <body class="article-page">
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <header class="site-header" id="site-header">
+      <nav class="nav container" aria-label="Primary navigation">
+        <a href="index.html" class="nav__brand">Bioinformatics Field Guide</a>
+        <div class="nav__links" id="nav-links">
+          <a href="index.html#guides">Guides</a>
+          <a href="index.html#resources">Resources</a>
+          <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+        <div class="nav__actions">
+          <button class="icon-button" id="theme-toggle" aria-label="Toggle color theme">
+            <i class="ri-moon-line" aria-hidden="true"></i>
+          </button>
+          <button class="icon-button nav__toggle" id="nav-toggle" aria-label="Open menu">
+            <i class="ri-menu-line" aria-hidden="true"></i>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="article-hero">
+        <div class="container article-hero__grid">
+          <div>
+            <a class="back-link" href="index.html"><i class="ri-arrow-left-line" aria-hidden="true"></i> Field Guide home</a>
+            <p class="eyebrow">Week 10 · 7 minutes</p>
+            <h1>Single-Cell RNA-seq vs Bulk RNA-seq</h1>
+                        <p class="article-hero__subtitle">What changes
+when every cell becomes a data point</p>
+                        <div class="article-meta">
+              <span><i class="ri-user-smile-line" aria-hidden="true"></i> Beginner friendly</span>
+              <span><i class="ri-terminal-box-line" aria-hidden="true"></i> Tested commands</span>
+              <span><i class="ri-git-repository-line" aria-hidden="true"></i> Reproducible assets</span>
+            </div>
+          </div>
+          <aside class="article-card">
+            <span class="article-card__label">Original asset</span>
+            <p>Bulk vs single-cell comparison map</p>
+            <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+              View repository <i class="ri-external-link-line" aria-hidden="true"></i>
+            </a>
+          </aside>
+        </div>
+      </section>
+
+      <div class="container article-layout">
+        <aside class="toc" aria-label="Table of contents">
+          <p class="toc__title">On this page</p>
+          <ul>
+          <li><a href="#single-cell-rna-seq-vs-bulk-rna-seq"
+          id="toc-single-cell-rna-seq-vs-bulk-rna-seq">Single-Cell
+          RNA-seq vs Bulk RNA-seq</a>
+          <ul>
+          <li><a href="#the-simple-difference"
+          id="toc-the-simple-difference">The Simple Difference</a></li>
+          <li><a href="#why-single-cell-changed-the-field"
+          id="toc-why-single-cell-changed-the-field">Why Single-Cell
+          Changed The Field</a></li>
+          <li><a href="#the-workflow" id="toc-the-workflow">The
+          Workflow</a></li>
+          <li><a href="#the-hard-part-annotation"
+          id="toc-the-hard-part-annotation">The Hard Part:
+          Annotation</a></li>
+          <li><a href="#pseudobulk-a-useful-bridge"
+          id="toc-pseudobulk-a-useful-bridge">Pseudobulk: A Useful
+          Bridge</a></li>
+          <li><a href="#umap-is-a-map-not-a-microscope"
+          id="toc-umap-is-a-map-not-a-microscope">UMAP Is A Map, Not A
+          Microscope</a></li>
+          <li><a href="#common-mistakes" id="toc-common-mistakes">Common
+          Mistakes</a></li>
+          <li><a href="#save-this-bulk-vs-single-cell-decision-map"
+          id="toc-save-this-bulk-vs-single-cell-decision-map">Save This:
+          Bulk vs Single-Cell Decision Map</a></li>
+          <li><a href="#what-to-watch-next"
+          id="toc-what-to-watch-next">What To Watch Next</a></li>
+          <li><a href="#credits-and-references"
+          id="toc-credits-and-references">Credits and
+          References</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+
+        <article class="article-content">
+          <h1 id="single-cell-rna-seq-vs-bulk-rna-seq">Single-Cell
+          RNA-seq vs Bulk RNA-seq</h1>
+          <p><strong>Takeaway:</strong> Bulk RNA-seq summarizes
+          expression across many cells, while single-cell RNA-seq
+          measures many individual cells and shifts the question from
+          "what changed overall?" to "which cells changed?"</p>
+          <h2 id="the-simple-difference">The Simple Difference</h2>
+          <p>Bulk RNA-seq blends many cells together. Single-cell
+          RNA-seq tries to measure individual cells separately.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Question</th>
+          <th>Bulk RNA-seq</th>
+          <th>Single-cell RNA-seq</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>Unit</td>
+          <td>sample</td>
+          <td>cell</td>
+          </tr>
+          <tr>
+          <td>Main output</td>
+          <td>gene by sample matrix</td>
+          <td>gene by cell matrix</td>
+          </tr>
+          <tr>
+          <td>Strength</td>
+          <td>robust condition-level expression</td>
+          <td>cell-type and cell-state resolution</td>
+          </tr>
+          <tr>
+          <td>Challenge</td>
+          <td>mixed cell populations</td>
+          <td>sparsity, noise, annotation, scale</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>Neither is automatically better. They answer different
+          questions.</p>
+          <h2 id="why-single-cell-changed-the-field">Why Single-Cell
+          Changed The Field</h2>
+          <p>Single-cell RNA-seq helps reveal:</p>
+          <ul>
+          <li>rare cell types</li>
+          <li>cell states</li>
+          <li>immune populations</li>
+          <li>tumor heterogeneity</li>
+          <li>developmental trajectories</li>
+          <li>treatment response within subpopulations</li>
+          </ul>
+          <p>It is powerful because biology often happens in specific
+          cells, not averaged tissue.</p>
+          <h2 id="the-workflow">The Workflow</h2>
+          <pre class="mermaid"><code>flowchart LR
+  A[&quot;Cells&quot;] --&gt; B[&quot;Barcoding&quot;]
+  B --&gt; C[&quot;Sequencing&quot;]
+  C --&gt; D[&quot;Count matrix&quot;]
+  D --&gt; E[&quot;QC&quot;]
+  E --&gt; F[&quot;Normalization&quot;]
+  F --&gt; G[&quot;Dimensionality reduction&quot;]
+  G --&gt; H[&quot;Clustering&quot;]
+  H --&gt; I[&quot;Annotation&quot;]
+  I --&gt; J[&quot;Biological interpretation&quot;]</code></pre>
+          <p>Each step contains choices that can change the result.</p>
+          <h2 id="the-hard-part-annotation">The Hard Part:
+          Annotation</h2>
+          <p>Clusters do not name themselves. Analysts often use marker
+          genes, reference atlases, label-transfer tools, or expert
+          knowledge to annotate cell types.</p>
+          <p>Ask:</p>
+          <ul>
+          <li>Are marker genes specific?</li>
+          <li>Is the reference appropriate?</li>
+          <li>Could this cluster be a cell state, not a cell type?</li>
+          <li>Does annotation match tissue biology?</li>
+          <li>Are doublets or low-quality cells driving the
+          cluster?</li>
+          </ul>
+          <p>Automated annotation is useful, but it is not a substitute
+          for biological review.</p>
+          <h2 id="pseudobulk-a-useful-bridge">Pseudobulk: A Useful
+          Bridge</h2>
+          <p>For differential expression, many experts prefer pseudobulk
+          approaches: aggregate counts by sample and cell type, then use
+          bulk RNA-seq statistical tools.</p>
+          <p>Why? Because single cells from the same person, mouse, or
+          sample are not independent biological replicates.</p>
+          <p>The unit of replication matters.</p>
+          <h2 id="umap-is-a-map-not-a-microscope">UMAP Is A Map, Not A
+          Microscope</h2>
+          <p>UMAP and t-SNE plots are helpful visual summaries, but
+          distances can be misleading.</p>
+          <p>Do not assume:</p>
+          <ul>
+          <li>nearby clusters are always biologically similar</li>
+          <li>distant clusters are always unrelated</li>
+          <li>cluster shape has direct biological meaning</li>
+          <li>a UMAP plot validates cell identity</li>
+          </ul>
+          <p>Use UMAP to explore. Use markers, metadata, validation, and
+          domain knowledge to interpret.</p>
+          <h2 id="common-mistakes">Common Mistakes</h2>
+          <ul>
+          <li>Treating every cell as an independent replicate.</li>
+          <li>Overtrusting automated annotations.</li>
+          <li>Ignoring doublets and low-quality cells.</li>
+          <li>Choosing clustering resolution without biological
+          reasoning.</li>
+          <li>Treating UMAP distance as exact biology.</li>
+          <li>Comparing cell types without enough samples.</li>
+          <li>Forgetting that integration can remove real biology if
+          misused.</li>
+          </ul>
+          <h2 id="save-this-bulk-vs-single-cell-decision-map">Save This:
+          Bulk vs Single-Cell Decision Map</h2>
+          <table>
+          <thead>
+          <tr>
+          <th>If your question is...</th>
+          <th>Consider</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>What changed overall between conditions?</td>
+          <td>bulk RNA-seq</td>
+          </tr>
+          <tr>
+          <td>Which cell type drives the signal?</td>
+          <td>single-cell RNA-seq</td>
+          </tr>
+          <tr>
+          <td>Do I need strong sample-level statistics?</td>
+          <td>bulk or pseudobulk</td>
+          </tr>
+          <tr>
+          <td>Do I need rare population discovery?</td>
+          <td>single-cell RNA-seq</td>
+          </tr>
+          <tr>
+          <td>Do I have few samples but many cells?</td>
+          <td>be cautious; cells are not replicates</td>
+          </tr>
+          <tr>
+          <td>Do I need spatial context?</td>
+          <td>spatial transcriptomics or validation</td>
+          </tr>
+          </tbody>
+          </table>
+          <h2 id="what-to-watch-next">What To Watch Next</h2>
+          <p>Experts debate normalization, integration, batch
+          correction, clustering resolution, annotation standards,
+          differential expression methods, and validation of cell
+          states. The next frontier is not prettier plots. It is
+          stronger biological conclusions.</p>
+          <h2 id="credits-and-references">Credits and References</h2>
+          <ul>
+          <li>Seurat documentation: <a
+          href="https://satijalab.org/seurat/">https://satijalab.org/seurat/</a></li>
+          <li>Seurat PBMC tutorial: <a
+          href="https://satijalab.org/seurat/articles/pbmc3k_tutorial">https://satijalab.org/seurat/articles/pbmc3k_tutorial</a></li>
+          <li>Scanpy documentation: <a
+          href="https://scanpy.readthedocs.io/">https://scanpy.readthedocs.io/</a></li>
+          <li>Single Cell Expression Atlas: <a
+          href="https://www.ebi.ac.uk/gxa/sc/home">https://www.ebi.ac.uk/gxa/sc/home</a></li>
+          <li>10x Genomics resources: <a
+          href="https://www.10xgenomics.com/resources">https://www.10xgenomics.com/resources</a></li>
+          <li>muscat pseudobulk workflows: <a
+          href="https://bioconductor.org/packages/release/bioc/html/muscat.html">https://bioconductor.org/packages/release/bioc/html/muscat.html</a></li>
+          </ul>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer__grid">
+        <div>
+          <strong>Bioinformatics Field Guide</strong>
+          <p>Practical bioinformatics guides with reproducible examples.</p>
+        </div>
+        <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+          GitHub repository <i class="ri-external-link-line" aria-hidden="true"></i>
+        </a>
+      </div>
+    </footer>
+
+    <script src="assets/site.js"></script>
+  </body>
+</html>

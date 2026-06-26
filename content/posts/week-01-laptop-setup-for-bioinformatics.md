@@ -399,7 +399,7 @@ You are ready for Week 2 when `bioinfo-starter` activates, Python/R/`samtools`/`
 
 People disagree about the best first setup: Conda first, containers first, or workflows first. My staged recommendation is simpler: learn folders and the terminal, use Conda for first analyses, use Docker when sharing or teaching, add Nextflow or Snakemake when a workflow must run repeatedly, and treat AI assistants as support rather than authority.
 
-## Original Asset
+## Starter Files
 
 This post includes five starter files:
 

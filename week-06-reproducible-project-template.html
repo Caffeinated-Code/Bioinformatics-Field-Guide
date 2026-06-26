@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Folder structure, README, Git, Conda, and
+reproducibility"
+    />
+    <meta property="og:title" content="The Bioinformatics Project
+Template" />
+    <meta
+      property="og:description"
+      content="Folder structure, README, Git, Conda, and
+reproducibility"
+    />
+    <meta property="og:type" content="article" />
+    <title>The Bioinformatics Project
+Template | Bioinformatics Field Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/site.css" />
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      window.mermaid = mermaid;
+      window.dispatchEvent(new Event("mermaid-ready"));
+    </script>
+  </head>
+  <body class="article-page">
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <header class="site-header" id="site-header">
+      <nav class="nav container" aria-label="Primary navigation">
+        <a href="index.html" class="nav__brand">Bioinformatics Field Guide</a>
+        <div class="nav__links" id="nav-links">
+          <a href="index.html#guides">Guides</a>
+          <a href="index.html#resources">Resources</a>
+          <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+        <div class="nav__actions">
+          <button class="icon-button" id="theme-toggle" aria-label="Toggle color theme">
+            <i class="ri-moon-line" aria-hidden="true"></i>
+          </button>
+          <button class="icon-button nav__toggle" id="nav-toggle" aria-label="Open menu">
+            <i class="ri-menu-line" aria-hidden="true"></i>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="article-hero">
+        <div class="container article-hero__grid">
+          <div>
+            <a class="back-link" href="index.html"><i class="ri-arrow-left-line" aria-hidden="true"></i> Field Guide home</a>
+            <p class="eyebrow">Week 6 · 7 minutes</p>
+            <h1>The Bioinformatics Project Template</h1>
+                        <p class="article-hero__subtitle">Folder
+structure, README, Git, Conda, and reproducibility</p>
+                        <div class="article-meta">
+              <span><i class="ri-user-smile-line" aria-hidden="true"></i> Beginner friendly</span>
+              <span><i class="ri-terminal-box-line" aria-hidden="true"></i> Tested commands</span>
+              <span><i class="ri-git-repository-line" aria-hidden="true"></i> Reproducible assets</span>
+            </div>
+          </div>
+          <aside class="article-card">
+            <span class="article-card__label">Original asset</span>
+            <p>GitHub-ready project template</p>
+            <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+              View repository <i class="ri-external-link-line" aria-hidden="true"></i>
+            </a>
+          </aside>
+        </div>
+      </section>
+
+      <div class="container article-layout">
+        <aside class="toc" aria-label="Table of contents">
+          <p class="toc__title">On this page</p>
+          <ul>
+          <li><a href="#the-bioinformatics-project-template"
+          id="toc-the-bioinformatics-project-template">The
+          Bioinformatics Project Template</a>
+          <ul>
+          <li><a href="#why-structure-matters"
+          id="toc-why-structure-matters">Why Structure Matters</a></li>
+          <li><a href="#the-simple-template"
+          id="toc-the-simple-template">The Simple Template</a></li>
+          <li><a href="#what-goes-where" id="toc-what-goes-where">What
+          Goes Where</a></li>
+          <li><a href="#the-readme-should-answer-five-questions"
+          id="toc-the-readme-should-answer-five-questions">The README
+          Should Answer Five Questions</a></li>
+          <li><a href="#environment-files"
+          id="toc-environment-files">Environment Files</a></li>
+          <li><a href="#git-without-overcomplication"
+          id="toc-git-without-overcomplication">Git Without
+          Overcomplication</a></li>
+          <li><a href="#a-useful-gitignore"
+          id="toc-a-useful-gitignore">A Useful
+          <code>.gitignore</code></a></li>
+          <li><a href="#save-this-minimum-reproducibility-checklist"
+          id="toc-save-this-minimum-reproducibility-checklist">Save
+          This: Minimum Reproducibility Checklist</a></li>
+          <li><a href="#common-mistakes" id="toc-common-mistakes">Common
+          Mistakes</a></li>
+          <li><a href="#what-to-watch-next"
+          id="toc-what-to-watch-next">What To Watch Next</a></li>
+          <li><a href="#credits-and-references"
+          id="toc-credits-and-references">Credits and
+          References</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+
+        <article class="article-content">
+          <h1 id="the-bioinformatics-project-template">The
+          Bioinformatics Project Template</h1>
+          <p><strong>Takeaway:</strong> A reproducible bioinformatics
+          project is one where another person can find the data,
+          understand the analysis, recreate the environment, rerun the
+          code, and check the results.</p>
+          <h2 id="why-structure-matters">Why Structure Matters</h2>
+          <p>Bioinformatics projects fail quietly when files are
+          scattered, package versions are forgotten, and important
+          decisions live only in notebook history.</p>
+          <p>A good project structure reduces memory load. It also makes
+          the work easier to review, reuse, hand off, and defend.</p>
+          <h2 id="the-simple-template">The Simple Template</h2>
+          <pre class="text"><code>project-name/
+  README.md
+  environment.yml
+  .gitignore
+  data/
+    raw/
+    processed/
+  metadata/
+  notebooks/
+  scripts/
+  results/
+  figures/
+  docs/</code></pre>
+          <p>This structure works for small projects and can grow into a
+          workflow later.</p>
+          <h2 id="what-goes-where">What Goes Where</h2>
+          <table>
+          <thead>
+          <tr>
+          <th>Folder</th>
+          <th>Purpose</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td><code>data/raw/</code></td>
+          <td>Original input data, never edited by hand</td>
+          </tr>
+          <tr>
+          <td><code>data/processed/</code></td>
+          <td>Cleaned, filtered, or transformed data</td>
+          </tr>
+          <tr>
+          <td><code>metadata/</code></td>
+          <td>Sample sheets, data dictionaries, covariates</td>
+          </tr>
+          <tr>
+          <td><code>notebooks/</code></td>
+          <td>Exploration, explanation, and figures</td>
+          </tr>
+          <tr>
+          <td><code>scripts/</code></td>
+          <td>Reusable code</td>
+          </tr>
+          <tr>
+          <td><code>results/</code></td>
+          <td>Tables produced by analysis</td>
+          </tr>
+          <tr>
+          <td><code>figures/</code></td>
+          <td>Plots and diagrams</td>
+          </tr>
+          <tr>
+          <td><code>docs/</code></td>
+          <td>Methods notes, assumptions, decisions</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>The rule: raw data stays raw. Every transformation should
+          be reproducible.</p>
+          <h2 id="the-readme-should-answer-five-questions">The README
+          Should Answer Five Questions</h2>
+          <ol type="1">
+          <li>What is the biological question?</li>
+          <li>What data is used?</li>
+          <li>How do I set up the environment?</li>
+          <li>How do I run the analysis?</li>
+          <li>Where are the main results?</li>
+          </ol>
+          <p>If the README cannot answer those questions, the project is
+          not ready for another person.</p>
+          <h2 id="environment-files">Environment Files</h2>
+          <p>Use an environment file so package versions are
+          visible:</p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> bioinfo-project</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">channels</span><span class="kw">:</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> conda-forge</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> bioconda</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dependencies</span><span class="kw">:</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> python=3.12</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> pandas</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> numpy</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> matplotlib</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> fastqc</span></span></code></pre></div>
+          <p>This is not perfect reproducibility, but it is much better
+          than "it worked on my laptop."</p>
+          <h2 id="git-without-overcomplication">Git Without
+          Overcomplication</h2>
+          <p>Use Git for code, documentation, environment files, small
+          example data, and figures when useful.</p>
+          <p>Usually commit:</p>
+          <ul>
+          <li>scripts</li>
+          <li>notebooks</li>
+          <li>README files</li>
+          <li>environment files</li>
+          <li>small example data</li>
+          <li>small result tables</li>
+          </ul>
+          <p>Usually do not commit:</p>
+          <ul>
+          <li>huge FASTQ or BAM files</li>
+          <li>protected human data</li>
+          <li>temporary files</li>
+          <li>credentials</li>
+          <li>raw collaborator data</li>
+          </ul>
+          <h2 id="a-useful-gitignore">A Useful
+          <code>.gitignore</code></h2>
+          <pre class="text"><code>.DS_Store
+__pycache__/
+.ipynb_checkpoints/
+data/raw/
+data/large/
+*.bam
+*.fastq
+*.fastq.gz
+*.vcf.gz
+*.log
+.env</code></pre>
+          <p>This keeps accidental clutter and sensitive files out of
+          the repo.</p>
+          <h2 id="save-this-minimum-reproducibility-checklist">Save
+          This: Minimum Reproducibility Checklist</h2>
+          <table>
+          <thead>
+          <tr>
+          <th>Check</th>
+          <th>Why it matters</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>README explains the question</td>
+          <td>prevents tool-first analysis</td>
+          </tr>
+          <tr>
+          <td>raw data is separated</td>
+          <td>protects original input</td>
+          </tr>
+          <tr>
+          <td>metadata is versioned</td>
+          <td>preserves sample meaning</td>
+          </tr>
+          <tr>
+          <td>environment is recorded</td>
+          <td>makes setup inspectable</td>
+          </tr>
+          <tr>
+          <td>scripts are reusable</td>
+          <td>avoids notebook-only logic</td>
+          </tr>
+          <tr>
+          <td>results are labeled</td>
+          <td>prevents mystery outputs</td>
+          </tr>
+          <tr>
+          <td>assumptions are written down</td>
+          <td>helps reviewers trust the work</td>
+          </tr>
+          </tbody>
+          </table>
+          <h2 id="common-mistakes">Common Mistakes</h2>
+          <ul>
+          <li>Keeping final results only in a notebook.</li>
+          <li>Naming files <code>final_final_v3.csv</code>.</li>
+          <li>Forgetting sample metadata.</li>
+          <li>Committing private or protected data.</li>
+          <li>Reusing the same environment for every project.</li>
+          <li>Having no record of why parameters were chosen.</li>
+          </ul>
+          <h2 id="what-to-watch-next">What To Watch Next</h2>
+          <p>Notebooks, scripts, and workflows all have a place. A
+          practical pattern is:</p>
+          <pre class="text"><code>notebooks for exploration -&gt; scripts for repeated logic -&gt; workflows for repeated execution</code></pre>
+          <p>Do not make the project more complex than the question
+          requires. Do make it clear enough that another person can
+          inspect it.</p>
+          <h2 id="credits-and-references">Credits and References</h2>
+          <ul>
+          <li>Git: <a
+          href="https://git-scm.com/">https://git-scm.com/</a></li>
+          <li>Conda documentation: <a
+          href="https://docs.conda.io/">https://docs.conda.io/</a></li>
+          <li>Bioconda documentation: <a
+          href="https://bioconda.github.io/">https://bioconda.github.io/</a></li>
+          <li>Nextflow: <a
+          href="https://www.nextflow.io/">https://www.nextflow.io/</a></li>
+          <li>Snakemake: <a
+          href="https://snakemake.readthedocs.io/">https://snakemake.readthedocs.io/</a></li>
+          <li>The Turing Way: <a
+          href="https://the-turing-way.netlify.app/">https://the-turing-way.netlify.app/</a></li>
+          </ul>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer__grid">
+        <div>
+          <strong>Bioinformatics Field Guide</strong>
+          <p>Practical bioinformatics guides with reproducible examples.</p>
+        </div>
+        <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+          GitHub repository <i class="ri-external-link-line" aria-hidden="true"></i>
+        </a>
+      </div>
+    </footer>
+
+    <script src="assets/site.js"></script>
+  </body>
+</html>

@@ -9,45 +9,58 @@ asset: "Biology prerequisite map"
 
 # What Biology Do You Need for Bioinformatics?
 
-**Takeaway:** You do not need a full biology degree to start bioinformatics, but you do need a working map of DNA, RNA, proteins, cells, experiments, and biological uncertainty.
+**Takeaway:** You do not need to memorize all of biology before starting bioinformatics, but you do need a working map of DNA, RNA, proteins, cells, experiments, and uncertainty.
 
-## Prerequisites
+## The Point Is Not Vocabulary
 
-Read Week 1 for setup and Week 2 for programming languages. This post explains the biology side of the same foundation.
+Bioinformatics is not just coding on biological files. A result only matters if it respects the experiment that produced the data.
 
-## The Biology You Actually Use
+When you see a dataset, ask:
 
-Bioinformatics is not just coding on biological files. The analysis only matters if it respects the experiment that produced the data.
+```text
+What biological system was measured, how was it measured, and what can this assay actually support?
+```
 
-Start with five ideas:
+That question is more useful than memorizing a hundred gene names.
 
-| Concept | Why it matters |
-|---|---|
-| DNA | Stores genetic sequence and variation |
-| RNA | Reflects gene expression and regulation |
-| Protein | Carries out many cellular functions |
-| Cell type | Determines biological context |
-| Experiment | Determines what your data can and cannot answer |
+## The Five Concepts To Learn First
 
-## DNA: The Reference Is Not the Person
+| Concept | Plain meaning | Why it matters |
+|---|---|---|
+| DNA | Genetic sequence and variation | Coordinates, variants, genes, regulatory regions |
+| RNA | Transcribed molecules | Expression, splicing, regulation, cell state |
+| Protein | Functional molecules | Pathways, structure, enzymes, receptors |
+| Cell type | Biological context | Signals can disappear when cell types are mixed |
+| Experiment | Data biography | Controls, batches, replicates, and limits of interpretation |
 
-DNA analysis often starts with a reference genome, but the reference is a coordinate system, not a perfect truth. Reads are aligned to it, variants are called against it, and annotations are layered on top of it.
+## DNA: The Reference Is A Coordinate System
+
+Many workflows start by comparing reads to a reference genome. The reference is not a perfect person; it is a coordinate system that helps us organize evidence.
 
 Learn:
+
 - chromosomes
 - genes
 - exons and introns
 - variants
 - reference genomes
 - genome annotations
+- genome builds
 
-The practical question is often: where is this signal in the genome, and how confident are we?
+The practical question is:
 
-## RNA: Expression Is Context
+```text
+Where is this signal in the genome, and are we using the right coordinate system?
+```
 
-RNA-seq measures RNA abundance, often as a proxy for gene expression. But expression depends on tissue, cell type, time, condition, batch, and protocol.
+Mixing genome builds is one of the easiest ways to create silent errors.
+
+## RNA: Expression Depends On Context
+
+RNA-seq often measures RNA abundance as a proxy for gene expression. But expression depends on tissue, cell type, time point, condition, protocol, and batch.
 
 Learn:
+
 - transcription
 - splicing
 - gene expression
@@ -55,74 +68,110 @@ Learn:
 - normalization
 - differential expression
 
-The practical question is often: which genes changed, in which samples, and under what assumptions?
+The practical question is:
 
-## Proteins: Closer to Function, Harder to Predict
+```text
+Which genes changed, in which samples, under what assumptions?
+```
 
-Proteins do much of the work in cells. Sequence changes can affect protein structure, binding, localization, and function. Proteomics and protein prediction are increasingly important, especially with AI-based structure and function tools.
+RNA changes are evidence. They are not automatic proof of protein change, mechanism, or clinical relevance.
+
+## Proteins: Closer To Function, Still Not Simple
+
+Proteins carry out many cellular functions, but predicting function from sequence or expression is not straightforward.
 
 Learn:
+
 - amino acids
-- domains
+- protein domains
 - motifs
-- post-translational modification
 - protein families
+- post-translational modification
 - structure-function relationships
 
-The practical question is often: does this molecular change plausibly alter function?
+The practical question is:
 
-## Cells: The Unit of Context
+```text
+Does this molecular change plausibly alter function, and what evidence supports that?
+```
 
-Single-cell and spatial methods remind us that tissue is not one thing. A tumor, organ, or culture can contain many cell states and cell types.
+## Cells: Biology Has Location
+
+Single-cell and spatial methods remind us that tissue is not one uniform thing. A tumor, liver sample, blood draw, or organoid may contain many cell types and states.
 
 Learn:
+
 - cell type
 - cell state
 - differentiation
-- immune cells
-- tumor microenvironment
+- immune populations
+- tissue compartments
 - spatial organization
 
-The practical question is often: which cells are driving the pattern?
+The practical question is:
 
-## Experiments: Data Has a Biography
+```text
+Which cells are driving the pattern?
+```
 
-Every dataset has a backstory:
+This matters because a bulk signal can reflect a true expression change, a cell-type proportion change, or both.
+
+## Experiments: Every Dataset Has A Biography
+
+Before trusting any analysis, learn the dataset's backstory:
+
 - How were samples collected?
 - What platform was used?
-- How many replicates exist?
-- What batches exist?
+- How many biological replicates exist?
 - What controls exist?
+- What batches exist?
 - What metadata is missing?
+- What was excluded before you received the file?
 
 If you ignore the experiment, your analysis can be elegant and wrong.
 
+## A Beginner Biology Map
+
+```mermaid
+flowchart LR
+  A["DNA"] --> B["RNA"]
+  B --> C["Protein"]
+  A --> D["Variants and regulation"]
+  B --> E["Expression and splicing"]
+  C --> F["Function and pathways"]
+  G["Cell type"] --> E
+  H["Experiment"] --> A
+  H --> B
+  H --> G
+  H --> I["Interpretation limits"]
+```
+
 ## Common Mistakes
 
-- Treating gene names as stable and universal.
-- Forgetting that annotations change over time.
+- Treating gene symbols as stable and universal.
+- Forgetting that annotations change.
 - Assuming RNA changes equal protein changes.
 - Ignoring batch effects.
 - Confusing correlation with mechanism.
-- Overinterpreting a single dataset.
+- Overinterpreting one dataset.
+- Forgetting that missing metadata limits every downstream claim.
 
-## What Experts Still Debate
+## Save This: The Biology Sanity Check
 
-Experts often disagree about how much biology a computational analyst must know before contributing. A useful standard is this: you should understand enough biology to know when your result is surprising, impossible, underpowered, or biologically uninteresting.
+Before analyzing a dataset, answer:
 
-## Research Gap
+| Question | Why it matters |
+|---|---|
+| What organism and genome build? | Prevents coordinate and annotation errors |
+| What tissue or cell type? | Gives biological context |
+| What assay? | Defines what can be measured |
+| What comparison? | Prevents vague analysis |
+| What replicates and controls? | Determines statistical strength |
+| What metadata is missing? | Defines interpretation limits |
 
-There is a need for better "biology for computational people" maps that connect concepts directly to file types, workflows, and analysis decisions.
+## What To Watch Next
 
-## Original Asset
-
-Create a biology prerequisite map with four tracks:
-- Genome track.
-- Transcriptome track.
-- Protein/function track.
-- Cell and tissue context track.
-
-Each concept should link to a future post and one recommended reference.
+Computational biology is moving toward multimodal data: sequence, chromatin, RNA, protein, imaging, and perturbation readouts in the same biological system. The analysts who thrive will understand enough biology to know when a computational result is surprising, impossible, underpowered, or useful.
 
 ## Credits and References
 
@@ -131,9 +180,4 @@ Each concept should link to a future post and one recommended reference.
 - UCSC Genome Browser: https://genome.ucsc.edu/
 - Gene Ontology Consortium: https://geneontology.org/
 - UniProt: https://www.uniprot.org/
-
-## Expert Review Checklist
-
-- Add a diagram connecting biology concepts to common file types.
-- Confirm terminology is beginner-safe but scientifically accurate.
-- Add recommended beginner references before publication.
+- EMBL-EBI training: https://www.ebi.ac.uk/training/

@@ -11,68 +11,113 @@ asset: "Bioinformatics thinking framework"
 
 **Takeaway:** Bioinformatics is the habit of asking whether a biological signal is real, measurable, reproducible, and useful.
 
-## Prerequisites
+## Tools Are Not The Center
 
-Read Week 1 for setup, Week 2 for languages, and Week 3 for the biology map.
+A beginner often asks, "Which tool should I run?" A strong analyst first asks:
+
+```text
+What question am I trying to answer, and what evidence would convince me?
+```
+
+Tools matter, but they are not the analysis. The analysis is the chain of reasoning from biological question to data, model, result, and interpretation.
 
 ## The Four Questions
 
-When you see a bioinformatics result, ask:
+When you see any bioinformatics result, ask:
 
 1. What biological question is being asked?
 2. What data was generated to answer it?
 3. What assumptions connect the data to the question?
 4. What would change my mind?
 
-This is the difference between running tools and doing analysis.
+If you cannot answer those four questions, the result is not ready to trust.
 
 ## Biology First
 
 Start with the biological contrast:
+
 - disease vs control
 - treated vs untreated
 - responder vs non-responder
 - cell type A vs cell type B
 - time point 1 vs time point 2
 
-If the contrast is unclear, the analysis will drift. A beautiful plot cannot fix a vague question.
+If the contrast is unclear, the analysis will drift. A beautiful plot cannot rescue a vague question.
 
-## Data Second
+## Assay Second
 
-Then ask what the assay can measure. RNA-seq measures RNA abundance. Whole-genome sequencing measures DNA sequence. ATAC-seq measures chromatin accessibility. Spatial transcriptomics measures gene expression with location, but often at lower resolution than people assume.
+Ask what the experiment can measure.
+
+| Assay | Measures | Cannot prove alone |
+|---|---|---|
+| RNA-seq | RNA abundance | mechanism or protein function |
+| ATAC-seq | chromatin accessibility | transcriptional activity by itself |
+| ChIP-seq | protein-DNA occupancy or histone marks | direct gene regulation without context |
+| WGS | DNA sequence variation | functional impact without evidence |
+| single-cell RNA-seq | expression by cell | independent biological replication per cell |
 
 The assay defines the ceiling of the claim.
 
 ## Statistics Third
 
-Statistics helps separate signal from noise, but it does not create good experimental design. Replicates, controls, batch structure, and metadata matter before any model is fit.
+Statistics separates signal from noise, but it does not fix weak design.
 
-Ask:
+Before modeling, ask:
+
 - How many biological replicates exist?
 - Are samples independent?
 - What batch effects might exist?
 - Were covariates measured?
 - How many hypotheses were tested?
+- Are labels reliable?
+
+The model is only as useful as the design it represents.
 
 ## Skepticism Always
 
 Good skepticism is not negativity. It is respect for how easy it is to fool yourself with high-dimensional data.
 
-Common skeptical questions:
-- Does this pattern survive another normalization?
+Ask:
+
+- Does this pattern survive another reasonable normalization?
 - Does it appear in an independent dataset?
-- Is it driven by outliers?
+- Is it driven by one outlier?
+- Is batch confounded with condition?
 - Is the label circular?
-- Is the strongest result biologically plausible?
 - Is there a simpler explanation?
 
-## The Bioinformatics Thinking Framework
+## The Thinking Framework
 
-```text
-Question -> Assay -> Data -> Quality control -> Model -> Result -> Biological interpretation -> Validation
+```mermaid
+flowchart LR
+  A["Biological question"] --> B["Assay"]
+  B --> C["Raw data"]
+  C --> D["Quality control"]
+  D --> E["Model"]
+  E --> F["Result"]
+  F --> G["Biological interpretation"]
+  G --> H["Validation or next experiment"]
 ```
 
-At each step, write down what could go wrong.
+At each arrow, write down what could go wrong.
+
+## A Tiny Example
+
+Suppose PC1 separates disease and control samples in an RNA-seq dataset.
+
+A weak interpretation is:
+
+```text
+Disease changes the transcriptome.
+```
+
+A stronger interpretation is:
+
+```text
+PC1 separates disease and control samples, but we need to check whether disease is confounded with batch, sex, tissue quality, sequencing depth, or cell-type composition before treating it as biological signal.
+```
+
+The second version is less flashy and much more useful.
 
 ## Common Mistakes
 
@@ -80,36 +125,29 @@ At each step, write down what could go wrong.
 - Treating default parameters as truth.
 - Confusing statistical significance with biological importance.
 - Ignoring negative results.
-- Making a mechanistic claim from descriptive data.
+- Making mechanistic claims from descriptive data.
 - Forgetting to ask whether the result is actionable.
 
-## What Experts Still Debate
+## Save This: Result Stress Test
 
-Experts disagree on how much automation is healthy. Automated workflows are valuable, but they can also hide assumptions. The best analysts automate execution while keeping interpretation deliberate.
+| Check | Question |
+|---|---|
+| Question | Is the biological contrast clear? |
+| Assay | Can this assay answer the question? |
+| Metadata | Are key covariates available? |
+| QC | Are samples and features behaving as expected? |
+| Model | Are assumptions visible? |
+| Result | Is effect size meaningful, not just significant? |
+| Interpretation | Is the claim proportional to evidence? |
+| Validation | What would strengthen or refute the result? |
 
-## Research Gap
+## What To Watch Next
 
-Bioinformatics needs better public examples of failed analyses: cases where a result looked convincing but collapsed because of batch effects, leakage, circular labels, poor controls, or weak validation.
-
-## Original Asset
-
-Create a one-page "Bioinformatics Result Stress Test" checklist:
-- Is the question clear?
-- Is the assay appropriate?
-- Is the metadata complete?
-- Is the quality control convincing?
-- Are the assumptions visible?
-- Is the interpretation overclaimed?
-- What validation is needed?
+Automation is useful, but it can hide assumptions. The best analysts automate execution while keeping interpretation deliberate. If a workflow produces results faster than the team can reason about them, the workflow is not finished.
 
 ## Credits and References
 
 - Bioconductor workflows: https://www.bioconductor.org/help/workflows/
-- Nature reporting summaries and reproducibility resources: https://www.nature.com/nature-portfolio/editorial-policies/reporting-standards
+- Nature reporting standards: https://www.nature.com/nature-portfolio/editorial-policies/reporting-standards
 - NIH rigor and reproducibility: https://www.nih.gov/research-training/rigor-reproducibility
-
-## Expert Review Checklist
-
-- Add a visual framework diagram.
-- Add one real example from RNA-seq or single-cell analysis.
-- Ensure the tone is practical, not abstract.
+- The Turing Way: https://the-turing-way.netlify.app/

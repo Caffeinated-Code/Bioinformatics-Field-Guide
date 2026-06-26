@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A practical map for computational learners"
+    />
+    <meta property="og:title" content="What Biology Do You Need for
+Bioinformatics?" />
+    <meta
+      property="og:description"
+      content="A practical map for computational learners"
+    />
+    <meta property="og:type" content="article" />
+    <title>What Biology Do You Need for
+Bioinformatics? | Bioinformatics Field Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/site.css" />
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      window.mermaid = mermaid;
+      window.dispatchEvent(new Event("mermaid-ready"));
+    </script>
+  </head>
+  <body class="article-page">
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <header class="site-header" id="site-header">
+      <nav class="nav container" aria-label="Primary navigation">
+        <a href="index.html" class="nav__brand">Bioinformatics Field Guide</a>
+        <div class="nav__links" id="nav-links">
+          <a href="index.html#guides">Guides</a>
+          <a href="index.html#resources">Resources</a>
+          <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+        <div class="nav__actions">
+          <button class="icon-button" id="theme-toggle" aria-label="Toggle color theme">
+            <i class="ri-moon-line" aria-hidden="true"></i>
+          </button>
+          <button class="icon-button nav__toggle" id="nav-toggle" aria-label="Open menu">
+            <i class="ri-menu-line" aria-hidden="true"></i>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="article-hero">
+        <div class="container article-hero__grid">
+          <div>
+            <a class="back-link" href="index.html"><i class="ri-arrow-left-line" aria-hidden="true"></i> Field Guide home</a>
+            <p class="eyebrow">Week 3 · 7 minutes</p>
+            <h1>What Biology Do You Need for Bioinformatics?</h1>
+                        <p class="article-hero__subtitle">A practical
+map for computational learners</p>
+                        <div class="article-meta">
+              <span><i class="ri-user-smile-line" aria-hidden="true"></i> Beginner friendly</span>
+              <span><i class="ri-terminal-box-line" aria-hidden="true"></i> Tested commands</span>
+              <span><i class="ri-git-repository-line" aria-hidden="true"></i> Reproducible assets</span>
+            </div>
+          </div>
+          <aside class="article-card">
+            <span class="article-card__label">Original asset</span>
+            <p>Biology prerequisite map</p>
+            <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+              View repository <i class="ri-external-link-line" aria-hidden="true"></i>
+            </a>
+          </aside>
+        </div>
+      </section>
+
+      <div class="container article-layout">
+        <aside class="toc" aria-label="Table of contents">
+          <p class="toc__title">On this page</p>
+          <ul>
+          <li><a href="#what-biology-do-you-need-for-bioinformatics"
+          id="toc-what-biology-do-you-need-for-bioinformatics">What
+          Biology Do You Need for Bioinformatics?</a>
+          <ul>
+          <li><a href="#the-point-is-not-vocabulary"
+          id="toc-the-point-is-not-vocabulary">The Point Is Not
+          Vocabulary</a></li>
+          <li><a href="#the-five-concepts-to-learn-first"
+          id="toc-the-five-concepts-to-learn-first">The Five Concepts To
+          Learn First</a></li>
+          <li><a href="#dna-the-reference-is-a-coordinate-system"
+          id="toc-dna-the-reference-is-a-coordinate-system">DNA: The
+          Reference Is A Coordinate System</a></li>
+          <li><a href="#rna-expression-depends-on-context"
+          id="toc-rna-expression-depends-on-context">RNA: Expression
+          Depends On Context</a></li>
+          <li><a href="#proteins-closer-to-function-still-not-simple"
+          id="toc-proteins-closer-to-function-still-not-simple">Proteins:
+          Closer To Function, Still Not Simple</a></li>
+          <li><a href="#cells-biology-has-location"
+          id="toc-cells-biology-has-location">Cells: Biology Has
+          Location</a></li>
+          <li><a href="#experiments-every-dataset-has-a-biography"
+          id="toc-experiments-every-dataset-has-a-biography">Experiments:
+          Every Dataset Has A Biography</a></li>
+          <li><a href="#a-beginner-biology-map"
+          id="toc-a-beginner-biology-map">A Beginner Biology
+          Map</a></li>
+          <li><a href="#common-mistakes" id="toc-common-mistakes">Common
+          Mistakes</a></li>
+          <li><a href="#save-this-the-biology-sanity-check"
+          id="toc-save-this-the-biology-sanity-check">Save This: The
+          Biology Sanity Check</a></li>
+          <li><a href="#what-to-watch-next"
+          id="toc-what-to-watch-next">What To Watch Next</a></li>
+          <li><a href="#credits-and-references"
+          id="toc-credits-and-references">Credits and
+          References</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+
+        <article class="article-content">
+          <h1 id="what-biology-do-you-need-for-bioinformatics">What
+          Biology Do You Need for Bioinformatics?</h1>
+          <p><strong>Takeaway:</strong> You do not need to memorize all
+          of biology before starting bioinformatics, but you do need a
+          working map of DNA, RNA, proteins, cells, experiments, and
+          uncertainty.</p>
+          <h2 id="the-point-is-not-vocabulary">The Point Is Not
+          Vocabulary</h2>
+          <p>Bioinformatics is not just coding on biological files. A
+          result only matters if it respects the experiment that
+          produced the data.</p>
+          <p>When you see a dataset, ask:</p>
+          <pre class="text"><code>What biological system was measured, how was it measured, and what can this assay actually support?</code></pre>
+          <p>That question is more useful than memorizing a hundred gene
+          names.</p>
+          <h2 id="the-five-concepts-to-learn-first">The Five Concepts To
+          Learn First</h2>
+          <table>
+          <thead>
+          <tr>
+          <th>Concept</th>
+          <th>Plain meaning</th>
+          <th>Why it matters</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>DNA</td>
+          <td>Genetic sequence and variation</td>
+          <td>Coordinates, variants, genes, regulatory regions</td>
+          </tr>
+          <tr>
+          <td>RNA</td>
+          <td>Transcribed molecules</td>
+          <td>Expression, splicing, regulation, cell state</td>
+          </tr>
+          <tr>
+          <td>Protein</td>
+          <td>Functional molecules</td>
+          <td>Pathways, structure, enzymes, receptors</td>
+          </tr>
+          <tr>
+          <td>Cell type</td>
+          <td>Biological context</td>
+          <td>Signals can disappear when cell types are mixed</td>
+          </tr>
+          <tr>
+          <td>Experiment</td>
+          <td>Data biography</td>
+          <td>Controls, batches, replicates, and limits of
+          interpretation</td>
+          </tr>
+          </tbody>
+          </table>
+          <h2 id="dna-the-reference-is-a-coordinate-system">DNA: The
+          Reference Is A Coordinate System</h2>
+          <p>Many workflows start by comparing reads to a reference
+          genome. The reference is not a perfect person; it is a
+          coordinate system that helps us organize evidence.</p>
+          <p>Learn:</p>
+          <ul>
+          <li>chromosomes</li>
+          <li>genes</li>
+          <li>exons and introns</li>
+          <li>variants</li>
+          <li>reference genomes</li>
+          <li>genome annotations</li>
+          <li>genome builds</li>
+          </ul>
+          <p>The practical question is:</p>
+          <pre class="text"><code>Where is this signal in the genome, and are we using the right coordinate system?</code></pre>
+          <p>Mixing genome builds is one of the easiest ways to create
+          silent errors.</p>
+          <h2 id="rna-expression-depends-on-context">RNA: Expression
+          Depends On Context</h2>
+          <p>RNA-seq often measures RNA abundance as a proxy for gene
+          expression. But expression depends on tissue, cell type, time
+          point, condition, protocol, and batch.</p>
+          <p>Learn:</p>
+          <ul>
+          <li>transcription</li>
+          <li>splicing</li>
+          <li>gene expression</li>
+          <li>count matrices</li>
+          <li>normalization</li>
+          <li>differential expression</li>
+          </ul>
+          <p>The practical question is:</p>
+          <pre class="text"><code>Which genes changed, in which samples, under what assumptions?</code></pre>
+          <p>RNA changes are evidence. They are not automatic proof of
+          protein change, mechanism, or clinical relevance.</p>
+          <h2
+          id="proteins-closer-to-function-still-not-simple">Proteins:
+          Closer To Function, Still Not Simple</h2>
+          <p>Proteins carry out many cellular functions, but predicting
+          function from sequence or expression is not
+          straightforward.</p>
+          <p>Learn:</p>
+          <ul>
+          <li>amino acids</li>
+          <li>protein domains</li>
+          <li>motifs</li>
+          <li>protein families</li>
+          <li>post-translational modification</li>
+          <li>structure-function relationships</li>
+          </ul>
+          <p>The practical question is:</p>
+          <pre class="text"><code>Does this molecular change plausibly alter function, and what evidence supports that?</code></pre>
+          <h2 id="cells-biology-has-location">Cells: Biology Has
+          Location</h2>
+          <p>Single-cell and spatial methods remind us that tissue is
+          not one uniform thing. A tumor, liver sample, blood draw, or
+          organoid may contain many cell types and states.</p>
+          <p>Learn:</p>
+          <ul>
+          <li>cell type</li>
+          <li>cell state</li>
+          <li>differentiation</li>
+          <li>immune populations</li>
+          <li>tissue compartments</li>
+          <li>spatial organization</li>
+          </ul>
+          <p>The practical question is:</p>
+          <pre class="text"><code>Which cells are driving the pattern?</code></pre>
+          <p>This matters because a bulk signal can reflect a true
+          expression change, a cell-type proportion change, or both.</p>
+          <h2
+          id="experiments-every-dataset-has-a-biography">Experiments:
+          Every Dataset Has A Biography</h2>
+          <p>Before trusting any analysis, learn the dataset's
+          backstory:</p>
+          <ul>
+          <li>How were samples collected?</li>
+          <li>What platform was used?</li>
+          <li>How many biological replicates exist?</li>
+          <li>What controls exist?</li>
+          <li>What batches exist?</li>
+          <li>What metadata is missing?</li>
+          <li>What was excluded before you received the file?</li>
+          </ul>
+          <p>If you ignore the experiment, your analysis can be elegant
+          and wrong.</p>
+          <h2 id="a-beginner-biology-map">A Beginner Biology Map</h2>
+          <pre class="mermaid"><code>flowchart LR
+  A[&quot;DNA&quot;] --&gt; B[&quot;RNA&quot;]
+  B --&gt; C[&quot;Protein&quot;]
+  A --&gt; D[&quot;Variants and regulation&quot;]
+  B --&gt; E[&quot;Expression and splicing&quot;]
+  C --&gt; F[&quot;Function and pathways&quot;]
+  G[&quot;Cell type&quot;] --&gt; E
+  H[&quot;Experiment&quot;] --&gt; A
+  H --&gt; B
+  H --&gt; G
+  H --&gt; I[&quot;Interpretation limits&quot;]</code></pre>
+          <h2 id="common-mistakes">Common Mistakes</h2>
+          <ul>
+          <li>Treating gene symbols as stable and universal.</li>
+          <li>Forgetting that annotations change.</li>
+          <li>Assuming RNA changes equal protein changes.</li>
+          <li>Ignoring batch effects.</li>
+          <li>Confusing correlation with mechanism.</li>
+          <li>Overinterpreting one dataset.</li>
+          <li>Forgetting that missing metadata limits every downstream
+          claim.</li>
+          </ul>
+          <h2 id="save-this-the-biology-sanity-check">Save This: The
+          Biology Sanity Check</h2>
+          <p>Before analyzing a dataset, answer:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Question</th>
+          <th>Why it matters</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>What organism and genome build?</td>
+          <td>Prevents coordinate and annotation errors</td>
+          </tr>
+          <tr>
+          <td>What tissue or cell type?</td>
+          <td>Gives biological context</td>
+          </tr>
+          <tr>
+          <td>What assay?</td>
+          <td>Defines what can be measured</td>
+          </tr>
+          <tr>
+          <td>What comparison?</td>
+          <td>Prevents vague analysis</td>
+          </tr>
+          <tr>
+          <td>What replicates and controls?</td>
+          <td>Determines statistical strength</td>
+          </tr>
+          <tr>
+          <td>What metadata is missing?</td>
+          <td>Defines interpretation limits</td>
+          </tr>
+          </tbody>
+          </table>
+          <h2 id="what-to-watch-next">What To Watch Next</h2>
+          <p>Computational biology is moving toward multimodal data:
+          sequence, chromatin, RNA, protein, imaging, and perturbation
+          readouts in the same biological system. The analysts who
+          thrive will understand enough biology to know when a
+          computational result is surprising, impossible, underpowered,
+          or useful.</p>
+          <h2 id="credits-and-references">Credits and References</h2>
+          <ul>
+          <li>NCBI Bookshelf: <a
+          href="https://www.ncbi.nlm.nih.gov/books/">https://www.ncbi.nlm.nih.gov/books/</a></li>
+          <li>Ensembl genome browser: <a
+          href="https://www.ensembl.org/">https://www.ensembl.org/</a></li>
+          <li>UCSC Genome Browser: <a
+          href="https://genome.ucsc.edu/">https://genome.ucsc.edu/</a></li>
+          <li>Gene Ontology Consortium: <a
+          href="https://geneontology.org/">https://geneontology.org/</a></li>
+          <li>UniProt: <a
+          href="https://www.uniprot.org/">https://www.uniprot.org/</a></li>
+          <li>EMBL-EBI training: <a
+          href="https://www.ebi.ac.uk/training/">https://www.ebi.ac.uk/training/</a></li>
+          </ul>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer__grid">
+        <div>
+          <strong>Bioinformatics Field Guide</strong>
+          <p>Practical bioinformatics guides with reproducible examples.</p>
+        </div>
+        <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+          GitHub repository <i class="ri-external-link-line" aria-hidden="true"></i>
+        </a>
+      </div>
+    </footer>
+
+    <script src="assets/site.js"></script>
+  </body>
+</html>

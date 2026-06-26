@@ -1,158 +1,181 @@
 ---
 title: "What Languages Should a Bioinformatician Know?"
-subtitle: "Python, R, Bash, SQL, and when each one matters"
+subtitle: "Python, R, Bash, SQL, and how to choose without getting stuck"
 week: 2
 audience: ["beginner", "practitioner"]
 reading_time: "7 minutes"
-asset: "Language decision tree"
+asset: "Bioinformatics language decision map"
 ---
 
 # What Languages Should a Bioinformatician Know?
 
-**Takeaway:** You do not need to master every language at once; learn Bash for moving around, Python or R for analysis, SQL for structured data, and enough workflow thinking to connect them.
+**Takeaway:** You do not need to learn every language at once. Learn enough Bash to move through files, enough Python or R to analyze data, enough SQL to respect metadata, and enough workflow thinking to make your work repeatable.
 
-## Prerequisites
+## Start With The Job, Not The Language
 
-Read Week 1 first if your laptop is not set up yet. You should know how to open a terminal and create a project folder.
+Beginners often ask, "Should I learn Python or R?" A better question is:
 
-## The Short Answer
+```text
+What kind of bioinformatics work am I trying to do?
+```
 
-If you are starting today:
+Languages are tools. The goal is not to collect them. The goal is to know which one fits the problem in front of you.
 
-| Need | Learn first |
-|---|---|
-| Running tools and moving files | Bash |
-| Data analysis and automation | Python |
-| Statistics and genomics packages | R |
-| Querying tables and databases | SQL |
-| Reproducible pipelines | Nextflow or Snakemake later |
+| Job | Best first tool | Why |
+|---|---|---|
+| Move around files and run bioinformatics tools | Bash | Most command-line tools expect a Unix-like shell |
+| Clean tables, write scripts, call APIs, use ML | Python | General-purpose, readable, and strong for automation |
+| RNA-seq statistics, plots, Bioconductor workflows | R | Excellent statistical genomics ecosystem |
+| Query sample sheets, clinical tables, warehouses | SQL | Forces precise thinking about metadata and joins |
+| Rerun the same analysis many times | Nextflow or Snakemake | Turns commands into reproducible workflows |
 
-The goal is not to become a language collector. The goal is to know which tool fits the question.
+## The Beginner Order That Works
 
-## Bash: The Glue
+If you are starting from zero, use this order:
 
-Bash helps you inspect files, run tools, move data, and automate repetitive commands. A lot of bioinformatics still happens at the command line because sequencing files are large and many tools are designed for Unix-like systems.
+1. **Bash basics:** paths, files, pipes, and running tools.
+2. **Python or R:** choose one as your first analysis language.
+3. **The other analysis language:** add it after you can finish small tasks.
+4. **SQL:** learn joins and grouping before your metadata gets messy.
+5. **Workflow systems:** add Nextflow or Snakemake when you repeat analyses.
 
-Learn:
-- `pwd`, `ls`, `cd`
-- `mkdir`, `cp`, `mv`, `rm`
-- `head`, `tail`, `less`
-- `grep`, `cut`, `sort`, `uniq`, `wc`
-- pipes with `|`
-- shell scripts for repeated commands
+Do not try to master everything in one month. Aim for useful fluency.
 
-You do not need to become a systems engineer. You do need to stop being afraid of the terminal.
+## Bash: The Glue Layer
 
-## Python: The General-Purpose Workhorse
+Bash is how you talk to files and command-line tools. Sequencing data is often too large for spreadsheets, and many bioinformatics tools are designed for the terminal.
 
-Python is excellent for:
-- Cleaning data.
-- Writing scripts.
-- Working with APIs.
-- Building small tools.
-- Machine learning.
-- Single-cell analysis with tools like Scanpy.
+Learn these first:
 
-For bioinformatics, start with:
-- `pandas`
-- `numpy`
-- `matplotlib` or `seaborn`
-- `scipy`
-- `scikit-learn`
-- `biopython`
+```bash
+pwd
+ls
+cd
+mkdir
+cp
+mv
+head
+tail
+wc
+grep
+cut
+sort
+uniq
+```
 
-Python is often the best choice when you need to build something reusable.
+Then learn pipes:
 
-## R: Statistics and Bioinformatics Depth
+```bash
+cat samples.tsv | cut -f2 | sort | uniq -c
+```
 
-R is strong for:
-- Statistics.
-- Data visualization.
-- RNA-seq and differential expression.
-- Bioconductor workflows.
-- Reports with Quarto or R Markdown.
+You do not need to become a systems engineer. You do need to stop being afraid of paths, files, and command output.
+
+## Python: The Builder
+
+Python is a strong first analysis language if you want to clean data, automate work, build tools, use APIs, or learn machine learning.
 
 Start with:
-- `tidyverse`
-- `ggplot2`
-- `DESeq2`
-- `edgeR`
-- `limma`
-- `Seurat`
 
-R is often the best choice when your analysis lives close to statistical modeling and established Bioconductor packages.
+| Package | Use |
+|---|---|
+| `pandas` | tables and metadata |
+| `numpy` | arrays and numerical work |
+| `matplotlib` / `seaborn` | plotting |
+| `scipy` | statistics and scientific computing |
+| `scikit-learn` | machine learning |
+| `biopython` | sequence and biological file utilities |
 
-## SQL: The Quiet Superpower
+Python is often the best choice when you need to build something reusable for yourself or a team.
 
-Many beginners skip SQL, but bioinformatics teams often work with metadata, sample sheets, clinical annotations, assay records, and warehouse tables. SQL helps you ask precise questions of structured data.
+## R: The Statistical Genomics Workbench
+
+R is especially strong when the analysis is close to statistics, visualization, and Bioconductor.
+
+Start with:
+
+| Package | Use |
+|---|---|
+| `tidyverse` | data wrangling |
+| `ggplot2` | visualization |
+| `DESeq2` | RNA-seq differential expression |
+| `edgeR` | count-based statistical modeling |
+| `limma` | linear modeling and omics workflows |
+| `Seurat` | single-cell analysis |
+
+R is often the best choice when a trusted method already exists in Bioconductor or when the question is statistical first.
+
+## SQL: The Metadata Superpower
+
+Bioinformatics fails quietly when metadata is messy. SQL helps you ask precise questions:
+
+```sql
+SELECT condition, COUNT(*) AS n_samples
+FROM samples
+GROUP BY condition;
+```
 
 Learn:
+
 - `SELECT`
 - `WHERE`
 - `GROUP BY`
 - `JOIN`
 - `ORDER BY`
-- basic database design
+- primary keys
+- sample identifiers
 
-SQL makes you better at thinking about samples, identifiers, and metadata.
+SQL makes you better at spotting duplicated samples, inconsistent labels, missing covariates, and broken joins.
 
-## A Decision Tree
+## The Decision Map
 
-Use this rule of thumb:
-
-```text
-Do I need to run command-line tools or inspect files?
-  Use Bash.
-
-Do I need to analyze tables, automate work, or use machine learning?
-  Use Python.
-
-Do I need statistical genomics packages or publication-quality plots?
-  Use R.
-
-Do I need to query structured metadata?
-  Use SQL.
-
-Do I need to run the same analysis repeatedly?
-  Use a workflow system.
+```mermaid
+flowchart TD
+  A["What are you trying to do?"] --> B["Run tools or inspect files"]
+  A --> C["Analyze tables or automate work"]
+  A --> D["Use statistical genomics packages"]
+  A --> E["Query structured metadata"]
+  A --> F["Repeat the full analysis"]
+  B --> G["Use Bash"]
+  C --> H["Use Python"]
+  D --> I["Use R"]
+  E --> J["Use SQL"]
+  F --> K["Use Nextflow or Snakemake"]
 ```
 
 ## Common Mistakes
 
-- Trying to learn Python, R, Bash, and SQL all in the same week.
-- Writing everything in notebooks and never making scripts.
-- Treating programming as separate from biology.
-- Copying code without understanding file paths and objects.
+- Learning syntax without learning file paths.
+- Treating notebooks as the only record of analysis.
+- Copying code without understanding objects and inputs.
+- Using Python for everything because it feels familiar.
+- Using R for everything because a package exists.
 - Ignoring metadata until the end.
+- Starting workflow systems before understanding the commands they run.
 
-## What Experts Still Debate
+## Save This: A Four-Week Starter Plan
 
-Some teams are Python-first, some are R-first, and many use both. The mature answer is not tribal. Good bioinformatics is language-flexible but reproducibility-strict.
+| Week | Goal | Tiny project |
+|---|---|---|
+| 1 | Bash | Count rows, inspect FASTA/FASTQ-like files, summarize sample names |
+| 2 | Python | Read a metadata table, clean columns, make one plot |
+| 3 | R | Read a count matrix, join metadata, make a basic expression plot |
+| 4 | SQL | Create two small tables and join samples to annotations |
 
-## Research Gap
+By the end, you should be able to explain what each language is doing in one sentence.
 
-There is room for a public "bioinformatics language benchmark" that takes the same small task, such as summarizing a count matrix with metadata, and shows equivalent Bash, Python, R, and SQL solutions with tradeoffs.
+## What To Watch Next
 
-## Original Asset
-
-Create a language decision tree and a 4-week starter plan:
-- Week 1: Bash basics.
-- Week 2: Python tables and plotting.
-- Week 3: R statistics and visualization.
-- Week 4: SQL joins and metadata.
+The mature answer is not Python vs R. Real bioinformatics teams use whatever combination makes the analysis correct, readable, and reproducible. The best analysts are language-flexible but evidence-strict.
 
 ## Credits and References
 
 - Python: https://www.python.org/
 - R Project: https://www.r-project.org/
 - Bioconductor: https://www.bioconductor.org/
+- pandas documentation: https://pandas.pydata.org/docs/
+- tidyverse: https://www.tidyverse.org/
 - Scanpy documentation: https://scanpy.readthedocs.io/
 - Seurat documentation: https://satijalab.org/seurat/
 - Nextflow: https://www.nextflow.io/
 - Snakemake: https://snakemake.readthedocs.io/
-
-## Expert Review Checklist
-
-- Add a one-page visual decision tree.
-- Include beginner exercises for each language.
-- Verify package names and links before publication.

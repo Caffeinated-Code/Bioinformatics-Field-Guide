@@ -11,24 +11,23 @@ asset: "Bulk vs single-cell comparison map"
 
 **Takeaway:** Bulk RNA-seq summarizes expression across many cells, while single-cell RNA-seq measures many individual cells and shifts the question from "what changed overall?" to "which cells changed?"
 
-## Prerequisites
-
-Read Week 7 for RNA-seq and Week 9 for PCA.
-
 ## The Simple Difference
 
 Bulk RNA-seq blends many cells together. Single-cell RNA-seq tries to measure individual cells separately.
 
 | Question | Bulk RNA-seq | Single-cell RNA-seq |
 |---|---|---|
-| What is the unit? | Sample | Cell |
-| Main output | Gene by sample matrix | Gene by cell matrix |
-| Strength | Robust condition-level expression | Cell-type and cell-state resolution |
-| Challenge | Mixed cell populations | Sparsity, noise, annotation, scale |
+| Unit | sample | cell |
+| Main output | gene by sample matrix | gene by cell matrix |
+| Strength | robust condition-level expression | cell-type and cell-state resolution |
+| Challenge | mixed cell populations | sparsity, noise, annotation, scale |
 
-## Why Single-Cell Changed the Field
+Neither is automatically better. They answer different questions.
+
+## Why Single-Cell Changed The Field
 
 Single-cell RNA-seq helps reveal:
+
 - rare cell types
 - cell states
 - immune populations
@@ -38,30 +37,57 @@ Single-cell RNA-seq helps reveal:
 
 It is powerful because biology often happens in specific cells, not averaged tissue.
 
-## The Single-Cell Workflow
+## The Workflow
 
-```text
-cells -> barcoded sequencing -> count matrix -> QC -> normalization -> dimensionality reduction -> clustering -> annotation -> biological interpretation
+```mermaid
+flowchart LR
+  A["Cells"] --> B["Barcoding"]
+  B --> C["Sequencing"]
+  C --> D["Count matrix"]
+  D --> E["QC"]
+  E --> F["Normalization"]
+  F --> G["Dimensionality reduction"]
+  G --> H["Clustering"]
+  H --> I["Annotation"]
+  I --> J["Biological interpretation"]
 ```
 
 Each step contains choices that can change the result.
 
 ## The Hard Part: Annotation
 
-Clusters do not name themselves. Analysts often use marker genes, references, labels from tools, or expert knowledge to annotate cell types.
+Clusters do not name themselves. Analysts often use marker genes, reference atlases, label-transfer tools, or expert knowledge to annotate cell types.
 
 Ask:
+
 - Are marker genes specific?
 - Is the reference appropriate?
-- Could the cluster be a state, not a type?
+- Could this cluster be a cell state, not a cell type?
 - Does annotation match tissue biology?
 - Are doublets or low-quality cells driving the cluster?
 
+Automated annotation is useful, but it is not a substitute for biological review.
+
 ## Pseudobulk: A Useful Bridge
 
-For differential expression, many experts prefer pseudobulk approaches: aggregate counts by sample and cell type, then use bulk RNA-seq statistical tools. This helps preserve biological replication.
+For differential expression, many experts prefer pseudobulk approaches: aggregate counts by sample and cell type, then use bulk RNA-seq statistical tools.
 
-Single cells are not automatically independent biological replicates.
+Why? Because single cells from the same person, mouse, or sample are not independent biological replicates.
+
+The unit of replication matters.
+
+## UMAP Is A Map, Not A Microscope
+
+UMAP and t-SNE plots are helpful visual summaries, but distances can be misleading.
+
+Do not assume:
+
+- nearby clusters are always biologically similar
+- distant clusters are always unrelated
+- cluster shape has direct biological meaning
+- a UMAP plot validates cell identity
+
+Use UMAP to explore. Use markers, metadata, validation, and domain knowledge to interpret.
 
 ## Common Mistakes
 
@@ -71,24 +97,22 @@ Single cells are not automatically independent biological replicates.
 - Choosing clustering resolution without biological reasoning.
 - Treating UMAP distance as exact biology.
 - Comparing cell types without enough samples.
+- Forgetting that integration can remove real biology if misused.
 
-## What Experts Still Debate
+## Save This: Bulk vs Single-Cell Decision Map
 
-Experts debate normalization, integration, batch correction, clustering resolution, annotation standards, differential expression methods, and how to validate cell states.
+| If your question is... | Consider |
+|---|---|
+| What changed overall between conditions? | bulk RNA-seq |
+| Which cell type drives the signal? | single-cell RNA-seq |
+| Do I need strong sample-level statistics? | bulk or pseudobulk |
+| Do I need rare population discovery? | single-cell RNA-seq |
+| Do I have few samples but many cells? | be cautious; cells are not replicates |
+| Do I need spatial context? | spatial transcriptomics or validation |
 
-## Research Gap
+## What To Watch Next
 
-Single-cell analysis needs better benchmark tasks that test biological conclusions, not just clustering metrics. A method can make attractive plots and still fail at the biological question.
-
-## Original Asset
-
-Create a bulk vs single-cell comparison map:
-- data unit
-- matrix shape
-- workflow steps
-- statistical risks
-- best use cases
-- common overclaims
+Experts debate normalization, integration, batch correction, clustering resolution, annotation standards, differential expression methods, and validation of cell states. The next frontier is not prettier plots. It is stronger biological conclusions.
 
 ## Credits and References
 
@@ -97,9 +121,4 @@ Create a bulk vs single-cell comparison map:
 - Scanpy documentation: https://scanpy.readthedocs.io/
 - Single Cell Expression Atlas: https://www.ebi.ac.uk/gxa/sc/home
 - 10x Genomics resources: https://www.10xgenomics.com/resources
-
-## Expert Review Checklist
-
-- Add a diagram showing bulk averaging vs single-cell resolution.
-- Add references for pseudobulk best practices before publication.
-- Check latest Seurat and Scanpy recommendations.
+- muscat pseudobulk workflows: https://bioconductor.org/packages/release/bioc/html/muscat.html

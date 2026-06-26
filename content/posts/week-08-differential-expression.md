@@ -11,15 +11,12 @@ asset: "Differential expression interpretation rubric"
 
 **Takeaway:** Differential expression can tell you which genes changed between conditions, but it cannot by itself prove mechanism, causality, or clinical relevance.
 
-## Prerequisites
+## What The Test Actually Asks
 
-Read Week 7 for the RNA-seq workflow and Week 4 for bioinformatics thinking.
-
-## What Differential Expression Tests
-
-Differential expression asks whether observed gene counts differ between groups more than expected by noise, given a statistical model.
+Differential expression asks whether observed gene counts differ between groups more than expected under a statistical model.
 
 It depends on:
+
 - count data
 - sample metadata
 - normalization
@@ -27,14 +24,16 @@ It depends on:
 - study design
 - multiple-testing correction
 
+The result is model-based evidence. It is not automatic biology.
+
 ## The Columns People Misread
 
 | Column | Meaning | Common mistake |
 |---|---|---|
-| log fold change | Size and direction of change | Treating tiny effects as important |
-| p-value | Evidence under the model | Ignoring multiple testing |
-| adjusted p-value | Multiple-testing corrected evidence | Treating as biological truth |
-| base mean | Average expression level | Ignoring low-expression instability |
+| log fold change | size and direction of change | treating tiny effects as important |
+| p-value | evidence under the model | ignoring multiple testing |
+| adjusted p-value | corrected evidence across many tests | treating it as biological truth |
+| base mean | average expression level | ignoring low-expression instability |
 
 The most useful genes are often not just statistically significant. They are statistically supported, biologically plausible, and relevant to the question.
 
@@ -55,11 +54,41 @@ For each result, ask:
 Volcano plots are useful summaries, but they can encourage shallow interpretation. A labeled point on a volcano plot is a hypothesis, not an answer.
 
 Always inspect:
+
 - normalized counts
 - sample-level plots
 - batch structure
 - pathway context
 - known markers or controls
+- outliers
+
+## A Tiny Example
+
+Suppose `GENE1` has:
+
+| gene | log2 fold change | adjusted p-value | base mean |
+|---|---:|---:|---:|
+| GENE1 | 0.18 | 0.00001 | 900 |
+| GENE2 | 2.4 | 0.04 | 6 |
+| GENE3 | 1.2 | 0.003 | 180 |
+
+`GENE1` is statistically strong but may have a small effect. `GENE2` has a large effect but low expression, so the estimate may be unstable. `GENE3` may be the more interesting first follow-up if the biology fits.
+
+That is the point: interpretation needs more than one column.
+
+## Design Formula Matters
+
+A design formula tells the model what comparison to test and what covariates to account for.
+
+Examples:
+
+```r
+~ condition
+~ batch + condition
+~ donor + condition
+```
+
+If batch is confounded with condition, no formula can magically create a clean experiment. If donor pairing matters and is ignored, the result can be misleading.
 
 ## Common Mistakes
 
@@ -70,24 +99,23 @@ Always inspect:
 - Not accounting for paired samples.
 - Treating adjusted p-value cutoffs as universal laws.
 - Overinterpreting pathway enrichment.
+- Making clinical claims from exploratory results.
 
-## What Experts Still Debate
+## Save This: DE Result Triage
 
-Experts debate best practices for shrinkage, gene filtering, complex designs, pseudobulk single-cell differential expression, and whether pathway-level methods should be primary or secondary.
+| Check | Good sign |
+|---|---|
+| expression | not driven by near-zero counts |
+| effect size | large enough to matter biologically |
+| adjusted p-value | survives multiple-testing correction |
+| sample consistency | not driven by one outlier |
+| design | covariates match the experiment |
+| biology | direction fits known or testable biology |
+| validation | independent data or experiment can support it |
 
-## Research Gap
+## What To Watch Next
 
-Bioinformatics needs more public examples showing how differential expression conclusions change under different design formulas, filtering rules, and batch adjustments.
-
-## Original Asset
-
-Create a differential expression interpretation rubric with scores for:
-- statistical support
-- effect size
-- expression level
-- sample consistency
-- biological plausibility
-- validation priority
+Experts still debate shrinkage, filtering, complex designs, pseudobulk single-cell differential expression, and when pathway-level interpretation should be primary or secondary. A careful analyst treats differential expression as a prioritized hypothesis list, not as final proof.
 
 ## Credits and References
 
@@ -96,9 +124,3 @@ Create a differential expression interpretation rubric with scores for:
 - edgeR: https://bioconductor.org/packages/release/bioc/html/edgeR.html
 - limma: https://bioconductor.org/packages/release/bioc/html/limma.html
 - Bioconductor RNA-seq workflow: https://www.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html
-
-## Expert Review Checklist
-
-- Add a toy result table and show interpretation.
-- Verify advice for paired and batch designs.
-- Add caution around clinical interpretation.

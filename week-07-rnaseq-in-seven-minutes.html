@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="From reads to differential expression"
+    />
+    <meta property="og:title" content="RNA-seq in 7 Minutes" />
+    <meta
+      property="og:description"
+      content="From reads to differential expression"
+    />
+    <meta property="og:type" content="article" />
+    <title>RNA-seq in 7 Minutes | Bioinformatics Field Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/site.css" />
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      window.mermaid = mermaid;
+      window.dispatchEvent(new Event("mermaid-ready"));
+    </script>
+  </head>
+  <body class="article-page">
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <header class="site-header" id="site-header">
+      <nav class="nav container" aria-label="Primary navigation">
+        <a href="index.html" class="nav__brand">Bioinformatics Field Guide</a>
+        <div class="nav__links" id="nav-links">
+          <a href="index.html#guides">Guides</a>
+          <a href="index.html#resources">Resources</a>
+          <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+        <div class="nav__actions">
+          <button class="icon-button" id="theme-toggle" aria-label="Toggle color theme">
+            <i class="ri-moon-line" aria-hidden="true"></i>
+          </button>
+          <button class="icon-button nav__toggle" id="nav-toggle" aria-label="Open menu">
+            <i class="ri-menu-line" aria-hidden="true"></i>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="article-hero">
+        <div class="container article-hero__grid">
+          <div>
+            <a class="back-link" href="index.html"><i class="ri-arrow-left-line" aria-hidden="true"></i> Field Guide home</a>
+            <p class="eyebrow">Week 7 · 7 minutes</p>
+            <h1>RNA-seq in 7 Minutes</h1>
+                        <p class="article-hero__subtitle">From reads to
+differential expression</p>
+                        <div class="article-meta">
+              <span><i class="ri-user-smile-line" aria-hidden="true"></i> Beginner friendly</span>
+              <span><i class="ri-terminal-box-line" aria-hidden="true"></i> Tested commands</span>
+              <span><i class="ri-git-repository-line" aria-hidden="true"></i> Reproducible assets</span>
+            </div>
+          </div>
+          <aside class="article-card">
+            <span class="article-card__label">Original asset</span>
+            <p>RNA-seq workflow map</p>
+            <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+              View repository <i class="ri-external-link-line" aria-hidden="true"></i>
+            </a>
+          </aside>
+        </div>
+      </section>
+
+      <div class="container article-layout">
+        <aside class="toc" aria-label="Table of contents">
+          <p class="toc__title">On this page</p>
+          <ul>
+          <li><a href="#rna-seq-in-7-minutes"
+          id="toc-rna-seq-in-7-minutes">RNA-seq in 7 Minutes</a>
+          <ul>
+          <li><a href="#what-rna-seq-measures"
+          id="toc-what-rna-seq-measures">What RNA-seq Measures</a></li>
+          <li><a href="#the-workflow" id="toc-the-workflow">The
+          Workflow</a></li>
+          <li><a href="#step-1-experimental-design"
+          id="toc-step-1-experimental-design">Step 1: Experimental
+          Design</a></li>
+          <li><a href="#step-2-fastq-quality-control"
+          id="toc-step-2-fastq-quality-control">Step 2: FASTQ Quality
+          Control</a></li>
+          <li><a href="#step-3-alignment-or-quantification"
+          id="toc-step-3-alignment-or-quantification">Step 3: Alignment
+          Or Quantification</a></li>
+          <li><a href="#step-4-count-matrix-plus-metadata"
+          id="toc-step-4-count-matrix-plus-metadata">Step 4: Count
+          Matrix Plus Metadata</a></li>
+          <li><a href="#step-5-differential-expression"
+          id="toc-step-5-differential-expression">Step 5: Differential
+          Expression</a></li>
+          <li><a href="#step-6-interpretation"
+          id="toc-step-6-interpretation">Step 6: Interpretation</a></li>
+          <li><a href="#common-mistakes" id="toc-common-mistakes">Common
+          Mistakes</a></li>
+          <li><a href="#save-this-rna-seq-qc-map"
+          id="toc-save-this-rna-seq-qc-map">Save This: RNA-seq QC
+          Map</a></li>
+          <li><a href="#what-to-watch-next"
+          id="toc-what-to-watch-next">What To Watch Next</a></li>
+          <li><a href="#credits-and-references"
+          id="toc-credits-and-references">Credits and
+          References</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+
+        <article class="article-content">
+          <h1 id="rna-seq-in-7-minutes">RNA-seq in 7 Minutes</h1>
+          <p><strong>Takeaway:</strong> RNA-seq turns RNA fragments into
+          a count matrix, then uses statistics to ask which genes differ
+          across biological conditions.</p>
+          <h2 id="what-rna-seq-measures">What RNA-seq Measures</h2>
+          <p>RNA-seq measures RNA abundance. It does not directly
+          measure protein abundance, enzyme activity, mechanism, or
+          clinical relevance.</p>
+          <p>That limitation does not make RNA-seq weak. It makes
+          interpretation important.</p>
+          <h2 id="the-workflow">The Workflow</h2>
+          <pre class="mermaid"><code>flowchart LR
+  A[&quot;Samples&quot;] --&gt; B[&quot;RNA extraction&quot;]
+  B --&gt; C[&quot;Sequencing&quot;]
+  C --&gt; D[&quot;FASTQ&quot;]
+  D --&gt; E[&quot;QC&quot;]
+  E --&gt; F[&quot;Alignment or quantification&quot;]
+  F --&gt; G[&quot;Count matrix&quot;]
+  H[&quot;Metadata&quot;] --&gt; G
+  G --&gt; I[&quot;Differential expression&quot;]
+  I --&gt; J[&quot;Biological interpretation&quot;]</code></pre>
+          <p>Every arrow is a place where bias can enter.</p>
+          <h2 id="step-1-experimental-design">Step 1: Experimental
+          Design</h2>
+          <p>Before sequencing, decide:</p>
+          <ul>
+          <li>What condition is being compared?</li>
+          <li>What tissue, cell type, or time point matters?</li>
+          <li>How many biological replicates are needed?</li>
+          <li>What batches might exist?</li>
+          <li>What covariates should be recorded?</li>
+          <li>What result would be biologically useful?</li>
+          </ul>
+          <p>Analysis cannot rescue a weak design.</p>
+          <h2 id="step-2-fastq-quality-control">Step 2: FASTQ Quality
+          Control</h2>
+          <p>FASTQ files should be checked for:</p>
+          <ul>
+          <li>base quality</li>
+          <li>adapter contamination</li>
+          <li>duplication</li>
+          <li>overrepresented sequences</li>
+          <li>read length</li>
+          </ul>
+          <p>FastQC and MultiQC are commonly used to summarize quality.
+          The goal is not to panic at every warning. The goal is to
+          understand whether the data is fit for the planned
+          analysis.</p>
+          <h2 id="step-3-alignment-or-quantification">Step 3: Alignment
+          Or Quantification</h2>
+          <p>There are two common paths:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Path</th>
+          <th>Example tools</th>
+          <th>Typical output</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>Align reads to a genome</td>
+          <td>STAR, HISAT2</td>
+          <td>BAM files</td>
+          </tr>
+          <tr>
+          <td>Quantify transcripts directly</td>
+          <td>Salmon, kallisto</td>
+          <td>transcript abundance</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>Both can lead to gene-level analysis, but assumptions
+          differ. Record the tool, version, reference, and
+          annotation.</p>
+          <h2 id="step-4-count-matrix-plus-metadata">Step 4: Count
+          Matrix Plus Metadata</h2>
+          <p>Most differential expression workflows use a matrix of
+          counts per gene per sample.</p>
+          <pre class="text"><code>gene_id    control_1    control_2    treated_1    treated_2
+GeneA      10           12           31           29
+GeneB      0            1            0            2
+GeneC      100          95           104          110</code></pre>
+          <p>The count matrix must match metadata:</p>
+          <pre class="text"><code>sample_id    condition    batch
+control_1    control      A
+control_2    control      B
+treated_1    treated      A
+treated_2    treated      B</code></pre>
+          <p>Without metadata, the model does not know what comparison
+          to test.</p>
+          <h2 id="step-5-differential-expression">Step 5: Differential
+          Expression</h2>
+          <p>Tools such as DESeq2, edgeR, and limma-voom model count
+          data and test whether genes differ between conditions.</p>
+          <p>The output usually includes:</p>
+          <ul>
+          <li>gene ID</li>
+          <li>log fold change</li>
+          <li>p-value</li>
+          <li>adjusted p-value</li>
+          <li>average expression</li>
+          </ul>
+          <p>The adjusted p-value matters because thousands of genes are
+          tested.</p>
+          <h2 id="step-6-interpretation">Step 6: Interpretation</h2>
+          <p>Differential expression is not the endpoint. Ask:</p>
+          <ul>
+          <li>Are the top genes biologically plausible?</li>
+          <li>Is the effect size meaningful?</li>
+          <li>Are results driven by one sample?</li>
+          <li>Do pathway results match the gene-level result?</li>
+          <li>Is validation needed?</li>
+          </ul>
+          <p>The safest phrase is often:</p>
+          <pre class="text"><code>This result suggests a transcriptional change consistent with...</code></pre>
+          <p>That is stronger than overclaiming mechanism.</p>
+          <h2 id="common-mistakes">Common Mistakes</h2>
+          <ul>
+          <li>Comparing technical replicates as if they were biological
+          replicates.</li>
+          <li>Ignoring batch effects.</li>
+          <li>Filtering genes after looking at results.</li>
+          <li>Reporting only p-values without effect sizes.</li>
+          <li>Treating RNA change as proof of mechanism.</li>
+          <li>Forgetting gene annotation version.</li>
+          <li>Losing the sample sheet.</li>
+          </ul>
+          <h2 id="save-this-rna-seq-qc-map">Save This: RNA-seq QC
+          Map</h2>
+          <table>
+          <thead>
+          <tr>
+          <th>Stage</th>
+          <th>Check</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>Design</td>
+          <td>biological replicates, batches, covariates</td>
+          </tr>
+          <tr>
+          <td>FASTQ</td>
+          <td>read quality, adapters, read length</td>
+          </tr>
+          <tr>
+          <td>Reference</td>
+          <td>genome build, annotation version</td>
+          </tr>
+          <tr>
+          <td>Quantification</td>
+          <td>mapping rate, assignment rate</td>
+          </tr>
+          <tr>
+          <td>Count matrix</td>
+          <td>sample names match metadata</td>
+          </tr>
+          <tr>
+          <td>Model</td>
+          <td>design formula matches question</td>
+          </tr>
+          <tr>
+          <td>Result</td>
+          <td>effect size, adjusted p-value, sample consistency</td>
+          </tr>
+          <tr>
+          <td>Interpretation</td>
+          <td>claim does not exceed evidence</td>
+          </tr>
+          </tbody>
+          </table>
+          <h2 id="what-to-watch-next">What To Watch Next</h2>
+          <p>Experts still debate transcript-level vs gene-level
+          analysis, alignment vs lightweight quantification, best
+          normalization strategies for unusual designs, and how to
+          integrate RNA-seq with proteomics or single-cell data.</p>
+          <h2 id="credits-and-references">Credits and References</h2>
+          <ul>
+          <li>Bioconductor RNA-seq workflow: <a
+          href="https://www.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html">https://www.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html</a></li>
+          <li>DESeq2 paper: <a
+          href="https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8">https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8</a></li>
+          <li>FastQC: <a
+          href="https://www.bioinformatics.babraham.ac.uk/projects/fastqc/">https://www.bioinformatics.babraham.ac.uk/projects/fastqc/</a></li>
+          <li>MultiQC: <a
+          href="https://multiqc.info/">https://multiqc.info/</a></li>
+          <li>Salmon: <a
+          href="https://combine-lab.github.io/salmon/">https://combine-lab.github.io/salmon/</a></li>
+          <li>kallisto: <a
+          href="https://pachterlab.github.io/kallisto/">https://pachterlab.github.io/kallisto/</a></li>
+          </ul>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer__grid">
+        <div>
+          <strong>Bioinformatics Field Guide</strong>
+          <p>Practical bioinformatics guides with reproducible examples.</p>
+        </div>
+        <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+          GitHub repository <i class="ri-external-link-line" aria-hidden="true"></i>
+        </a>
+      </div>
+    </footer>
+
+    <script src="assets/site.js"></script>
+  </body>
+</html>

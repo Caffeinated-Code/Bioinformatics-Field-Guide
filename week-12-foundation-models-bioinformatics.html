@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="What is useful, what is hype, and what needs better
+benchmarks"
+    />
+    <meta property="og:title" content="Foundation Models in
+Bioinformatics" />
+    <meta
+      property="og:description"
+      content="What is useful, what is hype, and what needs better
+benchmarks"
+    />
+    <meta property="og:type" content="article" />
+    <title>Foundation Models in
+Bioinformatics | Bioinformatics Field Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/site.css" />
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      window.mermaid = mermaid;
+      window.dispatchEvent(new Event("mermaid-ready"));
+    </script>
+  </head>
+  <body class="article-page">
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <header class="site-header" id="site-header">
+      <nav class="nav container" aria-label="Primary navigation">
+        <a href="index.html" class="nav__brand">Bioinformatics Field Guide</a>
+        <div class="nav__links" id="nav-links">
+          <a href="index.html#guides">Guides</a>
+          <a href="index.html#resources">Resources</a>
+          <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+        <div class="nav__actions">
+          <button class="icon-button" id="theme-toggle" aria-label="Toggle color theme">
+            <i class="ri-moon-line" aria-hidden="true"></i>
+          </button>
+          <button class="icon-button nav__toggle" id="nav-toggle" aria-label="Open menu">
+            <i class="ri-menu-line" aria-hidden="true"></i>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="article-hero">
+        <div class="container article-hero__grid">
+          <div>
+            <a class="back-link" href="index.html"><i class="ri-arrow-left-line" aria-hidden="true"></i> Field Guide home</a>
+            <p class="eyebrow">Week 12 · 7 minutes</p>
+            <h1>Foundation Models in Bioinformatics</h1>
+                        <p class="article-hero__subtitle">What is
+useful, what is hype, and what needs better benchmarks</p>
+                        <div class="article-meta">
+              <span><i class="ri-user-smile-line" aria-hidden="true"></i> Beginner friendly</span>
+              <span><i class="ri-terminal-box-line" aria-hidden="true"></i> Tested commands</span>
+              <span><i class="ri-git-repository-line" aria-hidden="true"></i> Reproducible assets</span>
+            </div>
+          </div>
+          <aside class="article-card">
+            <span class="article-card__label">Original asset</span>
+            <p>Foundation model evidence map</p>
+            <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+              View repository <i class="ri-external-link-line" aria-hidden="true"></i>
+            </a>
+          </aside>
+        </div>
+      </section>
+
+      <div class="container article-layout">
+        <aside class="toc" aria-label="Table of contents">
+          <p class="toc__title">On this page</p>
+          <ul>
+          <li><a href="#foundation-models-in-bioinformatics"
+          id="toc-foundation-models-in-bioinformatics">Foundation Models
+          in Bioinformatics</a>
+          <ul>
+          <li><a href="#what-is-a-foundation-model"
+          id="toc-what-is-a-foundation-model">What Is A Foundation
+          Model?</a></li>
+          <li><a href="#why-biology-is-harder-than-text"
+          id="toc-why-biology-is-harder-than-text">Why Biology Is Harder
+          Than Text</a></li>
+          <li><a href="#where-foundation-models-might-help"
+          id="toc-where-foundation-models-might-help">Where Foundation
+          Models Might Help</a></li>
+          <li><a href="#the-benchmark-problem"
+          id="toc-the-benchmark-problem">The Benchmark Problem</a></li>
+          <li><a href="#interpretability-needs-discipline"
+          id="toc-interpretability-needs-discipline">Interpretability
+          Needs Discipline</a></li>
+          <li><a href="#a-practical-evidence-map"
+          id="toc-a-practical-evidence-map">A Practical Evidence
+          Map</a></li>
+          <li><a href="#common-mistakes" id="toc-common-mistakes">Common
+          Mistakes</a></li>
+          <li><a href="#save-this-foundation-model-review-checklist"
+          id="toc-save-this-foundation-model-review-checklist">Save
+          This: Foundation Model Review Checklist</a></li>
+          <li><a href="#what-to-watch-next"
+          id="toc-what-to-watch-next">What To Watch Next</a></li>
+          <li><a href="#credits-and-references"
+          id="toc-credits-and-references">Credits and
+          References</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+
+        <article class="article-content">
+          <h1 id="foundation-models-in-bioinformatics">Foundation Models
+          in Bioinformatics</h1>
+          <p><strong>Takeaway:</strong> Foundation models may become
+          useful infrastructure for biology, but their value depends on
+          task-specific evidence, strong baselines, interpretability,
+          and realistic benchmarks.</p>
+          <h2 id="what-is-a-foundation-model">What Is A Foundation
+          Model?</h2>
+          <p>A foundation model is a large model trained on broad data
+          so it can be adapted to many downstream tasks.</p>
+          <p>In bioinformatics, foundation models are being explored
+          for:</p>
+          <ul>
+          <li>DNA sequence</li>
+          <li>RNA expression</li>
+          <li>proteins</li>
+          <li>single-cell data</li>
+          <li>spatial omics</li>
+          <li>drug discovery</li>
+          <li>multimodal biological data</li>
+          </ul>
+          <p>The promise is reuse: train once on large biological data,
+          then adapt to many biological questions.</p>
+          <h2 id="why-biology-is-harder-than-text">Why Biology Is Harder
+          Than Text</h2>
+          <p>Biological data is noisy, incomplete, expensive, and deeply
+          context-dependent. A word in a sentence is not the same kind
+          of object as a gene in a cell, a variant in a genome, or a
+          protein in a pathway.</p>
+          <p>Key challenges:</p>
+          <ul>
+          <li>batch effects</li>
+          <li>sparse measurements</li>
+          <li>changing annotations</li>
+          <li>weak labels</li>
+          <li>tissue specificity</li>
+          <li>limited ground truth</li>
+          <li>confounded benchmarks</li>
+          <li>privacy and access restrictions</li>
+          </ul>
+          <p>A model can learn patterns without learning the biology you
+          care about.</p>
+          <h2 id="where-foundation-models-might-help">Where Foundation
+          Models Might Help</h2>
+          <p>They may be useful for:</p>
+          <ul>
+          <li>representation learning</li>
+          <li>variant effect prediction</li>
+          <li>protein structure or function tasks</li>
+          <li>cell type annotation</li>
+          <li>perturbation response prediction</li>
+          <li>multimodal integration</li>
+          <li>search and retrieval over biological knowledge</li>
+          </ul>
+          <p>But "might help" is not the same as "already better."</p>
+          <h2 id="the-benchmark-problem">The Benchmark Problem</h2>
+          <p>A foundation model should be compared against:</p>
+          <ul>
+          <li>simple baselines</li>
+          <li>established methods</li>
+          <li>smaller task-specific models</li>
+          <li>independent datasets</li>
+          <li>realistic external validation</li>
+          <li>biologically meaningful metrics</li>
+          </ul>
+          <p>If a model only beats weak baselines, the result is not
+          enough.</p>
+          <p>Recent benchmark work has repeatedly shown that foundation
+          models can be impressive in some settings and underwhelming in
+          others. For example, DNA foundation model benchmarks emphasize
+          the need for diverse genomic tasks and fair evaluation, while
+          single-cell benchmark studies have found that simple or highly
+          variable gene baselines can remain competitive in zero-shot
+          settings.</p>
+          <h2 id="interpretability-needs-discipline">Interpretability
+          Needs Discipline</h2>
+          <p>Attention maps, embeddings, and gene importance scores can
+          be useful, but they are not automatically biological
+          explanations.</p>
+          <p>Ask:</p>
+          <ul>
+          <li>Does the explanation survive perturbation?</li>
+          <li>Does it match known biology?</li>
+          <li>Does it predict new biology?</li>
+          <li>Does it beat a simpler explanation?</li>
+          <li>Can an experimentalist act on it?</li>
+          </ul>
+          <p>Interpretability without validation is storytelling.</p>
+          <h2 id="a-practical-evidence-map">A Practical Evidence
+          Map</h2>
+          <table>
+          <thead>
+          <tr>
+          <th>Claim</th>
+          <th>What would make it convincing?</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>better embeddings</td>
+          <td>strong baselines on independent datasets</td>
+          </tr>
+          <tr>
+          <td>better cell annotation</td>
+          <td>expert-reviewed labels and realistic references</td>
+          </tr>
+          <tr>
+          <td>better perturbation prediction</td>
+          <td>held-out perturbations, cell types, and donors</td>
+          </tr>
+          <tr>
+          <td>better variant interpretation</td>
+          <td>clinically relevant benchmarks and calibration</td>
+          </tr>
+          <tr>
+          <td>better biological insight</td>
+          <td>testable hypotheses validated beyond the model</td>
+          </tr>
+          </tbody>
+          </table>
+          <h2 id="common-mistakes">Common Mistakes</h2>
+          <ul>
+          <li>Assuming bigger models are automatically better.</li>
+          <li>Treating pretraining as proof of biological
+          understanding.</li>
+          <li>Ignoring data leakage.</li>
+          <li>Comparing against weak baselines.</li>
+          <li>Overclaiming interpretability.</li>
+          <li>Forgetting that deployment cost matters.</li>
+          <li>Treating a benchmark win as clinical readiness.</li>
+          </ul>
+          <h2 id="save-this-foundation-model-review-checklist">Save
+          This: Foundation Model Review Checklist</h2>
+          <table>
+          <thead>
+          <tr>
+          <th>Check</th>
+          <th>Question</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>task</td>
+          <td>What exact biological or computational task is
+          tested?</td>
+          </tr>
+          <tr>
+          <td>baseline</td>
+          <td>Is the baseline strong and current?</td>
+          </tr>
+          <tr>
+          <td>split</td>
+          <td>Is there leakage across donors, batches, cell types, or
+          datasets?</td>
+          </tr>
+          <tr>
+          <td>metric</td>
+          <td>Does the metric match the biological question?</td>
+          </tr>
+          <tr>
+          <td>evidence</td>
+          <td>Does the model help beyond a simpler method?</td>
+          </tr>
+          <tr>
+          <td>interpretability</td>
+          <td>Are explanations validated?</td>
+          </tr>
+          <tr>
+          <td>deployment</td>
+          <td>Are cost, access, privacy, and reproducibility
+          addressed?</td>
+          </tr>
+          </tbody>
+          </table>
+          <h2 id="what-to-watch-next">What To Watch Next</h2>
+          <p>The next useful wave will not be models that merely sound
+          general. It will be models that prove usefulness on specific
+          biological tasks, under realistic validation, against strong
+          baselines, with enough transparency for scientists to trust
+          and inspect.</p>
+          <h2 id="credits-and-references">Credits and References</h2>
+          <ul>
+          <li>Foundation models in bioinformatics review: <a
+          href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11900445/">https://pmc.ncbi.nlm.nih.gov/articles/PMC11900445/</a></li>
+          <li>Single-cell foundation models review: <a
+          href="https://www.nature.com/articles/s12276-025-01547-5">https://www.nature.com/articles/s12276-025-01547-5</a></li>
+          <li>Benchmarking DNA foundation models: <a
+          href="https://www.nature.com/articles/s41467-025-65823-8">https://www.nature.com/articles/s41467-025-65823-8</a></li>
+          <li>BioLLM standardized framework: <a
+          href="https://www.cell.com/patterns/fulltext/S2666-3899(25)00174-6">https://www.cell.com/patterns/fulltext/S2666-3899(25)00174-6</a></li>
+          <li>Biology-driven benchmark of single-cell foundation models:
+          <a
+          href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12492631/">https://pmc.ncbi.nlm.nih.gov/articles/PMC12492631/</a></li>
+          <li>Awesome single-cell foundation model papers: <a
+          href="https://github.com/OmicsML/awesome-foundation-model-single-cell-papers">https://github.com/OmicsML/awesome-foundation-model-single-cell-papers</a></li>
+          <li>Hugging Face model hub: <a
+          href="https://huggingface.co/models">https://huggingface.co/models</a></li>
+          <li>Papers with Code: <a
+          href="https://paperswithcode.com/">https://paperswithcode.com/</a></li>
+          </ul>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer__grid">
+        <div>
+          <strong>Bioinformatics Field Guide</strong>
+          <p>Practical bioinformatics guides with reproducible examples.</p>
+        </div>
+        <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+          GitHub repository <i class="ri-external-link-line" aria-hidden="true"></i>
+        </a>
+      </div>
+    </footer>
+
+    <script src="assets/site.js"></script>
+  </body>
+</html>
