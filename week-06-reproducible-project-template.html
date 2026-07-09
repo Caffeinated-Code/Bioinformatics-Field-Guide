@@ -28,7 +28,7 @@ Template | Bioinformatics Field Guide</title>
       href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="assets/site.css" />
+    <link rel="stylesheet" href="assets/site.css?v=20260709-engagement" />
   </head>
   <body class="article-page">
     <div class="reading-progress" id="reading-progress"></div>
@@ -324,6 +324,60 @@ data/large/
           <li>The Turing Way: <a
           href="https://the-turing-way.netlify.app/">https://the-turing-way.netlify.app/</a></li>
           </ul>
+
+          <section class="article-engagement" aria-labelledby="article-engagement-title">
+            <div class="engagement-card">
+              <p class="eyebrow">Share and discuss</p>
+              <h2 id="article-engagement-title">Was this useful?</h2>
+              <p>
+                Share this guide with someone learning bioinformatics, suggest an edit on GitHub,
+                or leave a question below.
+              </p>
+              <div class="share-actions" data-share-title="The
+Bioinformatics Project Template">
+                <button class="share-button" type="button" data-share-native>
+                  <i class="ri-share-forward-line" aria-hidden="true"></i>
+                  Share
+                </button>
+                <button class="share-button" type="button" data-copy-link>
+                  <i class="ri-link" aria-hidden="true"></i>
+                  Copy link
+                </button>
+                <a class="share-button" data-share-linkedin target="_blank" rel="noreferrer">
+                  <i class="ri-linkedin-box-line" aria-hidden="true"></i>
+                  LinkedIn
+                </a>
+                <a class="share-button" data-share-x target="_blank" rel="noreferrer">
+                  <i class="ri-twitter-x-line" aria-hidden="true"></i>
+                  X
+                </a>
+                <a class="share-button" data-edit-github target="_blank" rel="noreferrer">
+                  <i class="ri-git-pull-request-line" aria-hidden="true"></i>
+                  Suggest edit
+                </a>
+              </div>
+              <p class="share-status" aria-live="polite"></p>
+            </div>
+
+            <div class="giscus-panel" aria-label="Comments and reactions">
+              <script
+                src="https://giscus.app/client.js"
+                data-repo="Caffeinated-Code/Bioinformatics-Field-Guide"
+                data-repo-id="R_kgDOTEbe8w"
+                data-category="General"
+                data-category-id="DIC_kwDOTEbe884DA22S"
+                data-mapping="pathname"
+                data-strict="0"
+                data-reactions-enabled="1"
+                data-emit-metadata="0"
+                data-input-position="top"
+                data-theme="preferred_color_scheme"
+                data-lang="en"
+                crossorigin="anonymous"
+                async>
+              </script>
+            </div>
+          </section>
         </article>
       </div>
     </main>
@@ -340,7 +394,7 @@ data/large/
       </div>
     </footer>
 
-    <script src="assets/site.js?v=20260625-mermaid"></script>
+    <script src="assets/site.js?v=20260709-engagement"></script>
     <script type="module">
       import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
       mermaid.initialize({ startOnLoad: false });
