@@ -20,12 +20,12 @@ Use this as a quick guide when choosing what to learn or use for a project.
 
 ## Four-Week Starter Plan
 
-| Week | Goal | Tiny project |
-|---|---|---|
-| 1 | Bash | Count rows, inspect FASTA or FASTQ-like files, summarize sample names |
-| 2 | Python | Read a metadata table, clean columns, make one plot |
-| 3 | R | Read a count matrix, join metadata, make a basic expression plot |
-| 4 | SQL | Create two small tables and join samples to annotations |
+| Week | Goal | Notebook | Tiny project |
+|---|---|---|---|
+| 1 | Bash | `notebooks/01_bash_file_inspection.ipynb` | Count rows, inspect a FASTA file, summarize sample names |
+| 2 | Python | `notebooks/02_python_metadata_cleanup.ipynb` | Read a metadata table, clean columns, make one plot |
+| 3 | R | `notebooks/03_r_expression_plot.ipynb` | Read a count matrix, join metadata, make a basic expression plot |
+| 4 | SQL | `notebooks/04_sql_metadata_checks.ipynb` | Create small tables, check sample balance, join gene annotations |
 
 ## Self-Check
 

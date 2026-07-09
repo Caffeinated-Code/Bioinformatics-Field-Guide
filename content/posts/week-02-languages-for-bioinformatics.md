@@ -205,12 +205,21 @@ The reusable version of this map is in the Week 2 resources folder: [`content/re
 
 ## Save This: A Four-Week Starter Plan
 
-| Week | Goal | Tiny project |
-|---|---|---|
-| 1 | Bash | Count rows, inspect FASTA/FASTQ-like files, summarize sample names |
-| 2 | Python | Read a metadata table, clean columns, make one plot |
-| 3 | R | Read a count matrix, join metadata, make a basic expression plot |
-| 4 | SQL | Create two small tables and join samples to annotations |
+Use the notebooks as tiny confidence labs. Each one has a bioinformatics-flavored end goal, sample files, and small challenges you can edit.
+
+| Week | Goal | Interactive tutorial | Tiny project |
+|---|---|---|---|
+| 1 | Bash | [Inspect a tiny bioinformatics project](https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide/blob/main/content/resources/week-02/notebooks/01_bash_file_inspection.ipynb) | Count rows, inspect a FASTA file, summarize sample names |
+| 2 | Python | [Clean sample metadata](https://colab.research.google.com/github/Caffeinated-Code/Bioinformatics-Field-Guide/blob/main/content/resources/week-02/notebooks/02_python_metadata_cleanup.ipynb) | Read a metadata table, clean columns, make one plot |
+| 3 | R | [Plot a tiny expression matrix](https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide/blob/main/content/resources/week-02/notebooks/03_r_expression_plot.ipynb) | Read a count matrix, join metadata, make a basic expression plot |
+| 4 | SQL | [Audit sample metadata with SQL](https://colab.research.google.com/github/Caffeinated-Code/Bioinformatics-Field-Guide/blob/main/content/resources/week-02/notebooks/04_sql_metadata_checks.ipynb) | Create small tables, check sample balance, join gene annotations |
+
+If you want browser-only practice before running local notebooks, use these:
+
+- Bash: [Learn Shell](https://www.learnshell.org/) for command-line basics.
+- Python: [Google Colab](https://colab.research.google.com/) for no-install Python notebooks.
+- R: [Posit Cloud](https://posit.cloud/) for RStudio in the browser.
+- SQL: [SQLiteOnline](https://sqliteonline.com/) or [SQLZoo](https://sqlzoo.net/) for interactive SQL practice.
 
 By the end, you should be able to explain what each language is doing in one sentence.
 
@@ -241,3 +250,8 @@ Week 3 will step backward again and ask: what biology do you actually need to kn
 - Seurat documentation: https://satijalab.org/seurat/
 - Nextflow: https://www.nextflow.io/
 - Snakemake: https://snakemake.readthedocs.io/
+- Learn Shell: https://www.learnshell.org/
+- Google Colab: https://colab.research.google.com/
+- Posit Cloud: https://posit.cloud/
+- SQLiteOnline: https://sqliteonline.com/
+- SQLZoo: https://sqlzoo.net/

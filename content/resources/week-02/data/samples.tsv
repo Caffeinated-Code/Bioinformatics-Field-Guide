@@ -1,0 +1,7 @@
+sample_id	condition	batch	tissue	reads_million	fastq_file
+S01	control	B1	liver	22.4	S01_R1.fastq.gz
+S02	control	B1	liver	24.1	S02_R1.fastq.gz
+S03	treated	B1	liver	25.7	S03_R1.fastq.gz
+S04	treated	B2	liver	21.8	S04_R1.fastq.gz
+S05	control	B2	liver	19.9	S05_R1.fastq.gz
+S06	treated	B2	liver	23.6	S06_R1.fastq.gz
