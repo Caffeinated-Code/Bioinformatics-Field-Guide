@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="A practical map for computational learners"
+      content="A practical map for understanding datasets before
+touching code"
     />
     <meta property="og:title" content="What Biology Do You Need for
 Bioinformatics?" />
     <meta
       property="og:description"
-      content="A practical map for computational learners"
+      content="A practical map for understanding datasets before
+touching code"
     />
     <meta property="og:type" content="article" />
     <title>What Biology Do You Need for
@@ -58,7 +60,7 @@ Bioinformatics? | Bioinformatics Field Guide</title>
             <p class="eyebrow">Week 3 · 7 minutes</p>
             <h1>What Biology Do You Need for Bioinformatics?</h1>
                         <p class="article-hero__subtitle">A practical
-map for computational learners</p>
+map for understanding datasets before touching code</p>
                         <div class="article-meta">
               <span><i class="ri-user-smile-line" aria-hidden="true"></i> Beginner friendly</span>
               <span><i class="ri-terminal-box-line" aria-hidden="true"></i> Tested commands</span>
@@ -67,7 +69,7 @@ map for computational learners</p>
           </div>
           <aside class="article-card">
             <span class="article-card__label">Original asset</span>
-            <p>Biology prerequisite map</p>
+            <p>Biology sanity-check worksheet and prerequisite map</p>
             <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
               View repository <i class="ri-external-link-line" aria-hidden="true"></i>
             </a>
@@ -83,9 +85,9 @@ map for computational learners</p>
           id="toc-what-biology-do-you-need-for-bioinformatics">What
           Biology Do You Need for Bioinformatics?</a>
           <ul>
-          <li><a href="#the-point-is-not-vocabulary"
-          id="toc-the-point-is-not-vocabulary">The Point Is Not
-          Vocabulary</a></li>
+          <li><a href="#start-with-the-datasets-story"
+          id="toc-start-with-the-datasets-story">Start With The
+          Dataset's Story</a></li>
           <li><a href="#the-five-concepts-to-learn-first"
           id="toc-the-five-concepts-to-learn-first">The Five Concepts To
           Learn First</a></li>
@@ -104,6 +106,9 @@ map for computational learners</p>
           <li><a href="#experiments-every-dataset-has-a-biography"
           id="toc-experiments-every-dataset-has-a-biography">Experiments:
           Every Dataset Has A Biography</a></li>
+          <li><a href="#the-four-part-dataset-question"
+          id="toc-the-four-part-dataset-question">The Four-Part Dataset
+          Question</a></li>
           <li><a href="#a-beginner-biology-map"
           id="toc-a-beginner-biology-map">A Beginner Biology
           Map</a></li>
@@ -125,18 +130,22 @@ map for computational learners</p>
           <h1 id="what-biology-do-you-need-for-bioinformatics">What
           Biology Do You Need for Bioinformatics?</h1>
           <p><strong>Takeaway:</strong> You do not need to memorize all
-          of biology before starting bioinformatics, but you do need a
-          working map of DNA, RNA, proteins, cells, experiments, and
-          uncertainty.</p>
-          <h2 id="the-point-is-not-vocabulary">The Point Is Not
-          Vocabulary</h2>
+          of biology before starting bioinformatics. You do need to know
+          what biological system was measured, what the assay can and
+          cannot see, and what claims the data can support.</p>
+          <h2 id="start-with-the-datasets-story">Start With The
+          Dataset's Story</h2>
           <p>Bioinformatics is not just coding on biological files. A
           result only matters if it respects the experiment that
           produced the data.</p>
           <p>When you see a dataset, ask:</p>
           <pre class="text"><code>What biological system was measured, how was it measured, and what can this assay actually support?</code></pre>
           <p>That question is more useful than memorizing a hundred gene
-          names.</p>
+          names. It prevents the most common beginner mistake: treating
+          every table as if it means the same thing.</p>
+          <p>A count matrix, VCF, peak file, protein table, or
+          cell-by-gene matrix is not just "data." It is a compressed
+          story about a biological system.</p>
           <h2 id="the-five-concepts-to-learn-first">The Five Concepts To
           Learn First</h2>
           <table>
@@ -176,6 +185,9 @@ map for computational learners</p>
           </tr>
           </tbody>
           </table>
+          <p>You do not need a PhD-level command of each concept to
+          begin. You need enough to ask better questions before you run
+          better code.</p>
           <h2 id="dna-the-reference-is-a-coordinate-system">DNA: The
           Reference Is A Coordinate System</h2>
           <p>Many workflows start by comparing reads to a reference
@@ -194,7 +206,9 @@ map for computational learners</p>
           <p>The practical question is:</p>
           <pre class="text"><code>Where is this signal in the genome, and are we using the right coordinate system?</code></pre>
           <p>Mixing genome builds is one of the easiest ways to create
-          silent errors.</p>
+          silent errors. A variant position, gene annotation, or
+          regulatory region can shift meaning if one file uses GRCh37
+          and another uses GRCh38.</p>
           <h2 id="rna-expression-depends-on-context">RNA: Expression
           Depends On Context</h2>
           <p>RNA-seq often measures RNA abundance as a proxy for gene
@@ -212,7 +226,9 @@ map for computational learners</p>
           <p>The practical question is:</p>
           <pre class="text"><code>Which genes changed, in which samples, under what assumptions?</code></pre>
           <p>RNA changes are evidence. They are not automatic proof of
-          protein change, mechanism, or clinical relevance.</p>
+          protein change, mechanism, or clinical relevance. A good
+          bioinformatician treats differential expression as a clue, not
+          a conclusion.</p>
           <h2
           id="proteins-closer-to-function-still-not-simple">Proteins:
           Closer To Function, Still Not Simple</h2>
@@ -230,6 +246,9 @@ map for computational learners</p>
           </ul>
           <p>The practical question is:</p>
           <pre class="text"><code>Does this molecular change plausibly alter function, and what evidence supports that?</code></pre>
+          <p>For example, higher mRNA for a receptor does not guarantee
+          higher surface protein. Protein abundance, localization,
+          modification, and degradation can change the biology.</p>
           <h2 id="cells-biology-has-location">Cells: Biology Has
           Location</h2>
           <p>Single-cell and spatial methods remind us that tissue is
@@ -252,7 +271,7 @@ map for computational learners</p>
           id="experiments-every-dataset-has-a-biography">Experiments:
           Every Dataset Has A Biography</h2>
           <p>Before trusting any analysis, learn the dataset's
-          backstory:</p>
+          biography:</p>
           <ul>
           <li>How were samples collected?</li>
           <li>What platform was used?</li>
@@ -263,7 +282,46 @@ map for computational learners</p>
           <li>What was excluded before you received the file?</li>
           </ul>
           <p>If you ignore the experiment, your analysis can be elegant
-          and wrong.</p>
+          and wrong. The code may run perfectly while the conclusion
+          falls apart.</p>
+          <h2 id="the-four-part-dataset-question">The Four-Part Dataset
+          Question</h2>
+          <p>Before opening a notebook, summarize the dataset in one
+          sentence:</p>
+          <pre class="text"><code>In [biological system], [assay] measured [molecular signal] to compare [groups or conditions].</code></pre>
+          <p>Examples:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Dataset</th>
+          <th>One-sentence interpretation</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>Bulk RNA-seq in treated liver organoids</td>
+          <td>In liver organoids, RNA-seq measured gene expression to
+          compare treated and control samples.</td>
+          </tr>
+          <tr>
+          <td>ATAC-seq in immune cells</td>
+          <td>In immune cells, ATAC-seq measured chromatin accessibility
+          to compare stimulated and unstimulated states.</td>
+          </tr>
+          <tr>
+          <td>Whole-genome sequencing in tumors</td>
+          <td>In tumor-normal pairs, WGS measured DNA variation to
+          identify somatic variants.</td>
+          </tr>
+          <tr>
+          <td>Single-cell RNA-seq in diseased tissue</td>
+          <td>In diseased tissue, scRNA-seq measured cell-level gene
+          expression to compare cell types and states.</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>If you cannot write this sentence, you are not ready to
+          interpret the analysis yet.</p>
           <h2 id="a-beginner-biology-map">A Beginner Biology Map</h2>
           <pre class="mermaid"><code>flowchart LR
   dna[DNA] --&gt; rna[RNA]
@@ -276,6 +334,8 @@ map for computational learners</p>
   experiment --&gt; rna
   experiment --&gt; cell
   experiment --&gt; limits[Interpretation limits]</code></pre>
+          <p>The reusable worksheet for this post is here: <a
+          href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide/blob/main/content/resources/week-03/biology-sanity-check.md"><code>content/resources/week-03/biology-sanity-check.md</code></a>.</p>
           <h2 id="common-mistakes">Common Mistakes</h2>
           <ul>
           <li>Treating gene symbols as stable and universal.</li>
@@ -286,6 +346,8 @@ map for computational learners</p>
           <li>Overinterpreting one dataset.</li>
           <li>Forgetting that missing metadata limits every downstream
           claim.</li>
+          <li>Forgetting that an assay measures a proxy, not biology
+          itself.</li>
           </ul>
           <h2 id="save-this-the-biology-sanity-check">Save This: The
           Biology Sanity Check</h2>
@@ -294,33 +356,47 @@ map for computational learners</p>
           <thead>
           <tr>
           <th>Question</th>
+          <th>Better version of the question</th>
           <th>Why it matters</th>
           </tr>
           </thead>
           <tbody>
           <tr>
           <td>What organism and genome build?</td>
+          <td>Human GRCh38? Mouse GRCm39? Something else?</td>
           <td>Prevents coordinate and annotation errors</td>
           </tr>
           <tr>
           <td>What tissue or cell type?</td>
+          <td>Liver tissue, hepatocytes, immune cells, tumor cells?</td>
           <td>Gives biological context</td>
           </tr>
           <tr>
           <td>What assay?</td>
+          <td>RNA-seq, ATAC-seq, WGS, proteomics, scRNA-seq?</td>
           <td>Defines what can be measured</td>
           </tr>
           <tr>
           <td>What comparison?</td>
+          <td>Treated vs control, disease vs healthy, responder vs
+          non-responder?</td>
           <td>Prevents vague analysis</td>
           </tr>
           <tr>
           <td>What replicates and controls?</td>
+          <td>How many biological replicates per condition?</td>
           <td>Determines statistical strength</td>
           </tr>
           <tr>
           <td>What metadata is missing?</td>
+          <td>Batch, sex, age, tissue source, protocol, time point?</td>
           <td>Defines interpretation limits</td>
+          </tr>
+          <tr>
+          <td>What claim is allowed?</td>
+          <td>Association, differential signal, mechanism, biomarker,
+          target?</td>
+          <td>Prevents overinterpretation</td>
           </tr>
           </tbody>
           </table>
@@ -331,6 +407,9 @@ map for computational learners</p>
           thrive will understand enough biology to know when a
           computational result is surprising, impossible, underpowered,
           or useful.</p>
+          <p>Week 4 will turn this into a working mindset: how to think
+          like a bioinformatician when biology, statistics, and software
+          all disagree a little.</p>
           <h2 id="credits-and-references">Credits and References</h2>
           <ul>
           <li>NCBI Bookshelf: <a
@@ -345,6 +424,10 @@ map for computational learners</p>
           href="https://www.uniprot.org/">https://www.uniprot.org/</a></li>
           <li>EMBL-EBI training: <a
           href="https://www.ebi.ac.uk/training/">https://www.ebi.ac.uk/training/</a></li>
+          <li>GENCODE: <a
+          href="https://www.gencodegenes.org/">https://www.gencodegenes.org/</a></li>
+          <li>Human Cell Atlas: <a
+          href="https://www.humancellatlas.org/">https://www.humancellatlas.org/</a></li>
           </ul>
         </article>
       </div>
