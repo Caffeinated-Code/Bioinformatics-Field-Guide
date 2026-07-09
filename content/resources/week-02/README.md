@@ -11,6 +11,17 @@ These files support the Week 2 guide: "What Programming Languages Should a Bioin
 | R | Make a simple expression plot for marker genes | `notebooks/03_r_expression_plot.ipynb` |
 | SQL | Audit sample metadata and join gene annotations | `notebooks/04_sql_metadata_checks.ipynb` |
 
+## Open In The Browser
+
+| Tutorial | Browser link |
+|---|---|
+| Bash | https://colab.research.google.com/github/Caffeinated-Code/Bioinformatics-Field-Guide/blob/main/content/resources/week-02/notebooks/01_bash_file_inspection.ipynb |
+| Python | https://colab.research.google.com/github/Caffeinated-Code/Bioinformatics-Field-Guide/blob/main/content/resources/week-02/notebooks/02_python_metadata_cleanup.ipynb |
+| R | https://colab.research.google.com/github/Caffeinated-Code/Bioinformatics-Field-Guide/blob/main/content/resources/week-02/notebooks/03_r_expression_plot.ipynb |
+| SQL | https://colab.research.google.com/github/Caffeinated-Code/Bioinformatics-Field-Guide/blob/main/content/resources/week-02/notebooks/04_sql_metadata_checks.ipynb |
+
+The R notebook uses an R kernel. If a hosted notebook service does not start the R runtime cleanly, open it in Posit Cloud or in the local JupyterLab environment from Week 1.
+
 ## Data
 
 | File | Purpose |
