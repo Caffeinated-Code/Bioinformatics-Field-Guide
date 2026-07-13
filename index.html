@@ -23,13 +23,14 @@
       href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="assets/site.css" />
+    <link rel="stylesheet" href="assets/site.css?v=20260713-map" />
   </head>
   <body>
     <header class="site-header" id="site-header">
       <nav class="nav container" aria-label="Primary navigation">
         <a href="index.html" class="nav__brand">Bioinformatics Field Guide</a>
         <div class="nav__links" id="nav-links">
+          <a href="#field-map">Field map</a>
           <a href="#guides">Guides</a>
           <a href="#resources">Resources</a>
           <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">GitHub</a>
@@ -52,15 +53,15 @@
             <p class="eyebrow">Practical bioinformatics, from setup to interpretation</p>
             <h1>Bioinformatics Field Guide</h1>
             <p class="hero__subtitle">
-              Clear, reproducible guides for learners and working scientists who want to move
-              from raw biological data to careful, trustworthy analysis.
+              A technical learning map for bioinformatics: start with setup and languages,
+              then move quickly into real files, workflows, analysis, and research-grade judgment.
             </p>
             <div class="hero__actions">
-              <a class="button" href="week-01-laptop-setup-for-bioinformatics.html">
-                Start with Week 1 <i class="ri-arrow-right-line" aria-hidden="true"></i>
+              <a class="button" href="#field-map">
+                Explore the field map <i class="ri-arrow-right-line" aria-hidden="true"></i>
               </a>
-              <a class="button button--ghost" href="#guides">
-                Browse all guides
+              <a class="button button--ghost" href="week-05-bioinformatics-file-types.html">
+                Jump to real files
               </a>
             </div>
           </div>
@@ -68,103 +69,99 @@
             <span class="hero-panel__label">What makes this useful</span>
             <h2>Short guides with reusable mental models.</h2>
             <ul>
-              <li>Beginner-friendly explanations without flattening the science.</li>
-              <li>Practical warnings about common analysis mistakes.</li>
-              <li>Saveable checklists, maps, and interpretation rubrics.</li>
-              <li>Links to tools, references, and reproducible resources.</li>
+              <li>Beginner routes for setup, languages, and first notebooks.</li>
+              <li>Technical routes for file formats, workflows, RNA-seq, and statistics.</li>
+              <li>Advanced routes for papers, benchmarks, AI, and future DIY project series.</li>
+              <li>Reusable notebooks, checklists, maps, and reproducible resources.</li>
             </ul>
           </aside>
         </div>
       </section>
 
-      <section class="section" id="guides">
+      <section class="section" id="field-map">
         <div class="container">
           <div class="section__heading">
-            <p class="eyebrow">12-week foundation series</p>
-            <h2>Start from setup, then build toward interpretation.</h2>
+            <p class="eyebrow">Learning map</p>
+            <h2>Pick a route through the field.</h2>
+            <p>
+              This is not only a chronological blog. Use it like a map: enter at your level,
+              follow a route, or wander into adjacent topics when a project demands it.
+            </p>
           </div>
-          <div class="card-grid guide-grid">
-            <article class="guide-card">
-              <p class="eyebrow">Week 1</p>
-              <h3>How to Set Up Your Laptop for Bioinformatics</h3>
-              <p>Conda, Docker, JupyterLab, VS Code, Ollama, and a tiny BioChatter demo.</p>
-              <a href="week-01-laptop-setup-for-bioinformatics.html">Read guide <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
+          <div class="topic-map" aria-label="Bioinformatics learning map">
+            <article class="map-node map-node--foundation">
+              <span>Beginner</span>
+              <h3>Setup and languages</h3>
+              <p>Build the local stack, learn Bash/Python/R/SQL, and use a local AI assistant as a tutor.</p>
+              <a href="week-01-laptop-setup-for-bioinformatics.html">Start setup</a>
+              <a href="week-02-languages-for-bioinformatics.html">Choose languages</a>
             </article>
-            <article class="guide-card">
-              <p class="eyebrow">Week 2</p>
-              <h3>What Programming Languages Should a Bioinformatician Know?</h3>
-              <p>A practical map for Bash, Python, R, SQL, and workflow tools.</p>
-              <a href="week-02-languages-for-bioinformatics.html">Read guide <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
+            <article class="map-node map-node--core">
+              <span>Core technical</span>
+              <h3>Files and reproducible projects</h3>
+              <p>Learn the formats and folder structures that real bioinformatics work keeps returning to.</p>
+              <a href="week-05-bioinformatics-file-types.html">Read file types</a>
+              <a href="week-06-reproducible-project-template.html">Build project template</a>
             </article>
-            <article class="guide-card">
-              <p class="eyebrow">Week 3</p>
-              <h3>What Biology Do You Need for Bioinformatics?</h3>
-              <p>A practical map of DNA, RNA, proteins, cells, experiments, and uncertainty.</p>
-              <a href="week-03-biology-prerequisites.html">Read guide <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
+            <article class="map-node map-node--analysis">
+              <span>Practitioner</span>
+              <h3>RNA-seq and interpretation</h3>
+              <p>Move from sequencing files to count matrices, differential expression, PCA, and single-cell comparisons.</p>
+              <a href="week-07-rnaseq-in-seven-minutes.html">RNA-seq workflow</a>
+              <a href="week-08-differential-expression.html">Differential expression</a>
+              <a href="week-09-pca-in-bioinformatics.html">PCA</a>
+              <a href="week-10-single-cell-vs-bulk-rnaseq.html">Single-cell vs bulk</a>
             </article>
-            <article class="guide-card">
-              <p class="eyebrow">Week 4</p>
-              <h3>How to Think Like a Bioinformatician</h3>
-              <p>A framework for asking whether a biological signal is real and useful.</p>
-              <a href="week-04-think-like-a-bioinformatician.html">Read guide <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
+            <article class="map-node map-node--frontier">
+              <span>Advanced</span>
+              <h3>Papers, benchmarks, and AI for biology</h3>
+              <p>Stress-test claims, read methods critically, and separate useful models from hype.</p>
+              <a href="week-11-read-bioinformatics-paper.html">Read papers critically</a>
+              <a href="week-12-foundation-models-bioinformatics.html">Foundation models</a>
             </article>
-            <article class="guide-card">
-              <p class="eyebrow">Week 5</p>
-              <h3>The Bioinformatics File Types You Must Know</h3>
-              <p>FASTQ, BAM, VCF, GTF, count matrices, metadata, and what each file represents.</p>
-              <a href="week-05-bioinformatics-file-types.html">Read guide <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
-            </article>
-            <article class="guide-card">
-              <p class="eyebrow">Week 6</p>
-              <h3>The Bioinformatics Project Template</h3>
-              <p>Folder structure, README, Git, environment files, and reproducibility habits.</p>
-              <a href="week-06-reproducible-project-template.html">Read guide <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
-            </article>
-            <article class="guide-card">
-              <p class="eyebrow">Week 7</p>
-              <h3>RNA-seq in 7 Minutes</h3>
-              <p>From samples and FASTQ files to count matrices and differential expression.</p>
-              <a href="week-07-rnaseq-in-seven-minutes.html">Read guide <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
-            </article>
-            <article class="guide-card">
-              <p class="eyebrow">Week 8</p>
-              <h3>Differential Expression</h3>
-              <p>What DE tells you, what it does not, and how to interpret results responsibly.</p>
-              <a href="week-08-differential-expression.html">Read guide <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
-            </article>
-            <article class="guide-card">
-              <p class="eyebrow">Week 9</p>
-              <h3>PCA in Bioinformatics</h3>
-              <p>Why everyone uses PCA and how to avoid overreading exploratory plots.</p>
-              <a href="week-09-pca-in-bioinformatics.html">Read guide <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
-            </article>
-            <article class="guide-card">
-              <p class="eyebrow">Week 10</p>
-              <h3>Single-Cell RNA-seq vs Bulk RNA-seq</h3>
-              <p>What changes when every cell becomes a data point.</p>
-              <a href="week-10-single-cell-vs-bulk-rnaseq.html">Read guide <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
-            </article>
-            <article class="guide-card">
-              <p class="eyebrow">Week 11</p>
-              <h3>How to Read a Bioinformatics Paper</h3>
-              <p>A scorecard for methods, benchmarks, data leakage, and claim strength.</p>
-              <a href="week-11-read-bioinformatics-paper.html">Read guide <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
-            </article>
-            <article class="guide-card">
-              <p class="eyebrow">Week 12</p>
-              <h3>Foundation Models in Bioinformatics</h3>
-              <p>What is useful, what is hype, and what needs better benchmarks.</p>
-              <a href="week-12-foundation-models-bioinformatics.html">Read guide <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
+            <article class="map-node map-node--future">
+              <span>Coming soon</span>
+              <h3>DIY advanced project series</h3>
+              <p>Deeper project tracks for target discovery, public-data mining, AI workflows, and reproducible analyses.</p>
             </article>
           </div>
         </div>
       </section>
 
-      <section class="section section--soft" id="resources">
+      <section class="section section--soft" id="guides">
         <div class="container">
           <div class="section__heading">
-            <p class="eyebrow">Week 1 resources</p>
-            <h2>Run the setup, not just the article.</h2>
+            <p class="eyebrow">Current technical path</p>
+            <h2>From setup to real bioinformatics files.</h2>
+          </div>
+          <div class="card-grid guide-grid">
+            <article class="guide-card">
+              <p class="eyebrow">Start here · Beginner</p>
+              <h3>How to Set Up Your Laptop for Bioinformatics</h3>
+              <p>Conda, Docker, JupyterLab, VS Code, Ollama, and a tiny BioChatter demo.</p>
+              <a href="week-01-laptop-setup-for-bioinformatics.html">Read guide <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
+            </article>
+            <article class="guide-card">
+              <p class="eyebrow">Beginner to builder</p>
+              <h3>What Programming Languages Should a Bioinformatician Know?</h3>
+              <p>Bash, Python, R, SQL, workflow tools, notebooks, and AI-assisted learning.</p>
+              <a href="week-02-languages-for-bioinformatics.html">Read guide <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
+            </article>
+            <article class="guide-card guide-card--next">
+              <p class="eyebrow">Next technical stop</p>
+              <h3>The Bioinformatics File Types You Must Know</h3>
+              <p>FASTQ, BAM, VCF, GTF, count matrices, metadata, and what each file represents.</p>
+              <a href="week-05-bioinformatics-file-types.html">Read guide <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="resources">
+        <div class="container">
+          <div class="section__heading">
+            <p class="eyebrow">Reusable resources</p>
+            <h2>Run the examples, not just the articles.</h2>
           </div>
           <div class="card-grid">
             <article class="resource-card">
@@ -181,6 +178,11 @@
               <h3>BioChatter demo</h3>
               <p>A tiny local BioChatter + Ollama example for explaining observed output.</p>
               <a href="content/resources/week-01/biochatter_ollama_demo.py">demo script</a>
+            </article>
+            <article class="resource-card">
+              <h3>Week 2 notebooks</h3>
+              <p>Bash, Python, R, and SQL confidence labs with tiny bioinformatics data.</p>
+              <a href="content/resources/week-02/README.md">open resources</a>
             </article>
           </div>
         </div>
@@ -199,6 +201,6 @@
       </div>
     </footer>
 
-    <script src="assets/site.js"></script>
+    <script src="assets/site.js?v=20260713-map"></script>
   </body>
 </html>

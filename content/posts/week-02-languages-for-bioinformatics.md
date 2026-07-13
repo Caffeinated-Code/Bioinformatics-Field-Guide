@@ -47,6 +47,28 @@ Do not try to master everything in one month. Aim for useful fluency.
 
 If you read [Week 1](week-01-laptop-setup-for-bioinformatics.html), you already have the setup you need: a project folder, Conda environment, terminal, and editor. This week is about deciding what to learn first.
 
+## Use Your Week 1 Coding Assistant While You Learn
+
+If you set up VS Code, Ollama, and Continue in [Week 1](week-01-laptop-setup-for-bioinformatics.html), use them as a tutor while you work through the notebooks below. The goal is not to let the assistant write everything. The goal is to make unfamiliar code less intimidating.
+
+Open the Week 2 notebook folder in VS Code:
+
+```bash
+code content/resources/week-02
+```
+
+Then ask small, specific questions:
+
+| When you are stuck on... | Ask the assistant... |
+|---|---|
+| Bash | "Explain this command in plain English: `cut -f2 samples.tsv | sort | uniq -c`." |
+| Python | "What does this pandas line return, and what shape should I expect?" |
+| R | "Explain why this plot is descriptive and not a differential expression test." |
+| SQL | "Explain this join and tell me what rows could be lost or duplicated." |
+| Error messages | "What is the most likely cause of this error? Ask me for missing context before guessing." |
+
+Good assistant use makes you more active, not less. Ask it to explain inputs, outputs, assumptions, and failure modes. Do not ask it to invent biological conclusions from a tiny tutorial dataset.
+
 ## Bash: The Glue Layer
 
 Bash is how you talk to files and command-line tools. Sequencing data is often too large for spreadsheets, and many bioinformatics tools are designed to run from a terminal.
@@ -238,7 +260,7 @@ The best next step is to practice with tiny data:
 3. Use SQL to check sample metadata.
 4. Write down what each step changed.
 
-Week 3 will step backward again and ask: what biology do you actually need to know before the code starts making sense?
+Next, we go straight into the technical core: the file types you will keep seeing in real projects, including FASTQ, BAM, VCF, GTF, count matrices, and metadata.
 
 ## Credits and References
 

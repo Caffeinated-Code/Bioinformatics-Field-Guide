@@ -7,9 +7,7 @@ This folder contains the current Bioinformatics Field Guide articles and support
 | Week | Guide | Resource |
 |---|---|---|
 | 1 | [How to Set Up Your Laptop for Bioinformatics](posts/week-01-laptop-setup-for-bioinformatics.md) | Starter environment and Docker/JupyterLab setup |
-| 2 | [What Languages Should a Bioinformatician Know?](posts/week-02-languages-for-bioinformatics.md) | Language decision tree |
-| 3 | [What Biology Do You Need for Bioinformatics?](posts/week-03-biology-prerequisites.md) | Biology prerequisite map |
-| 4 | [How to Think Like a Bioinformatician](posts/week-04-think-like-a-bioinformatician.md) | Bioinformatics thinking framework |
+| 2 | [What Programming Languages Should a Bioinformatician Know?](posts/week-02-languages-for-bioinformatics.md) | Language decision tree, starter notebooks, AI-assisted learning |
 | 5 | [The File Types You Must Know](posts/week-05-bioinformatics-file-types.md) | File-format atlas |
 | 6 | [The Bioinformatics Project Template](posts/week-06-reproducible-project-template.md) | Reproducible project template |
 | 7 | [RNA-seq in 7 Minutes](posts/week-07-rnaseq-in-seven-minutes.md) | RNA-seq workflow map |

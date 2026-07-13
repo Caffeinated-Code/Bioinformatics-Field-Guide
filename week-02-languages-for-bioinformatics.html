@@ -94,6 +94,10 @@ starter plan</p>
           <li><a href="#the-beginner-order-that-works"
           id="toc-the-beginner-order-that-works">The Beginner Order That
           Works</a></li>
+          <li><a
+          href="#use-your-week-1-coding-assistant-while-you-learn"
+          id="toc-use-your-week-1-coding-assistant-while-you-learn">Use
+          Your Week 1 Coding Assistant While You Learn</a></li>
           <li><a href="#bash-the-glue-layer"
           id="toc-bash-the-glue-layer">Bash: The Glue Layer</a></li>
           <li><a href="#python-the-builder"
@@ -208,28 +212,79 @@ starter plan</p>
           1</a>, you already have the setup you need: a project folder,
           Conda environment, terminal, and editor. This week is about
           deciding what to learn first.</p>
+          <h2 id="use-your-week-1-coding-assistant-while-you-learn">Use
+          Your Week 1 Coding Assistant While You Learn</h2>
+          <p>If you set up VS Code, Ollama, and Continue in <a
+          href="week-01-laptop-setup-for-bioinformatics.html">Week
+          1</a>, use them as a tutor while you work through the
+          notebooks below. The goal is not to let the assistant write
+          everything. The goal is to make unfamiliar code less
+          intimidating.</p>
+          <p>Open the Week 2 notebook folder in VS Code:</p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">code</span> content/resources/week-02</span></code></pre></div>
+          <p>Then ask small, specific questions:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>When you are stuck on...</th>
+          <th>Ask the assistant...</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>Bash</td>
+          <td>"Explain this command in plain English: `cut -f2
+          samples.tsv</td>
+          </tr>
+          <tr>
+          <td>Python</td>
+          <td>"What does this pandas line return, and what shape should
+          I expect?"</td>
+          </tr>
+          <tr>
+          <td>R</td>
+          <td>"Explain why this plot is descriptive and not a
+          differential expression test."</td>
+          </tr>
+          <tr>
+          <td>SQL</td>
+          <td>"Explain this join and tell me what rows could be lost or
+          duplicated."</td>
+          </tr>
+          <tr>
+          <td>Error messages</td>
+          <td>"What is the most likely cause of this error? Ask me for
+          missing context before guessing."</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>Good assistant use makes you more active, not less. Ask it
+          to explain inputs, outputs, assumptions, and failure modes. Do
+          not ask it to invent biological conclusions from a tiny
+          tutorial dataset.</p>
           <h2 id="bash-the-glue-layer">Bash: The Glue Layer</h2>
           <p>Bash is how you talk to files and command-line tools.
           Sequencing data is often too large for spreadsheets, and many
           bioinformatics tools are designed to run from a terminal.</p>
           <p>Learn these first:</p>
-          <div class="sourceCode" id="cb2"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">pwd</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">wc</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">cut</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">uniq</span></span></code></pre></div>
-          <p>Then learn pipes:</p>
           <div class="sourceCode" id="cb3"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cut</span> <span class="at">-f2</span> samples.tsv <span class="kw">|</span> <span class="fu">sort</span> <span class="kw">|</span> <span class="fu">uniq</span> <span class="at">-c</span></span></code></pre></div>
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">pwd</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">wc</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">cut</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">uniq</span></span></code></pre></div>
+          <p>Then learn pipes:</p>
+          <div class="sourceCode" id="cb4"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cut</span> <span class="at">-f2</span> samples.tsv <span class="kw">|</span> <span class="fu">sort</span> <span class="kw">|</span> <span class="fu">uniq</span> <span class="at">-c</span></span></code></pre></div>
           <p>That command means: take column 2, sort the values, and
           count each unique value.</p>
           <p>You do not need to become a systems engineer. You do need
@@ -373,10 +428,10 @@ starter plan</p>
           Superpower</h2>
           <p>Bioinformatics fails quietly when metadata is messy. SQL
           helps you ask precise questions:</p>
-          <div class="sourceCode" id="cb4"><pre
-          class="sourceCode sql"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> condition, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> n_samples</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> samples</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> condition;</span></code></pre></div>
+          <div class="sourceCode" id="cb5"><pre
+          class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> condition, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> n_samples</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> samples</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> condition;</span></code></pre></div>
           <p>Learn:</p>
           <ul>
           <li><code>SELECT</code></li>
@@ -536,9 +591,9 @@ starter plan</p>
           <li>Use SQL to check sample metadata.</li>
           <li>Write down what each step changed.</li>
           </ol>
-          <p>Week 3 will step backward again and ask: what biology do
-          you actually need to know before the code starts making
-          sense?</p>
+          <p>Next, we go straight into the technical core: the file
+          types you will keep seeing in real projects, including FASTQ,
+          BAM, VCF, GTF, count matrices, and metadata.</p>
           <h2 id="credits-and-references">Credits and References</h2>
           <ul>
           <li>Python: <a
