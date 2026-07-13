@@ -332,9 +332,67 @@ h3 {
 
 .map-node a {
   display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   margin: 0.35rem 0.55rem 0 0;
   color: var(--brand-dark);
   font-weight: 800;
+}
+
+.map-node a strong,
+.route-strip a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-node a strong {
+  min-width: 2rem;
+  height: 1.6rem;
+  padding: 0 0.45rem;
+  border: 1px solid color-mix(in srgb, var(--brand) 45%, var(--line));
+  border-radius: 999px;
+  color: var(--brand-dark);
+  background: var(--surface-strong);
+  font-size: 0.72rem;
+  line-height: 1;
+}
+
+.route-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 1rem;
+  padding: 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.route-strip span {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 0.25rem;
+  color: var(--accent);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.route-strip a {
+  min-height: 2rem;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--text);
+  background: var(--surface-strong);
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.route-strip--side a {
+  color: var(--brand-dark);
 }
 
 .guide-card,
