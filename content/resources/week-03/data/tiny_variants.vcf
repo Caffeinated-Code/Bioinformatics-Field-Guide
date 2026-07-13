@@ -1,0 +1,5 @@
+##fileformat=VCFv4.3
+##reference=GRCh38_tiny_example
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	S1	S2
+chr1	1050	rsTiny1	A	G	99	PASS	GENE=TP53	GT	0/1	0/0
+chr1	3050	.	C	T	42	q10	GENE=BRAF	GT	0/0	0/1

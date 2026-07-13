@@ -26,7 +26,6 @@ themeToggle?.addEventListener("click", () => {
   themeToggle.innerHTML = isDark
     ? '<i class="ri-sun-line" aria-hidden="true"></i>'
     : '<i class="ri-moon-line" aria-hidden="true"></i>';
-  updateGiscusTheme();
 });
 
 function updateProgress() {
@@ -167,21 +166,6 @@ function setupSharing() {
       setShareStatus("Copy the URL from your browser bar");
     }
   });
-}
-
-function updateGiscusTheme() {
-  const iframe = document.querySelector("iframe.giscus-frame");
-  if (!iframe) return;
-  iframe.contentWindow?.postMessage(
-    {
-      giscus: {
-        setConfig: {
-          theme: document.body.classList.contains("dark-theme") ? "dark" : "light",
-        },
-      },
-    },
-    "https://giscus.app"
-  );
 }
 
 setupSharing();

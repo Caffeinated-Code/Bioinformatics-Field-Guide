@@ -670,8 +670,7 @@ h3 {
   margin-top: 4rem;
 }
 
-.engagement-card,
-.giscus-panel {
+.engagement-card {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--surface);
@@ -736,13 +735,26 @@ h3 {
   font-weight: 800;
 }
 
-.giscus-panel {
+.discussion-note {
   margin-top: 1rem;
   padding: 1rem;
 }
 
-.giscus {
-  max-width: 100%;
+.discussion-note {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  background: var(--surface);
+}
+
+.discussion-note strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--text);
+}
+
+.discussion-note p {
+  margin-bottom: 0;
 }
 
 .site-footer {

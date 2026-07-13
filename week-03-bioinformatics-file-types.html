@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="FASTQ, BAM, VCF, GTF, BED, count matrices, metadata, and
+how to inspect them safely"
+    />
+    <meta property="og:title" content="The Bioinformatics File Types You
+Must Know" />
+    <meta
+      property="og:description"
+      content="FASTQ, BAM, VCF, GTF, BED, count matrices, metadata, and
+how to inspect them safely"
+    />
+    <meta property="og:type" content="article" />
+    <title>The Bioinformatics File Types You Must
+Know | Bioinformatics Field Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/site.css?v=20260709-engagement" />
+  </head>
+  <body class="article-page">
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <header class="site-header" id="site-header">
+      <nav class="nav container" aria-label="Primary navigation">
+        <a href="index.html" class="nav__brand">Bioinformatics Field Guide</a>
+        <div class="nav__links" id="nav-links">
+          <a href="index.html#guides">Guides</a>
+          <a href="index.html#resources">Resources</a>
+          <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+        <div class="nav__actions">
+          <button class="icon-button" id="theme-toggle" aria-label="Toggle color theme">
+            <i class="ri-moon-line" aria-hidden="true"></i>
+          </button>
+          <button class="icon-button nav__toggle" id="nav-toggle" aria-label="Open menu">
+            <i class="ri-menu-line" aria-hidden="true"></i>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="article-hero">
+        <div class="container article-hero__grid">
+          <div>
+            <a class="back-link" href="index.html"><i class="ri-arrow-left-line" aria-hidden="true"></i> Field Guide home</a>
+            <p class="eyebrow">Week 3 · 7 minutes</p>
+            <h1>The Bioinformatics File Types You Must Know</h1>
+                        <p class="article-hero__subtitle">FASTQ, BAM,
+VCF, GTF, BED, count matrices, metadata, and how to inspect them
+safely</p>
+                        <div class="article-meta">
+              <span><i class="ri-user-smile-line" aria-hidden="true"></i> Beginner friendly</span>
+              <span><i class="ri-terminal-box-line" aria-hidden="true"></i> Tested commands</span>
+              <span><i class="ri-git-repository-line" aria-hidden="true"></i> Reproducible assets</span>
+            </div>
+          </div>
+          <aside class="article-card">
+            <span class="article-card__label">Original asset</span>
+            <p>File-format atlas and tiny inspection dataset</p>
+            <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+              View repository <i class="ri-external-link-line" aria-hidden="true"></i>
+            </a>
+          </aside>
+        </div>
+      </section>
+
+      <div class="container article-layout">
+        <aside class="toc" aria-label="Table of contents">
+          <p class="toc__title">On this page</p>
+          <ul>
+          <li><a href="#the-bioinformatics-file-types-you-must-know"
+          id="toc-the-bioinformatics-file-types-you-must-know">The
+          Bioinformatics File Types You Must Know</a>
+          <ul>
+          <li><a href="#why-file-types-matter"
+          id="toc-why-file-types-matter">Why File Types Matter</a></li>
+          <li><a href="#the-big-picture" id="toc-the-big-picture">The
+          Big Picture</a></li>
+          <li><a href="#first-rule-inspect-do-not-open"
+          id="toc-first-rule-inspect-do-not-open">First Rule: Inspect,
+          Do Not Open</a></li>
+          <li><a href="#fastq-raw-sequencing-reads"
+          id="toc-fastq-raw-sequencing-reads">FASTQ: Raw Sequencing
+          Reads</a></li>
+          <li><a href="#sam-and-bam-where-reads-align"
+          id="toc-sam-and-bam-where-reads-align">SAM And BAM: Where
+          Reads Align</a></li>
+          <li><a href="#vcf-genetic-variants"
+          id="toc-vcf-genetic-variants">VCF: Genetic Variants</a></li>
+          <li><a href="#gtf-and-gff-genome-annotation"
+          id="toc-gtf-and-gff-genome-annotation">GTF And GFF: Genome
+          Annotation</a></li>
+          <li><a href="#bed-genomic-intervals"
+          id="toc-bed-genomic-intervals">BED: Genomic Intervals</a></li>
+          <li><a href="#count-matrix-where-many-analyses-begin"
+          id="toc-count-matrix-where-many-analyses-begin">Count Matrix:
+          Where Many Analyses Begin</a></li>
+          <li><a href="#metadata-the-file-people-forget"
+          id="toc-metadata-the-file-people-forget">Metadata: The File
+          People Forget</a></li>
+          <li><a href="#save-this-file-format-atlas"
+          id="toc-save-this-file-format-atlas">Save This: File Format
+          Atlas</a></li>
+          <li><a href="#common-mistakes" id="toc-common-mistakes">Common
+          Mistakes</a></li>
+          <li><a href="#what-to-watch-next"
+          id="toc-what-to-watch-next">What To Watch Next</a></li>
+          <li><a href="#credits-and-references"
+          id="toc-credits-and-references">Credits and
+          References</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+
+        <article class="article-content">
+          <h1 id="the-bioinformatics-file-types-you-must-know">The
+          Bioinformatics File Types You Must Know</h1>
+          <p><strong>Takeaway:</strong> Bioinformatics files are not
+          random extensions. Each file type tells you where you are in
+          the journey from raw measurement to biological
+          interpretation.</p>
+          <h2 id="why-file-types-matter">Why File Types Matter</h2>
+          <p>Many beginner mistakes happen before any statistics are
+          run.</p>
+          <ul>
+          <li>opening huge files in the wrong program</li>
+          <li>mixing genome builds</li>
+          <li>losing the sample sheet</li>
+          <li>using gene symbols when stable IDs are needed</li>
+          <li>treating processed files as raw files</li>
+          <li>forgetting that binary files need specialized tools</li>
+          </ul>
+          <p>If you know what each file represents, the workflow becomes
+          easier to debug. You can ask better questions:</p>
+          <pre class="text"><code>Is this raw data, aligned data, annotation, summarized counts, metadata, or a result?</code></pre>
+          <p>That one question prevents a surprising number of
+          mistakes.</p>
+          <h2 id="the-big-picture">The Big Picture</h2>
+          <pre class="mermaid"><code>flowchart LR
+  fastq[FASTQ raw reads] --&gt; bam[BAM aligned reads]
+  bam --&gt; counts[Feature counts]
+  fastq --&gt; quant[Direct quantification]
+  counts --&gt; matrix[Count matrix]
+  quant --&gt; matrix
+  metadata[Metadata] --&gt; matrix
+  matrix --&gt; stats[Statistical results]
+  stats --&gt; interpretation[Biological interpretation]</code></pre>
+          <p>The files change because the question changes:</p>
+          <pre class="text"><code>What was sequenced? -&gt; Where did it align? -&gt; What feature was counted? -&gt; What changed?</code></pre>
+          <p>The reusable file atlas and tiny example files are here: <a
+          href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide/tree/main/content/resources/week-03"><code>content/resources/week-03</code></a>.</p>
+          <h2 id="first-rule-inspect-do-not-open">First Rule: Inspect,
+          Do Not Open</h2>
+          <p>Do not double-click a large bioinformatics file and hope
+          your computer guesses correctly. Inspect from the
+          terminal.</p>
+          <div class="sourceCode" id="cb4"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> file.tsv</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">less</span> file.vcf</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">zcat</span> reads.fastq.gz <span class="kw">|</span> <span class="fu">head</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view alignments.bam <span class="kw">|</span> <span class="fu">head</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">bcftools</span> view variants.vcf.gz <span class="kw">|</span> <span class="fu">head</span></span></code></pre></div>
+          <p>Use file-aware tools when files are compressed, indexed, or
+          binary. A spreadsheet is not a safe viewer for FASTQ, BAM,
+          VCF, or large count matrices.</p>
+          <h2 id="fastq-raw-sequencing-reads">FASTQ: Raw Sequencing
+          Reads</h2>
+          <p>FASTQ stores sequencing reads and quality scores. It is
+          often the first file you receive after sequencing.</p>
+          <pre class="text"><code>@read_id
+ACGTACGTACGT
++
+FFFFFFFFFFFF</code></pre>
+          <p>The sequence line contains bases. The quality line
+          estimates confidence in each base call.</p>
+          <p>Use FASTQ to ask:</p>
+          <ul>
+          <li>Are the reads good enough?</li>
+          <li>What is the read length?</li>
+          <li>Are adapters present?</li>
+          <li>Should reads be aligned or quantified?</li>
+          </ul>
+          <p>Common tools: FastQC, MultiQC, fastp, cutadapt, STAR,
+          HISAT2, Salmon, kallisto.</p>
+          <p>Do not edit FASTQ files by hand. If the file ends in
+          <code>.fastq.gz</code>, keep it compressed unless a tool
+          specifically requires otherwise.</p>
+          <h2 id="sam-and-bam-where-reads-align">SAM And BAM: Where
+          Reads Align</h2>
+          <p>SAM is a text format for aligned sequencing reads. BAM is
+          the compressed binary version. CRAM is an even more compressed
+          format that depends on a reference genome. These files
+          answer:</p>
+          <pre class="text"><code>Where did each read align?</code></pre>
+          <p>Use alignment files to ask:</p>
+          <ul>
+          <li>Did reads align where expected?</li>
+          <li>Is coverage high enough?</li>
+          <li>Are there duplicate reads?</li>
+          <li>Which reads overlap a gene, exon, peak, or variant?</li>
+          </ul>
+          <p>BAM files are usually indexed. If a tool complains about a
+          missing <code>.bai</code> file, it is asking for the BAM
+          index.</p>
+          <p>Common tools: samtools, IGV, featureCounts, bedtools,
+          GATK.</p>
+          <h2 id="vcf-genetic-variants">VCF: Genetic Variants</h2>
+          <p>VCF stores variants such as single nucleotide variants,
+          insertions, deletions, and structural variants.</p>
+          <p>It usually includes:</p>
+          <ul>
+          <li>genomic position</li>
+          <li>reference allele</li>
+          <li>alternate allele</li>
+          <li>quality information</li>
+          <li>genotype information</li>
+          </ul>
+          <p>Use VCF to ask:</p>
+          <ul>
+          <li>What variant was observed?</li>
+          <li>In which sample or genotype?</li>
+          <li>How strong is the evidence?</li>
+          <li>Which variants pass filters?</li>
+          <li>What annotation or clinical evidence supports
+          interpretation?</li>
+          </ul>
+          <p>The big caution: variant interpretation depends heavily on
+          reference genome, annotation version, filtering logic, and
+          clinical context.</p>
+          <h2 id="gtf-and-gff-genome-annotation">GTF And GFF: Genome
+          Annotation</h2>
+          <p>GTF and GFF files describe genomic features:</p>
+          <ul>
+          <li>genes</li>
+          <li>transcripts</li>
+          <li>exons</li>
+          <li>coding regions</li>
+          <li>other annotated elements</li>
+          </ul>
+          <p>They help tools connect genomic coordinates to biological
+          labels.</p>
+          <p>Use annotation files for:</p>
+          <ul>
+          <li>counting reads per gene</li>
+          <li>transcript analysis</li>
+          <li>feature overlap</li>
+          <li>gene model interpretation</li>
+          </ul>
+          <p>Always record which annotation version you used.</p>
+          <h2 id="bed-genomic-intervals">BED: Genomic Intervals</h2>
+          <p>BED files store genomic intervals. They are common in
+          ATAC-seq, ChIP-seq, enhancer analysis, peak calling, and
+          region overlap work.</p>
+          <pre class="text"><code>chr1    1000    1250    peak_1
+chr1    3000    3400    peak_2</code></pre>
+          <p>BED coordinates are usually zero-based and half-open. That
+          detail sounds tiny until an off-by-one error breaks an overlap
+          analysis.</p>
+          <p>Use BED to ask:</p>
+          <ul>
+          <li>Which genomic regions are interesting?</li>
+          <li>Which peaks overlap genes, promoters, enhancers, or
+          variants?</li>
+          <li>Which intervals are shared between experiments?</li>
+          </ul>
+          <p>Common tools: bedtools, UCSC Genome Browser, IGV.</p>
+          <h2 id="count-matrix-where-many-analyses-begin">Count Matrix:
+          Where Many Analyses Begin</h2>
+          <p>For RNA-seq and single-cell RNA-seq, statistical analysis
+          often begins with a count matrix.</p>
+          <pre class="text"><code>gene_id    sample_1    sample_2    sample_3
+GeneA      10          25          18
+GeneB      0           4           1
+GeneC      100         88          140</code></pre>
+          <p>Rows are usually genes or features. Columns are samples or
+          cells. Values are counts.</p>
+          <p>Counts without metadata are just numbers. Also check
+          whether values are raw counts, TPM, CPM, normalized counts,
+          log-transformed values, or scaled values. Many downstream
+          methods expect one of these and fail quietly with another.</p>
+          <h2 id="metadata-the-file-people-forget">Metadata: The File
+          People Forget</h2>
+          <p>Metadata describes samples:</p>
+          <pre class="text"><code>sample_id    condition    batch    tissue
+S1           control      A        liver
+S2           treated      A        liver
+S3           control      B        liver</code></pre>
+          <p>Metadata tells the analysis what the columns mean. It is
+          where condition, batch, tissue, donor, time point, and
+          covariates live.</p>
+          <p>If the metadata is wrong, the analysis will be wrong in a
+          very quiet way.</p>
+          <p>At minimum, metadata should have:</p>
+          <ul>
+          <li>one stable sample ID column</li>
+          <li>one row per biological sample or cell library</li>
+          <li>condition or group labels</li>
+          <li>batch or processing labels</li>
+          <li>enough context to reproduce the comparison</li>
+          </ul>
+          <h2 id="save-this-file-format-atlas">Save This: File Format
+          Atlas</h2>
+          <table>
+          <thead>
+          <tr>
+          <th>File</th>
+          <th>Stage</th>
+          <th>Inspect with</th>
+          <th>Beginner warning</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>FASTQ / FASTQ.GZ</td>
+          <td>raw reads</td>
+          <td><code>zcat</code>, <code>seqkit</code>, FastQC</td>
+          <td>do not edit by hand</td>
+          </tr>
+          <tr>
+          <td>SAM</td>
+          <td>aligned reads</td>
+          <td><code>head</code>, <code>samtools view</code></td>
+          <td>can be huge</td>
+          </tr>
+          <tr>
+          <td>BAM / CRAM</td>
+          <td>aligned reads</td>
+          <td><code>samtools view</code>, IGV</td>
+          <td>usually needs an index</td>
+          </tr>
+          <tr>
+          <td>VCF / VCF.GZ</td>
+          <td>variants</td>
+          <td><code>bcftools view</code>, <code>less</code></td>
+          <td>interpretation depends on annotation</td>
+          </tr>
+          <tr>
+          <td>GTF/GFF</td>
+          <td>annotation</td>
+          <td><code>head</code>, <code>awk</code>,
+          <code>grep</code></td>
+          <td>version matters</td>
+          </tr>
+          <tr>
+          <td>BED</td>
+          <td>genomic intervals</td>
+          <td><code>head</code>, <code>bedtools</code></td>
+          <td>coordinate conventions matter</td>
+          </tr>
+          <tr>
+          <td>count matrix</td>
+          <td>summarized features</td>
+          <td>R/Python, <code>head</code></td>
+          <td>must match metadata</td>
+          </tr>
+          <tr>
+          <td>sample sheet</td>
+          <td>metadata</td>
+          <td>R/Python, SQL, <code>csvcut</code></td>
+          <td>protect it like data</td>
+          </tr>
+          </tbody>
+          </table>
+          <h2 id="common-mistakes">Common Mistakes</h2>
+          <ul>
+          <li>Opening huge files in spreadsheet software.</li>
+          <li>Mixing genome builds.</li>
+          <li>Forgetting BAM indexes.</li>
+          <li>Forgetting Tabix indexes for compressed VCF or BED-like
+          files.</li>
+          <li>Losing the sample sheet.</li>
+          <li>Treating filtered files as raw files.</li>
+          <li>Using gene symbols when stable IDs are needed.</li>
+          <li>Sharing human genomic data without checking privacy
+          rules.</li>
+          <li>Running statistics on normalized values when the method
+          expects raw counts.</li>
+          </ul>
+          <h2 id="what-to-watch-next">What To Watch Next</h2>
+          <p>File formats are stable, but the way teams store, stream,
+          validate, and document data is still evolving. Cloud-native
+          workflows, metadata standards, and provenance tracking are
+          becoming as important as the files themselves.</p>
+          <p>Next in the Foundation Series: turn these file instincts
+          into a reproducible project structure so every input, output,
+          script, notebook, and result has a predictable home.</p>
+          <h2 id="credits-and-references">Credits and References</h2>
+          <ul>
+          <li>SAM/BAM specification: <a
+          href="https://samtools.github.io/hts-specs/SAMv1.pdf">https://samtools.github.io/hts-specs/SAMv1.pdf</a></li>
+          <li>VCF specification: <a
+          href="https://samtools.github.io/hts-specs/VCFv4.3.pdf">https://samtools.github.io/hts-specs/VCFv4.3.pdf</a></li>
+          <li>Sequence Ontology GFF/GTF specifications: <a
+          href="https://github.com/The-Sequence-Ontology/Specifications">https://github.com/The-Sequence-Ontology/Specifications</a></li>
+          <li>UCSC BED format FAQ: <a
+          href="https://genome.ucsc.edu/FAQ/FAQformat.html">https://genome.ucsc.edu/FAQ/FAQformat.html</a></li>
+          <li>FastQC: <a
+          href="https://www.bioinformatics.babraham.ac.uk/projects/fastqc/">https://www.bioinformatics.babraham.ac.uk/projects/fastqc/</a></li>
+          <li>MultiQC: <a
+          href="https://multiqc.info/">https://multiqc.info/</a></li>
+          <li>bedtools: <a
+          href="https://bedtools.readthedocs.io/">https://bedtools.readthedocs.io/</a></li>
+          <li>samtools: <a
+          href="https://www.htslib.org/doc/samtools.html">https://www.htslib.org/doc/samtools.html</a></li>
+          <li>bcftools: <a
+          href="https://samtools.github.io/bcftools/">https://samtools.github.io/bcftools/</a></li>
+          <li>Bioconductor RNA-seq workflow: <a
+          href="https://www.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html">https://www.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html</a></li>
+          </ul>
+
+          <section class="article-engagement" aria-labelledby="article-engagement-title">
+            <div class="engagement-card">
+              <p class="eyebrow">Share and discuss</p>
+              <h2 id="article-engagement-title">Was this useful?</h2>
+              <p>
+                Share this guide with someone learning bioinformatics, suggest an edit on GitHub,
+                or leave a question below.
+              </p>
+              <div class="share-actions" data-share-title="The
+Bioinformatics File Types You Must Know">
+                <button class="share-button" type="button" data-share-native>
+                  <i class="ri-share-forward-line" aria-hidden="true"></i>
+                  Share
+                </button>
+                <button class="share-button" type="button" data-copy-link>
+                  <i class="ri-link" aria-hidden="true"></i>
+                  Copy link
+                </button>
+                <a class="share-button" data-share-linkedin target="_blank" rel="noreferrer">
+                  <i class="ri-linkedin-box-line" aria-hidden="true"></i>
+                  LinkedIn
+                </a>
+                <a class="share-button" data-share-x target="_blank" rel="noreferrer">
+                  <i class="ri-twitter-x-line" aria-hidden="true"></i>
+                  X
+                </a>
+                <a class="share-button" data-edit-github target="_blank" rel="noreferrer">
+                  <i class="ri-git-pull-request-line" aria-hidden="true"></i>
+                  Suggest edit
+                </a>
+              </div>
+              <p class="share-status" aria-live="polite"></p>
+            </div>
+
+            <div class="discussion-note" aria-label="Comments and reactions">
+              <strong>Comments and reactions are coming soon.</strong>
+              <p>
+                For now, use the share buttons or suggest an edit on GitHub.
+                GitHub-powered discussions will be enabled after the discussion app is installed for this repository.
+              </p>
+            </div>
+          </section>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer__grid">
+        <div>
+          <strong>Bioinformatics Field Guide</strong>
+          <p>Practical bioinformatics guides with reproducible examples.</p>
+        </div>
+        <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+          GitHub repository <i class="ri-external-link-line" aria-hidden="true"></i>
+        </a>
+      </div>
+    </footer>
+
+    <script src="assets/site.js?v=20260709-engagement"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: false });
+      window.mermaid = mermaid;
+      window.dispatchEvent(new Event("mermaid-ready"));
+    </script>
+  </body>
+</html>

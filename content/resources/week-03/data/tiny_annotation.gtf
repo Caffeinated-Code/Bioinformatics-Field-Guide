@@ -1,0 +1,5 @@
+chr1	tiny	gene	900	1500	.	+	.	gene_id "ENSG_TINY_TP53"; gene_name "TP53";
+chr1	tiny	transcript	900	1500	.	+	.	gene_id "ENSG_TINY_TP53"; transcript_id "ENST_TINY_TP53_1";
+chr1	tiny	exon	900	1100	.	+	.	gene_id "ENSG_TINY_TP53"; transcript_id "ENST_TINY_TP53_1"; exon_number "1";
+chr1	tiny	gene	2800	3400	.	-	.	gene_id "ENSG_TINY_BRAF"; gene_name "BRAF";
+chr1	tiny	exon	3000	3200	.	-	.	gene_id "ENSG_TINY_BRAF"; transcript_id "ENST_TINY_BRAF_1"; exon_number "1";
