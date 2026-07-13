@@ -1,0 +1,9 @@
+file_type	public_source	what_to_download	first_check
+FASTQ	NCBI SRA / ENA / DDBJ	Raw sequencing reads for a small public run	Run FastQC or seqkit stats before alignment
+BAM_or_CRAM	ENCODE / 1000 Genomes / author repositories	Processed alignments plus index files	Check that genome build and chromosome naming match your annotation
+VCF	ClinVar / dbSNP / gnomAD / 1000 Genomes	Variant calls or curated variant records	Check reference genome, filter status, and annotation version
+GTF_or_GFF	GENCODE / Ensembl / RefSeq	Gene and transcript annotation	Check release number and genome build
+BED_or_narrowPeak	ENCODE / UCSC Table Browser / peak-calling outputs	Intervals, peaks, promoters, enhancers, or target regions	Check coordinate convention and genome build
+bedGraph_or_bigWig	ENCODE / UCSC Genome Browser track hubs	Signal tracks for coverage, accessibility, or enrichment	Check whether the track is normalized and what assay it represents
+count_matrix	GEO / CELLxGENE / Single Cell Portal / author repositories	Feature-by-sample or feature-by-cell counts	Check whether values are raw counts, normalized counts, TPM, CPM, or log-transformed values
+metadata	GEO / ENCODE / CELLxGENE / author repositories	Sample labels, conditions, batches, donors, and protocols	Check that sample IDs exactly match the matrix columns

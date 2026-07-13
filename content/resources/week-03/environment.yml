@@ -1,0 +1,10 @@
+name: bfg-week3-files
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - samtools>=1.20
+  - bedtools>=2.31
+  - ucsc-bedgraphtobigwig
+  - ucsc-bigwigtobedgraph
+  - seqkit

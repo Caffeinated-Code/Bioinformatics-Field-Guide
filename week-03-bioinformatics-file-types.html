@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="FASTQ, BAM, VCF, GTF, BED, count matrices, metadata, and
-how to inspect them safely"
+      content="FASTQ, BAM, VCF, GTF, BED, bedGraph, bigWig, count
+matrices, metadata, and how to inspect them safely"
     />
     <meta property="og:title" content="The Bioinformatics File Types You
 Must Know" />
     <meta
       property="og:description"
-      content="FASTQ, BAM, VCF, GTF, BED, count matrices, metadata, and
-how to inspect them safely"
+      content="FASTQ, BAM, VCF, GTF, BED, bedGraph, bigWig, count
+matrices, metadata, and how to inspect them safely"
     />
     <meta property="og:type" content="article" />
     <title>The Bioinformatics File Types You Must
@@ -57,11 +57,12 @@ Know | Bioinformatics Field Guide</title>
         <div class="container article-hero__grid">
           <div>
             <a class="back-link" href="index.html"><i class="ri-arrow-left-line" aria-hidden="true"></i> Field Guide home</a>
-            <p class="eyebrow">Week 3 · 7 minutes</p>
+            <p class="eyebrow">Week 3 · 7-minute core + 20-minute
+lab</p>
             <h1>The Bioinformatics File Types You Must Know</h1>
                         <p class="article-hero__subtitle">FASTQ, BAM,
-VCF, GTF, BED, count matrices, metadata, and how to inspect them
-safely</p>
+VCF, GTF, BED, bedGraph, bigWig, count matrices, metadata, and how to
+inspect them safely</p>
                         <div class="article-meta">
               <span><i class="ri-user-smile-line" aria-hidden="true"></i> Beginner friendly</span>
               <span><i class="ri-terminal-box-line" aria-hidden="true"></i> Tested commands</span>
@@ -70,7 +71,8 @@ safely</p>
           </div>
           <aside class="article-card">
             <span class="article-card__label">Original asset</span>
-            <p>File-format atlas and tiny inspection dataset</p>
+            <p>File-format atlas, tiny public-data-style dataset, and
+hands-on inspection lab</p>
             <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
               View repository <i class="ri-external-link-line" aria-hidden="true"></i>
             </a>
@@ -90,6 +92,8 @@ safely</p>
           id="toc-why-file-types-matter">Why File Types Matter</a></li>
           <li><a href="#the-big-picture" id="toc-the-big-picture">The
           Big Picture</a></li>
+          <li><a href="#the-tool-belt" id="toc-the-tool-belt">The Tool
+          Belt</a></li>
           <li><a href="#first-rule-inspect-do-not-open"
           id="toc-first-rule-inspect-do-not-open">First Rule: Inspect,
           Do Not Open</a></li>
@@ -106,6 +110,9 @@ safely</p>
           Annotation</a></li>
           <li><a href="#bed-genomic-intervals"
           id="toc-bed-genomic-intervals">BED: Genomic Intervals</a></li>
+          <li><a href="#bedgraph-and-bigwig-signal-along-the-genome"
+          id="toc-bedgraph-and-bigwig-signal-along-the-genome">bedGraph
+          And bigWig: Signal Along The Genome</a></li>
           <li><a href="#count-matrix-where-many-analyses-begin"
           id="toc-count-matrix-where-many-analyses-begin">Count Matrix:
           Where Many Analyses Begin</a></li>
@@ -115,6 +122,10 @@ safely</p>
           <li><a href="#save-this-file-format-atlas"
           id="toc-save-this-file-format-atlas">Save This: File Format
           Atlas</a></li>
+          <li><a
+          href="#hands-on-mini-lab-one-tiny-gene-region-investigation"
+          id="toc-hands-on-mini-lab-one-tiny-gene-region-investigation">Hands-On
+          Mini Lab: One Tiny Gene-Region Investigation</a></li>
           <li><a href="#common-mistakes" id="toc-common-mistakes">Common
           Mistakes</a></li>
           <li><a href="#what-to-watch-next"
@@ -133,6 +144,14 @@ safely</p>
           random extensions. Each file type tells you where you are in
           the journey from raw measurement to biological
           interpretation.</p>
+          <p>This guide has two layers:</p>
+          <ul>
+          <li><strong>Read first:</strong> learn what each file means
+          and what tools inspect it.</li>
+          <li><strong>Do next:</strong> run the mini lab at the end to
+          convert alignments, make intervals, create a coverage track,
+          and connect every file back to one biological question.</li>
+          </ul>
           <h2 id="why-file-types-matter">Why File Types Matter</h2>
           <p>Many beginner mistakes happen before any statistics are
           run.</p>
@@ -151,29 +170,95 @@ safely</p>
           mistakes.</p>
           <h2 id="the-big-picture">The Big Picture</h2>
           <pre class="mermaid"><code>flowchart LR
-  fastq[FASTQ raw reads] --&gt; bam[BAM aligned reads]
-  bam --&gt; counts[Feature counts]
-  fastq --&gt; quant[Direct quantification]
-  counts --&gt; matrix[Count matrix]
-  quant --&gt; matrix
-  metadata[Metadata] --&gt; matrix
-  matrix --&gt; stats[Statistical results]
-  stats --&gt; interpretation[Biological interpretation]</code></pre>
+  fastq[&quot;FASTQ raw reads&quot;] --&gt; sam[&quot;SAM text alignments&quot;]
+  sam --&gt; bam[&quot;BAM sorted indexed alignments&quot;]
+  bam --&gt; counts[&quot;Feature counts&quot;]
+  bam --&gt; bedgraph[&quot;bedGraph coverage&quot;]
+  bedgraph --&gt; bigwig[&quot;bigWig browser track&quot;]
+  gtf[&quot;GTF gene annotation&quot;] --&gt; counts
+  bed[&quot;BED intervals&quot;] --&gt; overlap[&quot;Overlap questions&quot;]
+  vcf[&quot;VCF variants&quot;] --&gt; overlap
+  counts --&gt; matrix[&quot;Count matrix&quot;]
+  metadata[&quot;Metadata&quot;] --&gt; matrix
+  matrix --&gt; stats[&quot;Statistical results&quot;]
+  bigwig --&gt; interpretation[&quot;Biological interpretation&quot;]
+  overlap --&gt; interpretation
+  stats --&gt; interpretation</code></pre>
           <p>The files change because the question changes:</p>
           <pre class="text"><code>What was sequenced? -&gt; Where did it align? -&gt; What feature was counted? -&gt; What changed?</code></pre>
-          <p>The reusable file atlas and tiny example files are here: <a
+          <p>The reusable file atlas, tiny data, environment file, and
+          tutorial script are here: <a
           href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide/tree/main/content/resources/week-03"><code>content/resources/week-03</code></a>.</p>
+          <h2 id="the-tool-belt">The Tool Belt</h2>
+          <p>You do not need to master every tool today. You do need to
+          know which tool is safe for which file.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Job</th>
+          <th>Tool</th>
+          <th>Why it matters</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>Inspect raw reads</td>
+          <td>FastQC, MultiQC, <code>seqkit</code>,
+          <code>zcat</code></td>
+          <td>Check quality before alignment or quantification</td>
+          </tr>
+          <tr>
+          <td>Work with SAM/BAM/CRAM</td>
+          <td><code>samtools</code></td>
+          <td>Convert, sort, index, slice, and summarize alignment
+          files</td>
+          </tr>
+          <tr>
+          <td>Work with variants</td>
+          <td><code>bcftools</code></td>
+          <td>Inspect, filter, normalize, and query VCF files</td>
+          </tr>
+          <tr>
+          <td>Work with intervals</td>
+          <td><code>bedtools</code></td>
+          <td>Intersect BED, GTF, VCF, and BAM-derived regions</td>
+          </tr>
+          <tr>
+          <td>Make coverage tracks</td>
+          <td><code>bedtools genomecov</code>, deepTools, UCSC
+          tools</td>
+          <td>Turn alignments into browser-friendly signal</td>
+          </tr>
+          <tr>
+          <td>View genome tracks</td>
+          <td>IGV, UCSC Genome Browser</td>
+          <td>Sanity-check what the data look like in genomic
+          context</td>
+          </tr>
+          <tr>
+          <td>Count features</td>
+          <td>featureCounts, HTSeq, Salmon, kallisto</td>
+          <td>Turn reads into gene or transcript-level tables</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>If you remember only three commands for this week,
+          remember:</p>
+          <div class="sourceCode" id="cb4"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view file.bam <span class="kw">|</span> <span class="fu">head</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> index file.sorted.bam</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">bedtools</span> intersect <span class="at">-a</span> regions.bed <span class="at">-b</span> annotation.gtf</span></code></pre></div>
           <h2 id="first-rule-inspect-do-not-open">First Rule: Inspect,
           Do Not Open</h2>
           <p>Do not double-click a large bioinformatics file and hope
           your computer guesses correctly. Inspect from the
           terminal.</p>
-          <div class="sourceCode" id="cb4"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> file.tsv</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">less</span> file.vcf</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">zcat</span> reads.fastq.gz <span class="kw">|</span> <span class="fu">head</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view alignments.bam <span class="kw">|</span> <span class="fu">head</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">bcftools</span> view variants.vcf.gz <span class="kw">|</span> <span class="fu">head</span></span></code></pre></div>
+          <div class="sourceCode" id="cb5"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> file.tsv</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">less</span> file.vcf</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">zcat</span> reads.fastq.gz <span class="kw">|</span> <span class="fu">head</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view alignments.bam <span class="kw">|</span> <span class="fu">head</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ex">bcftools</span> view variants.vcf.gz <span class="kw">|</span> <span class="fu">head</span></span></code></pre></div>
           <p>Use file-aware tools when files are compressed, indexed, or
           binary. A spreadsheet is not a safe viewer for FASTQ, BAM,
           VCF, or large count matrices.</p>
@@ -213,9 +298,68 @@ FFFFFFFFFFFF</code></pre>
           <li>Are there duplicate reads?</li>
           <li>Which reads overlap a gene, exon, peak, or variant?</li>
           </ul>
-          <p>BAM files are usually indexed. If a tool complains about a
-          missing <code>.bai</code> file, it is asking for the BAM
-          index.</p>
+          <p>BAM deserves extra attention because it sits in the middle
+          of many genomics workflows. A BAM file is not just a table. It
+          is a compressed alignment file that can store:</p>
+          <ul>
+          <li>read name</li>
+          <li>chromosome or contig</li>
+          <li>alignment start</li>
+          <li>mapping quality</li>
+          <li>CIGAR string</li>
+          <li>strand and flags</li>
+          <li>sequence and quality</li>
+          <li>optional tags such as cell barcode, UMI, alignment score,
+          or duplicate status</li>
+          </ul>
+          <p>The CIGAR string is the compact description of how a read
+          aligns. For example, <code>16M</code> means 16 aligned bases.
+          Real files can contain soft clips, insertions, deletions,
+          splicing, and split alignments.</p>
+          <p>BAM files are usually sorted and indexed:</p>
+          <div class="sourceCode" id="cb8"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> sort input.sam <span class="at">-o</span> input.sorted.bam</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> index input.sorted.bam</span></code></pre></div>
+          <p>Sorting puts alignments in genomic order. Indexing creates
+          a <code>.bai</code> file so tools can jump to
+          <code>chr1:1000-2000</code> without scanning the whole
+          BAM.</p>
+          <p>This distinction matters:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>File</th>
+          <th style="text-align: right;">Human-readable?</th>
+          <th style="text-align: right;">Random access?</th>
+          <th>Typical use</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>SAM</td>
+          <td style="text-align: right;">yes</td>
+          <td style="text-align: right;">no</td>
+          <td>debugging small examples</td>
+          </tr>
+          <tr>
+          <td>BAM</td>
+          <td style="text-align: right;">no</td>
+          <td style="text-align: right;">yes, with
+          <code>.bai</code></td>
+          <td>most alignment workflows</td>
+          </tr>
+          <tr>
+          <td>CRAM</td>
+          <td style="text-align: right;">no</td>
+          <td style="text-align: right;">yes, with index and
+          reference</td>
+          <td>storage-efficient archival</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>If a tool complains about a missing <code>.bai</code>, it
+          is usually asking for the BAM index. If it complains about
+          order, sort the BAM by coordinate before indexing.</p>
           <p>Common tools: samtools, IGV, featureCounts, bedtools,
           GATK.</p>
           <h2 id="vcf-genetic-variants">VCF: Genetic Variants</h2>
@@ -267,9 +411,61 @@ FFFFFFFFFFFF</code></pre>
           region overlap work.</p>
           <pre class="text"><code>chr1    1000    1250    peak_1
 chr1    3000    3400    peak_2</code></pre>
-          <p>BED coordinates are usually zero-based and half-open. That
-          detail sounds tiny until an off-by-one error breaks an overlap
-          analysis.</p>
+          <p>BED coordinates are usually <strong>zero-based and
+          half-open</strong>:</p>
+          <pre class="text"><code>chr1  100  200</code></pre>
+          <p>This means the interval starts at base 100 and ends before
+          base 200. Its length is <code>200 - 100 = 100</code>
+          bases.</p>
+          <p>Genome browser search boxes often use <strong>one-based,
+          fully closed</strong> coordinates:</p>
+          <pre class="text"><code>chr1:101-200</code></pre>
+          <p>These two examples describe the same span. The start
+          changes because the coordinate systems count differently.</p>
+          <p>Save this rule:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Format or display</th>
+          <th>Coordinate convention</th>
+          <th>Example span</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>BED</td>
+          <td>0-start, half-open</td>
+          <td><code>chr1 100 200</code></td>
+          </tr>
+          <tr>
+          <td>bedGraph</td>
+          <td>0-start, half-open</td>
+          <td><code>chr1 100 200 7</code></td>
+          </tr>
+          <tr>
+          <td>bigWig made from bedGraph</td>
+          <td>follows bedGraph-style intervals</td>
+          <td>browser signal track</td>
+          </tr>
+          <tr>
+          <td>VCF <code>POS</code></td>
+          <td>1-based position</td>
+          <td><code>chr1 101</code></td>
+          </tr>
+          <tr>
+          <td>GTF/GFF</td>
+          <td>1-based, closed</td>
+          <td><code>chr1 source exon 101 200 ...</code></td>
+          </tr>
+          <tr>
+          <td>Browser search box</td>
+          <td>usually 1-based, closed</td>
+          <td><code>chr1:101-200</code></td>
+          </tr>
+          </tbody>
+          </table>
+          <p>That detail sounds tiny until an off-by-one error breaks an
+          overlap analysis.</p>
           <p>Use BED to ask:</p>
           <ul>
           <li>Which genomic regions are interesting?</li>
@@ -278,6 +474,31 @@ chr1    3000    3400    peak_2</code></pre>
           <li>Which intervals are shared between experiments?</li>
           </ul>
           <p>Common tools: bedtools, UCSC Genome Browser, IGV.</p>
+          <h2 id="bedgraph-and-bigwig-signal-along-the-genome">bedGraph
+          And bigWig: Signal Along The Genome</h2>
+          <p>BED says, "this interval exists." bedGraph says, "this
+          interval has this signal value."</p>
+          <pre class="text"><code>chr1    1000    1016    1
+chr1    1200    1216    1
+chr1    3000    3016    1</code></pre>
+          <p>A bedGraph is text, easy to inspect, and useful for small
+          examples. A bigWig is the indexed binary version designed for
+          fast genome browser display. You usually create it in this
+          direction:</p>
+          <pre class="text"><code>BAM -&gt; bedGraph -&gt; sorted bedGraph -&gt; bigWig</code></pre>
+          <p>Typical commands:</p>
+          <div class="sourceCode" id="cb14"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bedtools</span> genomecov <span class="at">-ibam</span> aligned.sorted.bam <span class="at">-bg</span> <span class="op">&gt;</span> coverage.bedgraph</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span> <span class="at">-k1,1</span> <span class="at">-k2,2n</span> coverage.bedgraph <span class="op">&gt;</span> coverage.sorted.bedgraph</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ex">bedGraphToBigWig</span> coverage.sorted.bedgraph chrom.sizes coverage.bw</span></code></pre></div>
+          <p>Use bedGraph when you want to inspect or debug the signal.
+          Use bigWig when you want to view or share a track in IGV or
+          UCSC Genome Browser.</p>
+          <p>For RNA-seq, bigWig can show coverage across exons. For
+          ATAC-seq or ChIP-seq, it can show open chromatin or
+          protein-binding signal. For quality control, it helps answer a
+          basic question: does the signal appear where biology says it
+          should?</p>
           <h2 id="count-matrix-where-many-analyses-begin">Count Matrix:
           Where Many Analyses Begin</h2>
           <p>For RNA-seq and single-cell RNA-seq, statistical analysis
@@ -340,7 +561,7 @@ S3           control      B        liver</code></pre>
           <td>BAM / CRAM</td>
           <td>aligned reads</td>
           <td><code>samtools view</code>, IGV</td>
-          <td>usually needs an index</td>
+          <td>sort and index before slicing regions</td>
           </tr>
           <tr>
           <td>VCF / VCF.GZ</td>
@@ -362,6 +583,18 @@ S3           control      B        liver</code></pre>
           <td>coordinate conventions matter</td>
           </tr>
           <tr>
+          <td>bedGraph</td>
+          <td>interval signal</td>
+          <td><code>head</code>, IGV</td>
+          <td>must be sorted before bigWig conversion</td>
+          </tr>
+          <tr>
+          <td>bigWig</td>
+          <td>indexed signal track</td>
+          <td>IGV, UCSC</td>
+          <td>binary; inspect with bigWig tools</td>
+          </tr>
+          <tr>
           <td>count matrix</td>
           <td>summarized features</td>
           <td>R/Python, <code>head</code></td>
@@ -375,6 +608,114 @@ S3           control      B        liver</code></pre>
           </tr>
           </tbody>
           </table>
+          <h2
+          id="hands-on-mini-lab-one-tiny-gene-region-investigation">Hands-On
+          Mini Lab: One Tiny Gene-Region Investigation</h2>
+          <p>Goal: use every file type to answer one practical
+          question:</p>
+          <pre class="text"><code>Do the toy reads, variants, intervals, annotations, coverage, counts, and metadata agree with each other?</code></pre>
+          <p>The tiny examples are public-data-style practice files
+          curated to mirror common records from public resources such as
+          GENCODE, ClinVar/dbSNP-style VCFs, UCSC browser tracks, and
+          SRA/ENA-style sequencing data. They are intentionally tiny and
+          not meant for biological inference. Use the included
+          <code>public_data_manifest.tsv</code> when you are ready to
+          find real public examples of each file type.</p>
+          <h3 id="1-set-up-the-week-3-environment">1. Set Up The Week 3
+          Environment</h3>
+          <p>From the repository root:</p>
+          <div class="sourceCode" id="cb18"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> content/resources/week-03</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env create <span class="at">-f</span> environment.yml</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate bfg-week3-files</span></code></pre></div>
+          <p>If you already have the tools, you can skip the environment
+          and run the commands directly.</p>
+          <h3 id="2-inspect-the-raw-pieces">2. Inspect The Raw
+          Pieces</h3>
+          <div class="sourceCode" id="cb19"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> data/tiny_reads.fastq</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-S</span> data/tiny_alignments.sam</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-v</span> <span class="st">&#39;^#&#39;</span> data/tiny_variants.vcf</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">&#39;$3 == &quot;exon&quot;&#39;</span> data/tiny_annotation.gtf</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> data/tiny_regions.bed</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> data/tiny_counts.tsv</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> data/tiny_metadata.tsv</span></code></pre></div>
+          <p>Ask what each file represents before asking what it means
+          biologically.</p>
+          <h3 id="3-convert-sam-to-sorted-indexed-bam">3. Convert SAM To
+          Sorted, Indexed BAM</h3>
+          <div class="sourceCode" id="cb20"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> results</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-bS</span> data/tiny_alignments.sam <span class="op">&gt;</span> results/tiny.bam</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> sort results/tiny.bam <span class="at">-o</span> results/tiny.sorted.bam</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> index results/tiny.sorted.bam</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> idxstats results/tiny.sorted.bam</span></code></pre></div>
+          <p>You should now have:</p>
+          <pre class="text"><code>results/tiny.sorted.bam
+results/tiny.sorted.bam.bai</code></pre>
+          <p>This is the first moment where the file becomes
+          browser-ready.</p>
+          <h3 id="4-ask-an-interval-question-with-bed">4. Ask An
+          Interval Question With BED</h3>
+          <p>Which reads overlap the two regions in
+          <code>tiny_regions.bed</code>?</p>
+          <div class="sourceCode" id="cb22"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bedtools</span> intersect <span class="dt">\</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-a</span> results/tiny.sorted.bam <span class="dt">\</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-b</span> data/tiny_regions.bed <span class="dt">\</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-bed</span> <span class="op">&gt;</span> results/reads_over_regions.bed</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> results/reads_over_regions.bed</span></code></pre></div>
+          <p>This converts overlapping BAM alignments into BED-like
+          output so you can inspect the interval logic.</p>
+          <h3 id="5-create-bedgraph-and-bigwig-coverage">5. Create
+          bedGraph And bigWig Coverage</h3>
+          <div class="sourceCode" id="cb23"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bedtools</span> genomecov <span class="dt">\</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-ibam</span> results/tiny.sorted.bam <span class="dt">\</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-bg</span> <span class="op">&gt;</span> results/tiny.coverage.bedgraph</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span> <span class="at">-k1,1</span> <span class="at">-k2,2n</span> results/tiny.coverage.bedgraph <span class="op">&gt;</span> results/tiny.coverage.sorted.bedgraph</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="ex">bedGraphToBigWig</span> results/tiny.coverage.sorted.bedgraph data/tiny.chrom.sizes results/tiny.coverage.bw</span></code></pre></div>
+          <p>Now you have both:</p>
+          <ul>
+          <li><code>tiny.coverage.sorted.bedgraph</code>: text signal
+          you can inspect</li>
+          <li><code>tiny.coverage.bw</code>: compact signal track for
+          genome browsers</li>
+          </ul>
+          <h3 id="6-connect-variants-genes-counts-and-metadata">6.
+          Connect Variants, Genes, Counts, And Metadata</h3>
+          <div class="sourceCode" id="cb24"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bedtools</span> intersect <span class="dt">\</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-a</span> data/tiny_regions.bed <span class="dt">\</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-b</span> data/tiny_annotation.gtf <span class="dt">\</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-wa</span> <span class="at">-wb</span> <span class="op">&gt;</span> results/regions_overlapping_annotation.tsv</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-v</span> <span class="st">&#39;^#&#39;</span> data/tiny_variants.vcf <span class="op">&gt;</span> results/variants.no_header.vcf</span></code></pre></div>
+          <p>Then compare:</p>
+          <ul>
+          <li>Do the regions overlap the toy TP53-like and BRAF-like
+          annotations?</li>
+          <li>Do variants fall near the same places?</li>
+          <li>Do the count matrix columns match the metadata sample
+          IDs?</li>
+          <li>Does the browser signal support what the table says?</li>
+          </ul>
+          <h3 id="7-visualize-in-igv">7. Visualize In IGV</h3>
+          <p>Open IGV, choose a matching genome or create a tiny custom
+          genome if practicing locally, then load:</p>
+          <ul>
+          <li><code>results/tiny.sorted.bam</code></li>
+          <li><code>data/tiny_variants.vcf</code></li>
+          <li><code>data/tiny_annotation.gtf</code></li>
+          <li><code>data/tiny_regions.bed</code></li>
+          <li><code>results/tiny.coverage.bw</code></li>
+          </ul>
+          <p>In real work, this visual check often catches problems that
+          tables hide: wrong genome build, empty BAMs, mislabeled
+          chromosomes, missing indexes, or signal in impossible
+          places.</p>
           <h2 id="common-mistakes">Common Mistakes</h2>
           <ul>
           <li>Opening huge files in spreadsheet software.</li>
@@ -382,6 +723,12 @@ S3           control      B        liver</code></pre>
           <li>Forgetting BAM indexes.</li>
           <li>Forgetting Tabix indexes for compressed VCF or BED-like
           files.</li>
+          <li>Confusing 0-based BED starts with 1-based VCF or GTF
+          positions.</li>
+          <li>Sharing a bedGraph when a collaborator needs a bigWig for
+          browser performance.</li>
+          <li>Loading BAM into IGV without keeping the <code>.bai</code>
+          file next to it.</li>
           <li>Losing the sample sheet.</li>
           <li>Treating filtered files as raw files.</li>
           <li>Using gene symbols when stable IDs are needed.</li>
@@ -408,6 +755,10 @@ S3           control      B        liver</code></pre>
           href="https://github.com/The-Sequence-Ontology/Specifications">https://github.com/The-Sequence-Ontology/Specifications</a></li>
           <li>UCSC BED format FAQ: <a
           href="https://genome.ucsc.edu/FAQ/FAQformat.html">https://genome.ucsc.edu/FAQ/FAQformat.html</a></li>
+          <li>UCSC bedGraph format: <a
+          href="https://genome.ucsc.edu/goldenpath/help/bedgraph.html">https://genome.ucsc.edu/goldenpath/help/bedgraph.html</a></li>
+          <li>UCSC coordinate systems explainer: <a
+          href="https://genome-blog.gi.ucsc.edu/blog/2016/12/12/the-ucsc-genome-browser-coordinate-counting-systems/">https://genome-blog.gi.ucsc.edu/blog/2016/12/12/the-ucsc-genome-browser-coordinate-counting-systems/</a></li>
           <li>FastQC: <a
           href="https://www.bioinformatics.babraham.ac.uk/projects/fastqc/">https://www.bioinformatics.babraham.ac.uk/projects/fastqc/</a></li>
           <li>MultiQC: <a
@@ -418,6 +769,17 @@ S3           control      B        liver</code></pre>
           href="https://www.htslib.org/doc/samtools.html">https://www.htslib.org/doc/samtools.html</a></li>
           <li>bcftools: <a
           href="https://samtools.github.io/bcftools/">https://samtools.github.io/bcftools/</a></li>
+          <li>IGV: <a href="https://igv.org/">https://igv.org/</a></li>
+          <li>UCSC Genome Browser: <a
+          href="https://genome.ucsc.edu/">https://genome.ucsc.edu/</a></li>
+          <li>ENCODE Portal: <a
+          href="https://www.encodeproject.org/">https://www.encodeproject.org/</a></li>
+          <li>GENCODE: <a
+          href="https://www.gencodegenes.org/">https://www.gencodegenes.org/</a></li>
+          <li>ClinVar: <a
+          href="https://www.ncbi.nlm.nih.gov/clinvar/">https://www.ncbi.nlm.nih.gov/clinvar/</a></li>
+          <li>NCBI SRA: <a
+          href="https://www.ncbi.nlm.nih.gov/sra">https://www.ncbi.nlm.nih.gov/sra</a></li>
           <li>Bioconductor RNA-seq workflow: <a
           href="https://www.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html">https://www.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html</a></li>
           </ul>
