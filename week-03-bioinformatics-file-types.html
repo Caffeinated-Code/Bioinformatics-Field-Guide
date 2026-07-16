@@ -1071,9 +1071,14 @@ S3           control      B        liver</code></pre>
           Download Drill</h2>
           <p>When you are ready to touch real public files, run:</p>
           <div class="sourceCode" id="cb36"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> content/resources/week-03</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate bfg-week3-files</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> public_file_drill.sh</span></code></pre></div>
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Move into the Week 3 resource folder.</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> content/resources/week-03</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Activate the environment from Week 3.</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate bfg-week3-files</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Download small public examples and inspect each format.</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> public_file_drill.sh</span></code></pre></div>
           <p>This creates a local <code>public_examples/</code> folder
           and downloads small public examples from ENA/SRA and UCSC. It
           does not commit those files to Git. The goal is not biological
@@ -1135,18 +1140,47 @@ S3           control      B        liver</code></pre>
           </table>
           <p>Use this pattern for any public database:</p>
           <div class="sourceCode" id="cb37"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> public_examples</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> <span class="at">--fail</span> <span class="at">-o</span> public_examples/file.ext URL</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-lh</span> public_examples/file.ext</span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> public_examples/file.ext</span></code></pre></div>
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep downloaded public files separate from your teaching files.</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> public_examples</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Download with -L to follow redirects and --fail to stop on HTTP errors.</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> <span class="at">--fail</span> <span class="at">-o</span> public_examples/file.ext URL</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Check whether the file exists and whether the size looks plausible.</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-lh</span> public_examples/file.ext</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="co"># For plain text files only, preview the first few lines.</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> public_examples/file.ext</span></code></pre></div>
           <p>For compressed or binary files, swap <code>head</code> for
           the correct tool:</p>
           <div class="sourceCode" id="cb38"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gzip</span> <span class="at">-t</span> reads.fastq.gz</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gzip</span> <span class="at">-cd</span> reads.fastq.gz <span class="kw">|</span> <span class="fu">head</span></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> quickcheck alignments.bam</span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="ex">bcftools</span> view <span class="at">-h</span> variants.vcf.gz <span class="kw">|</span> <span class="fu">head</span></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="ex">bigWigInfo</span> signal.bw</span></code></pre></div>
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test gzip integrity. No output usually means success.</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gzip</span> <span class="at">-t</span> reads.fastq.gz</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Stream the first few decompressed lines without creating a new file.</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="fu">gzip</span> <span class="at">-cd</span> reads.fastq.gz <span class="kw">|</span> <span class="fu">head</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Check whether a BAM file is structurally valid.</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> quickcheck alignments.bam</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Preview VCF metadata/header lines.</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a><span class="ex">bcftools</span> view <span class="at">-h</span> variants.vcf.gz <span class="kw">|</span> <span class="fu">head</span></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect binary bigWig metadata.</span></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a><span class="ex">bigWigInfo</span> signal.bw</span></code></pre></div>
+          <p>Expected public-drill checkpoints look like this:</p>
+          <pre class="text"><code>public_examples/SRR1553607_1.fastq.gz       15708027 bytes
+public_examples/ucsc.bamExample.bam          2281952 bytes
+public_examples/ucsc.vcfExample.vcf.gz         44389 bytes</code></pre>
+          <p>For the BAM flag section, you should see counts like:</p>
+          <pre class="text"><code>0x4  4  UNMAP
+631
+35511
+35511</code></pre>
+          <p>Read that as: flag <code>4</code> means unmapped; this
+          public BAM has 631 unmapped reads, 35,511 reads that are not
+          marked unmapped, and 35,511 reads left after removing unmapped
+          plus secondary alignments.</p>
           <h2
           id="hands-on-mini-lab-one-tiny-gene-region-investigation">Hands-On
           Mini Lab: One Tiny Gene-Region Investigation</h2>
@@ -1163,78 +1197,142 @@ S3           control      B        liver</code></pre>
           <h3 id="1-set-up-the-week-3-environment">1. Set Up The Week 3
           Environment</h3>
           <p>From the repository root:</p>
-          <div class="sourceCode" id="cb40"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> content/resources/week-03</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env create <span class="at">-f</span> environment.yml</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate bfg-week3-files</span></code></pre></div>
+          <div class="sourceCode" id="cb42"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Move into the Week 3 resource folder.</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> content/resources/week-03</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the environment once. Skip this if you already created it.</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env create <span class="at">-f</span> environment.yml</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Activate the environment before running the lab.</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate bfg-week3-files</span></code></pre></div>
           <p>If you already have the tools, you can skip the environment
           and run the commands directly.</p>
           <h3 id="2-inspect-the-raw-pieces">2. Inspect The Raw
           Pieces</h3>
-          <div class="sourceCode" id="cb41"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> data/tiny_reads.fastq</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-S</span> data/tiny_alignments.sam</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-v</span> <span class="st">&#39;^#&#39;</span> data/tiny_variants.vcf</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">&#39;$3 == &quot;exon&quot;&#39;</span> data/tiny_annotation.gtf</span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> data/tiny_regions.bed</span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> data/tiny_counts.tsv</span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> data/tiny_metadata.tsv</span></code></pre></div>
+          <div class="sourceCode" id="cb43"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the first two FASTQ records.</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> <span class="at">-8</span> data/tiny_reads.fastq</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Count FASTQ lines and reads. FASTQ records come in 4-line blocks.</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">&#39;END {print NR &quot; lines; &quot; NR/4 &quot; reads&quot;}&#39;</span> data/tiny_reads.fastq</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect text SAM alignments.</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-S</span> data/tiny_alignments.sam</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Show VCF variant rows without metadata/header lines.</span></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-v</span> <span class="st">&#39;^#&#39;</span> data/tiny_variants.vcf</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Show only exon records from the GTF annotation.</span></span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">&#39;$3 == &quot;exon&quot;&#39;</span> data/tiny_annotation.gtf</span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect interval, count, and metadata tables.</span></span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> data/tiny_regions.bed</span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> data/tiny_counts.tsv</span>
+<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> data/tiny_metadata.tsv</span></code></pre></div>
           <p>Ask what each file represents before asking what it means
           biologically.</p>
+          <p>Expected FASTQ checkpoint:</p>
+          <pre class="text"><code>@S1_read_001
+ACGTACGTACGTACGT
++
+FFFFFFFFFFFFFFFF
+@S1_read_002
+TGCATGCATGCATGCA
++
+FFFFFFFFFFFFFFFA
+12 lines; 3 reads</code></pre>
           <h3 id="3-convert-sam-to-sorted-indexed-bam">3. Convert SAM To
           Sorted, Indexed BAM</h3>
-          <div class="sourceCode" id="cb42"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> results</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-bS</span> data/tiny_alignments.sam <span class="op">&gt;</span> results/tiny.bam</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> sort results/tiny.bam <span class="at">-o</span> results/tiny.sorted.bam</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> index results/tiny.sorted.bam</span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> idxstats results/tiny.sorted.bam</span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> flagstat results/tiny.sorted.bam</span></code></pre></div>
+          <div class="sourceCode" id="cb45"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep generated outputs in one folder.</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> results</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert text SAM to compressed binary BAM.</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-bS</span> data/tiny_alignments.sam <span class="op">&gt;</span> results/tiny.bam</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort BAM by genomic coordinate.</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> sort results/tiny.bam <span class="at">-o</span> results/tiny.sorted.bam</span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a BAM index: results/tiny.sorted.bam.bai.</span></span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> index results/tiny.sorted.bam</span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Count alignments by contig.</span></span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> idxstats results/tiny.sorted.bam</span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize mapped/unmapped and other SAM flag categories.</span></span>
+<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> flagstat results/tiny.sorted.bam</span></code></pre></div>
           <p>You should now have:</p>
           <pre class="text"><code>results/tiny.sorted.bam
 results/tiny.sorted.bam.bai</code></pre>
           <p>This is the first moment where the file becomes
           browser-ready.</p>
+          <p>Expected BAM checkpoint:</p>
+          <pre class="text"><code>chr1    10000    3    0
+*       0        0    0
+3 + 0 in total (QC-passed reads + QC-failed reads)
+3 + 0 primary
+0 + 0 secondary
+0 + 0 supplementary
+3 + 0 mapped (100.00% : N/A)</code></pre>
           <h3 id="4-filter-bam-records-with-sam-flags">4. Filter BAM
           Records With SAM Flags</h3>
           <p>Decode the unmapped flag:</p>
-          <div class="sourceCode" id="cb44"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> flags 4</span></code></pre></div>
+          <div class="sourceCode" id="cb48"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Decode SAM flag 4. It means the read is unmapped.</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> flags 4</span></code></pre></div>
           <p>Count unmapped reads:</p>
-          <div class="sourceCode" id="cb45"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-c</span> <span class="at">-f</span> 4 results/tiny.sorted.bam</span></code></pre></div>
+          <div class="sourceCode" id="cb49"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># -f keeps reads where this flag is present.</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-c</span> <span class="at">-f</span> 4 results/tiny.sorted.bam</span></code></pre></div>
           <p>Count mapped reads by excluding the unmapped flag:</p>
-          <div class="sourceCode" id="cb46"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-c</span> <span class="at">-F</span> 4 results/tiny.sorted.bam</span></code></pre></div>
+          <div class="sourceCode" id="cb50"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># -F removes reads where this flag is present.</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-c</span> <span class="at">-F</span> 4 results/tiny.sorted.bam</span></code></pre></div>
           <p>Write only mapped alignments to a SAM-like text file:</p>
-          <div class="sourceCode" id="cb47"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-F</span> 4 results/tiny.sorted.bam <span class="op">&gt;</span> results/mapped_reads.sam</span></code></pre></div>
+          <div class="sourceCode" id="cb51"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Write mapped reads to a text file for inspection.</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-F</span> 4 results/tiny.sorted.bam <span class="op">&gt;</span> results/mapped_reads.sam</span></code></pre></div>
           <p>In this tiny example, all three reads are mapped. In real
           public BAMs, flag filtering is one of the first ways to
           separate primary, secondary, supplementary, duplicate, mapped,
           and unmapped records.</p>
+          <p>Expected flag checkpoint:</p>
+          <pre class="text"><code>0x4    4    UNMAP
+unmapped reads: 0
+mapped reads: 3</code></pre>
           <h3 id="5-ask-an-interval-question-with-bed">5. Ask An
           Interval Question With BED</h3>
           <p>Which reads overlap the two regions in
           <code>tiny_regions.bed</code>?</p>
-          <div class="sourceCode" id="cb48"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bedtools</span> intersect <span class="dt">\</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-a</span> results/tiny.sorted.bam <span class="dt">\</span></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-b</span> data/tiny_regions.bed <span class="dt">\</span></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-bed</span> <span class="op">&gt;</span> results/reads_over_regions.bed</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> results/reads_over_regions.bed</span></code></pre></div>
+          <div class="sourceCode" id="cb53"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find BAM alignments that overlap the intervals in tiny_regions.bed.</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The -bed option prints BED-like text output instead of binary BAM.</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="ex">bedtools</span> intersect <span class="dt">\</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-a</span> results/tiny.sorted.bam <span class="dt">\</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-b</span> data/tiny_regions.bed <span class="dt">\</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-bed</span> <span class="op">&gt;</span> results/reads_over_regions.bed</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect the overlapping read intervals.</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> results/reads_over_regions.bed</span></code></pre></div>
           <p>This converts overlapping BAM alignments into BED-like
           output so you can inspect the interval logic.</p>
+          <p>Expected overlap checkpoint:</p>
+          <pre class="text"><code>chr1    1000    1016    S1_read_001    60    +
+chr1    3000    3016    S2_read_001    35    -</code></pre>
           <h3 id="6-create-bedgraph-and-bigwig-coverage">6. Create
           bedGraph And bigWig Coverage</h3>
-          <div class="sourceCode" id="cb49"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bedtools</span> genomecov <span class="dt">\</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-ibam</span> results/tiny.sorted.bam <span class="dt">\</span></span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-bg</span> <span class="op">&gt;</span> results/tiny.coverage.bedgraph</span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span> <span class="at">-k1,1</span> <span class="at">-k2,2n</span> results/tiny.coverage.bedgraph <span class="op">&gt;</span> results/tiny.coverage.sorted.bedgraph</span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="ex">bedGraphToBigWig</span> results/tiny.coverage.sorted.bedgraph data/tiny.chrom.sizes results/tiny.coverage.bw</span></code></pre></div>
+          <div class="sourceCode" id="cb55"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert BAM alignments into bedGraph coverage intervals.</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="ex">bedtools</span> genomecov <span class="dt">\</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-ibam</span> results/tiny.sorted.bam <span class="dt">\</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-bg</span> <span class="op">&gt;</span> results/tiny.coverage.bedgraph</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort bedGraph before bigWig conversion.</span></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span> <span class="at">-k1,1</span> <span class="at">-k2,2n</span> results/tiny.coverage.bedgraph <span class="op">&gt;</span> results/tiny.coverage.sorted.bedgraph</span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert text bedGraph signal to indexed binary bigWig signal.</span></span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a><span class="ex">bedGraphToBigWig</span> results/tiny.coverage.sorted.bedgraph data/tiny.chrom.sizes results/tiny.coverage.bw</span></code></pre></div>
           <p>Now you have both:</p>
           <ul>
           <li><code>tiny.coverage.sorted.bedgraph</code>: text signal
@@ -1242,15 +1340,21 @@ results/tiny.sorted.bam.bai</code></pre>
           <li><code>tiny.coverage.bw</code>: compact signal track for
           genome browsers</li>
           </ul>
+          <p>Expected coverage checkpoint:</p>
+          <pre class="text"><code>chr1    1000    1016    1
+chr1    1200    1216    1
+chr1    3000    3016    1</code></pre>
           <h3 id="7-connect-variants-genes-counts-and-metadata">7.
           Connect Variants, Genes, Counts, And Metadata</h3>
-          <div class="sourceCode" id="cb50"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bedtools</span> intersect <span class="dt">\</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-a</span> data/tiny_regions.bed <span class="dt">\</span></span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-b</span> data/tiny_annotation.gtf <span class="dt">\</span></span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-wa</span> <span class="at">-wb</span> <span class="op">&gt;</span> results/regions_overlapping_annotation.tsv</span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-v</span> <span class="st">&#39;^#&#39;</span> data/tiny_variants.vcf <span class="op">&gt;</span> results/variants.no_header.vcf</span></code></pre></div>
+          <div class="sourceCode" id="cb57"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Join BED regions to overlapping GTF annotation records.</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="ex">bedtools</span> intersect <span class="dt">\</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-a</span> data/tiny_regions.bed <span class="dt">\</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-b</span> data/tiny_annotation.gtf <span class="dt">\</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-wa</span> <span class="at">-wb</span> <span class="op">&gt;</span> results/regions_overlapping_annotation.tsv</span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove VCF header lines so only variant rows remain.</span></span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-v</span> <span class="st">&#39;^#&#39;</span> data/tiny_variants.vcf <span class="op">&gt;</span> results/variants.no_header.vcf</span></code></pre></div>
           <p>Then compare:</p>
           <ul>
           <li>Do the regions overlap the toy TP53-like and BRAF-like
@@ -1260,7 +1364,30 @@ results/tiny.sorted.bam.bai</code></pre>
           IDs?</li>
           <li>Does the browser signal support what the table says?</li>
           </ul>
-          <h3 id="8-visualize-in-igv">8. Visualize In IGV</h3>
+          <p>Expected annotation and VCF checkpoints:</p>
+          <pre class="text"><code>chr1  950   1150  promoter_like_region  chr1  tiny  gene  900   1500  ... gene_name &quot;TP53&quot;;
+chr1  2950  3250  peak_like_region      chr1  tiny  gene  2800  3400  ... gene_name &quot;BRAF&quot;;</code></pre>
+          <pre class="text"><code>chr1    1050    rsTiny1    A    G    99    PASS    GENE=TP53    GT    0/1    0/0
+chr1    3050    .          C    T    42    q10     GENE=BRAF    GT    0/0    0/1</code></pre>
+          <h3 id="8-run-the-whole-lab-script">8. Run The Whole Lab
+          Script</h3>
+          <p>If you want the guided version with comments and saved
+          outputs, run:</p>
+          <div class="sourceCode" id="cb60"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the full tiny lab from start to finish.</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> run_week3_file_lab.sh</span></code></pre></div>
+          <p>You should see the same checkpoints printed in order, then
+          a final output list:</p>
+          <pre class="text"><code>count_mapped_reads.txt
+count_unmapped_reads.txt
+mapped_reads.sam
+reads_over_regions.bed
+regions_overlapping_annotation.tsv
+tiny.coverage.bw
+tiny.sorted.bam
+tiny.sorted.bam.bai
+variants.no_header.vcf</code></pre>
+          <h3 id="9-visualize-in-igv">9. Visualize In IGV</h3>
           <p>Open IGV, choose a matching genome or create a tiny custom
           genome if practicing locally, then load:</p>
           <ul>

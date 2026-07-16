@@ -621,8 +621,13 @@ The key test is whether every count-matrix sample column has exactly one matchin
 When you are ready to touch real public files, run:
 
 ```bash
+# Move into the Week 3 resource folder.
 cd content/resources/week-03
+
+# Activate the environment from Week 3.
 conda activate bfg-week3-files
+
+# Download small public examples and inspect each format.
 bash public_file_drill.sh
 ```
 
@@ -644,21 +649,56 @@ The drill checks:
 Use this pattern for any public database:
 
 ```bash
+# Keep downloaded public files separate from your teaching files.
 mkdir -p public_examples
+
+# Download with -L to follow redirects and --fail to stop on HTTP errors.
 curl -L --fail -o public_examples/file.ext URL
+
+# Check whether the file exists and whether the size looks plausible.
 ls -lh public_examples/file.ext
+
+# For plain text files only, preview the first few lines.
 head public_examples/file.ext
 ```
 
 For compressed or binary files, swap `head` for the correct tool:
 
 ```bash
+# Test gzip integrity. No output usually means success.
 gzip -t reads.fastq.gz
+
+# Stream the first few decompressed lines without creating a new file.
 gzip -cd reads.fastq.gz | head
+
+# Check whether a BAM file is structurally valid.
 samtools quickcheck alignments.bam
+
+# Preview VCF metadata/header lines.
 bcftools view -h variants.vcf.gz | head
+
+# Inspect binary bigWig metadata.
 bigWigInfo signal.bw
 ```
+
+Expected public-drill checkpoints look like this:
+
+```text
+public_examples/SRR1553607_1.fastq.gz       15708027 bytes
+public_examples/ucsc.bamExample.bam          2281952 bytes
+public_examples/ucsc.vcfExample.vcf.gz         44389 bytes
+```
+
+For the BAM flag section, you should see counts like:
+
+```text
+0x4  4  UNMAP
+631
+35511
+35511
+```
+
+Read that as: flag `4` means unmapped; this public BAM has 631 unmapped reads, 35,511 reads that are not marked unmapped, and 35,511 reads left after removing unmapped plus secondary alignments.
 
 ## Hands-On Mini Lab: One Tiny Gene-Region Investigation
 
@@ -675,8 +715,13 @@ The tiny examples are public-data-style practice files curated to mirror common 
 From the repository root:
 
 ```bash
+# Move into the Week 3 resource folder.
 cd content/resources/week-03
+
+# Create the environment once. Skip this if you already created it.
 conda env create -f environment.yml
+
+# Activate the environment before running the lab.
 conda activate bfg-week3-files
 ```
 
@@ -685,10 +730,22 @@ If you already have the tools, you can skip the environment and run the commands
 ### 2. Inspect The Raw Pieces
 
 ```bash
-head data/tiny_reads.fastq
+# Show the first two FASTQ records.
+head -8 data/tiny_reads.fastq
+
+# Count FASTQ lines and reads. FASTQ records come in 4-line blocks.
+awk 'END {print NR " lines; " NR/4 " reads"}' data/tiny_reads.fastq
+
+# Inspect text SAM alignments.
 samtools view -S data/tiny_alignments.sam
+
+# Show VCF variant rows without metadata/header lines.
 grep -v '^#' data/tiny_variants.vcf
+
+# Show only exon records from the GTF annotation.
 awk '$3 == "exon"' data/tiny_annotation.gtf
+
+# Inspect interval, count, and metadata tables.
 cat data/tiny_regions.bed
 cat data/tiny_counts.tsv
 cat data/tiny_metadata.tsv
@@ -696,14 +753,39 @@ cat data/tiny_metadata.tsv
 
 Ask what each file represents before asking what it means biologically.
 
+Expected FASTQ checkpoint:
+
+```text
+@S1_read_001
+ACGTACGTACGTACGT
++
+FFFFFFFFFFFFFFFF
+@S1_read_002
+TGCATGCATGCATGCA
++
+FFFFFFFFFFFFFFFA
+12 lines; 3 reads
+```
+
 ### 3. Convert SAM To Sorted, Indexed BAM
 
 ```bash
+# Keep generated outputs in one folder.
 mkdir -p results
+
+# Convert text SAM to compressed binary BAM.
 samtools view -bS data/tiny_alignments.sam > results/tiny.bam
+
+# Sort BAM by genomic coordinate.
 samtools sort results/tiny.bam -o results/tiny.sorted.bam
+
+# Create a BAM index: results/tiny.sorted.bam.bai.
 samtools index results/tiny.sorted.bam
+
+# Count alignments by contig.
 samtools idxstats results/tiny.sorted.bam
+
+# Summarize mapped/unmapped and other SAM flag categories.
 samtools flagstat results/tiny.sorted.bam
 ```
 
@@ -716,57 +798,95 @@ results/tiny.sorted.bam.bai
 
 This is the first moment where the file becomes browser-ready.
 
+Expected BAM checkpoint:
+
+```text
+chr1    10000    3    0
+*       0        0    0
+3 + 0 in total (QC-passed reads + QC-failed reads)
+3 + 0 primary
+0 + 0 secondary
+0 + 0 supplementary
+3 + 0 mapped (100.00% : N/A)
+```
+
 ### 4. Filter BAM Records With SAM Flags
 
 Decode the unmapped flag:
 
 ```bash
+# Decode SAM flag 4. It means the read is unmapped.
 samtools flags 4
 ```
 
 Count unmapped reads:
 
 ```bash
+# -f keeps reads where this flag is present.
 samtools view -c -f 4 results/tiny.sorted.bam
 ```
 
 Count mapped reads by excluding the unmapped flag:
 
 ```bash
+# -F removes reads where this flag is present.
 samtools view -c -F 4 results/tiny.sorted.bam
 ```
 
 Write only mapped alignments to a SAM-like text file:
 
 ```bash
+# Write mapped reads to a text file for inspection.
 samtools view -F 4 results/tiny.sorted.bam > results/mapped_reads.sam
 ```
 
 In this tiny example, all three reads are mapped. In real public BAMs, flag filtering is one of the first ways to separate primary, secondary, supplementary, duplicate, mapped, and unmapped records.
+
+Expected flag checkpoint:
+
+```text
+0x4    4    UNMAP
+unmapped reads: 0
+mapped reads: 3
+```
 
 ### 5. Ask An Interval Question With BED
 
 Which reads overlap the two regions in `tiny_regions.bed`?
 
 ```bash
+# Find BAM alignments that overlap the intervals in tiny_regions.bed.
+# The -bed option prints BED-like text output instead of binary BAM.
 bedtools intersect \
   -a results/tiny.sorted.bam \
   -b data/tiny_regions.bed \
   -bed > results/reads_over_regions.bed
 
+# Inspect the overlapping read intervals.
 cat results/reads_over_regions.bed
 ```
 
 This converts overlapping BAM alignments into BED-like output so you can inspect the interval logic.
 
+Expected overlap checkpoint:
+
+```text
+chr1    1000    1016    S1_read_001    60    +
+chr1    3000    3016    S2_read_001    35    -
+```
+
 ### 6. Create bedGraph And bigWig Coverage
 
 ```bash
+# Convert BAM alignments into bedGraph coverage intervals.
 bedtools genomecov \
   -ibam results/tiny.sorted.bam \
   -bg > results/tiny.coverage.bedgraph
 
+# Sort bedGraph before bigWig conversion.
 sort -k1,1 -k2,2n results/tiny.coverage.bedgraph > results/tiny.coverage.sorted.bedgraph
+
+# Convert text bedGraph signal to indexed binary bigWig signal.
 bedGraphToBigWig results/tiny.coverage.sorted.bedgraph data/tiny.chrom.sizes results/tiny.coverage.bw
 ```
 
@@ -775,14 +895,24 @@ Now you have both:
 - `tiny.coverage.sorted.bedgraph`: text signal you can inspect
 - `tiny.coverage.bw`: compact signal track for genome browsers
 
+Expected coverage checkpoint:
+
+```text
+chr1    1000    1016    1
+chr1    1200    1216    1
+chr1    3000    3016    1
+```
+
 ### 7. Connect Variants, Genes, Counts, And Metadata
 
 ```bash
+# Join BED regions to overlapping GTF annotation records.
 bedtools intersect \
   -a data/tiny_regions.bed \
   -b data/tiny_annotation.gtf \
   -wa -wb > results/regions_overlapping_annotation.tsv
 
+# Remove VCF header lines so only variant rows remain.
 grep -v '^#' data/tiny_variants.vcf > results/variants.no_header.vcf
 ```
 
@@ -793,7 +923,42 @@ Then compare:
 - Do the count matrix columns match the metadata sample IDs?
 - Does the browser signal support what the table says?
 
-### 8. Visualize In IGV
+Expected annotation and VCF checkpoints:
+
+```text
+chr1  950   1150  promoter_like_region  chr1  tiny  gene  900   1500  ... gene_name "TP53";
+chr1  2950  3250  peak_like_region      chr1  tiny  gene  2800  3400  ... gene_name "BRAF";
+```
+
+```text
+chr1    1050    rsTiny1    A    G    99    PASS    GENE=TP53    GT    0/1    0/0
+chr1    3050    .          C    T    42    q10     GENE=BRAF    GT    0/0    0/1
+```
+
+### 8. Run The Whole Lab Script
+
+If you want the guided version with comments and saved outputs, run:
+
+```bash
+# Run the full tiny lab from start to finish.
+bash run_week3_file_lab.sh
+```
+
+You should see the same checkpoints printed in order, then a final output list:
+
+```text
+count_mapped_reads.txt
+count_unmapped_reads.txt
+mapped_reads.sam
+reads_over_regions.bed
+regions_overlapping_annotation.tsv
+tiny.coverage.bw
+tiny.sorted.bam
+tiny.sorted.bam.bai
+variants.no_header.vcf
+```
+
+### 9. Visualize In IGV
 
 Open IGV, choose a matching genome or create a tiny custom genome if practicing locally, then load:
 
