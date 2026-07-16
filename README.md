@@ -1,55 +1,55 @@
 # Bioinformatics Field Guide
 
-**Bioinformatics Field Guide** is a practical resource for learning and applying bioinformatics with reproducible tools, clear explanations, and working examples.
+**Bioinformatics Field Guide** is a practical, reproducible learning resource for bioinformatics. It is built for readers who want to move from setup and command-line confidence into real sequencing files, public data, and analysis decisions without getting lost in scattered tutorials.
 
-The field can feel overwhelming at first: many file formats, many tools, many biological assumptions, and many ways for an analysis to go quietly wrong. This project is designed to make the path easier to follow.
+[Read the published site](https://caffeinated-code.github.io/Bioinformatics-Field-Guide/) · [Open the content folder](content/) · [Use the resources](content/resources/)
 
-## What You Will Find Here
+## Why This Exists
 
-- Beginner-friendly bioinformatics guides.
-- Reproducible setup files for Conda, Docker, and JupyterLab.
-- Small examples that can be run locally.
-- Method explainers for omics workflows.
-- Practical notes on interpreting results carefully.
+Bioinformatics is full of invisible failure points: mismatched genome builds, confusing file formats, missing metadata, fragile environments, and tools that work only when every prerequisite is just right.
+
+This project turns those rough edges into guided, testable lessons:
+
+- short articles with plain-language explanations
+- runnable commands with expected outputs
+- tiny datasets for safe practice
+- reproducible Conda, Docker, notebook, and script resources
+- GitHub Discussions for reader questions and corrections
+
+## Published Guides
+
+| No. | Guide | What readers practice | Resources |
+|---:|---|---|---|
+| 01 | [Set Up Your Laptop For Bioinformatics](https://caffeinated-code.github.io/Bioinformatics-Field-Guide/week-01-laptop-setup-for-bioinformatics.html) | Conda, Docker, JupyterLab, VS Code, Ollama, BioChatter | [Week 1 resources](content/resources/week-01/) |
+| 02 | [What Programming Languages Should A Bioinformatician Know?](https://caffeinated-code.github.io/Bioinformatics-Field-Guide/week-02-languages-for-bioinformatics.html) | Bash, Python, R, SQL, notebooks, AI-assisted learning | [Week 2 resources](content/resources/week-02/) |
+| 03 | [The Bioinformatics File Types You Must Know](https://caffeinated-code.github.io/Bioinformatics-Field-Guide/week-03-bioinformatics-file-types.html) | FASTQ, SAM/BAM/CRAM, VCF, GTF/GFF, BED, bedGraph, bigWig, metadata | [Week 3 resources](content/resources/week-03/) |
+
+Only published guides are listed here. Draft and future articles are intentionally hidden from this landing page until they are ready.
 
 ## Start Here
 
-The first guide helps you set up a laptop for bioinformatics:
+If you are new to bioinformatics:
 
-- [How to Set Up Your Laptop for Bioinformatics](content/posts/week-01-laptop-setup-for-bioinformatics.md)
+1. Start with **Week 1** to set up a working environment.
+2. Use **Week 2** to understand when to use Bash, Python, R, and SQL.
+3. Spend extra time on **Week 3** because file literacy is where many real projects succeed or fail.
 
-It includes:
-
-- A Conda environment.
-- A Docker/JupyterLab setup.
-- A tiny FASTA demo.
-- Local coding-assistant configuration.
-- A BioChatter + Ollama example.
-
-## Guide Roadmap
-
-1. Laptop setup for bioinformatics.
-2. Programming languages for bioinformatics.
-3. Biology foundations for computational work.
-4. How to think like a bioinformatician.
-5. Common bioinformatics file types.
-6. Reproducible project structure.
-7. RNA-seq workflow basics.
-8. Differential expression interpretation.
-9. PCA in bioinformatics.
-10. Bulk vs single-cell RNA-seq.
-11. How to read bioinformatics papers critically.
-12. Foundation models in bioinformatics.
+If you already work in bioinformatics, jump directly to Week 3 and run the file-format lab.
 
 ## Repository Structure
 
-- `content/posts/`: field guides and method explainers.
-- `content/resources/`: reusable setup files, demo data, and supporting code.
+```text
+content/
+  posts/       Published article source files and drafts
+  resources/   Conda files, notebooks, scripts, tiny datasets, and tutorial assets
+assets/        Site CSS and JavaScript
+templates/     Shared article template
+```
+
+## Reader Feedback
+
+Each article supports GitHub-powered discussion through giscus. If something is unclear, incorrect, or missing, open a discussion from the article footer or suggest an edit through GitHub.
 
 ## Status
 
-This repository is in active development. Early guides are being expanded with visuals, notebooks, tested examples, and additional references.
-
-## License And Citation
-
-License and citation files will be added before the first formal release.
+Published through **Week 3**. Future guides will be added only after review, testing, and cleanup.

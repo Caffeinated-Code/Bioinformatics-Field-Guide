@@ -2,21 +2,16 @@
 
 This folder contains the current Bioinformatics Field Guide articles and supporting resources.
 
-## Guides
+## Published Guides
 
-| Week | Guide | Resource |
-|---|---|---|
-| 1 | [How to Set Up Your Laptop for Bioinformatics](posts/week-01-laptop-setup-for-bioinformatics.md) | Starter environment and Docker/JupyterLab setup |
-| 2 | [What Programming Languages Should a Bioinformatician Know?](posts/week-02-languages-for-bioinformatics.md) | Language decision tree, starter notebooks, AI-assisted learning |
-| 3 | [The File Types You Must Know](posts/week-03-bioinformatics-file-types.md) | File-format atlas and hands-on BAM/bedGraph/bigWig lab |
-| 6 | [The Bioinformatics Project Template](posts/week-06-reproducible-project-template.md) | Reproducible project template |
-| 7 | [RNA-seq in 7 Minutes](posts/week-07-rnaseq-in-seven-minutes.md) | RNA-seq workflow map |
-| 8 | [Differential Expression: What It Tells You and What It Does Not](posts/week-08-differential-expression.md) | Interpretation rubric |
-| 9 | [PCA in Bioinformatics](posts/week-09-pca-in-bioinformatics.md) | PCA visual notebook plan |
-| 10 | [Single-Cell RNA-seq vs Bulk RNA-seq](posts/week-10-single-cell-vs-bulk-rnaseq.md) | Bulk vs single-cell comparison map |
-| 11 | [How to Read a Bioinformatics Paper Without Getting Fooled](posts/week-11-read-bioinformatics-paper.md) | Paper-reading scorecard |
-| 12 | [Foundation Models in Bioinformatics](posts/week-12-foundation-models-bioinformatics.md) | Research-gap map |
+| No. | Guide | Resource |
+|---:|---|---|
+| 01 | [How to Set Up Your Laptop for Bioinformatics](posts/week-01-laptop-setup-for-bioinformatics.md) | [Week 1 setup resources](resources/week-01/) |
+| 02 | [What Programming Languages Should a Bioinformatician Know?](posts/week-02-languages-for-bioinformatics.md) | [Week 2 notebooks and language map](resources/week-02/) |
+| 03 | [The Bioinformatics File Types You Must Know](posts/week-03-bioinformatics-file-types.md) | [Week 3 file-format lab](resources/week-03/) |
+
+Future articles are not listed here until they are publication-ready.
 
 ## Resources
 
-Supporting files live in `resources/`, including environment files, Docker files, small demo data, and helper scripts.
+Supporting files live in `resources/`, including environment files, Docker files, notebooks, small demo data, and helper scripts.
