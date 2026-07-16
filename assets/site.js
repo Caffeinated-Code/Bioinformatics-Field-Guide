@@ -126,6 +126,8 @@ function setupSharing() {
   const linkedIn = shareActions.querySelector("[data-share-linkedin]");
   const x = shareActions.querySelector("[data-share-x]");
   const edit = shareActions.querySelector("[data-edit-github]");
+  const discussQuestion = document.querySelector("[data-discuss-question]");
+  const discussGeneral = document.querySelector("[data-discuss-general]");
   const sourcePath = articleSourcePath();
 
   if (linkedIn) {
@@ -138,6 +140,12 @@ function setupSharing() {
     edit.href = `https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide/edit/main/${sourcePath}`;
   } else if (edit) {
     edit.href = "https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide";
+  }
+  if (discussQuestion) {
+    discussQuestion.href = `https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide/discussions/new?category=q-a&title=${encodedTitle}`;
+  }
+  if (discussGeneral) {
+    discussGeneral.href = "https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide/discussions";
   }
 
   nativeButton?.addEventListener("click", async () => {

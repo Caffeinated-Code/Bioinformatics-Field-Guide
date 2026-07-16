@@ -13,6 +13,14 @@ samtools sort results/tiny.bam -o results/tiny.sorted.bam
 samtools index results/tiny.sorted.bam
 samtools idxstats results/tiny.sorted.bam > results/tiny.idxstats.tsv
 samtools flagstat results/tiny.sorted.bam > results/tiny.flagstat.txt
+samtools view results/tiny.sorted.bam > results/tiny.alignments.tsv
+
+echo
+echo "2b. Filter alignments with SAM flags"
+samtools flags 4 > results/sam_flag_unmapped.txt
+samtools view -c -f 4 results/tiny.sorted.bam > results/count_unmapped_reads.txt
+samtools view -c -F 4 results/tiny.sorted.bam > results/count_mapped_reads.txt
+samtools view -F 4 results/tiny.sorted.bam > results/mapped_reads.sam
 
 echo
 echo "3. Intersect BAM alignments with BED regions"

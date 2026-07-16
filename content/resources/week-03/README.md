@@ -13,12 +13,21 @@ bash run_week3_file_lab.sh
 
 The script creates a `results/` folder with a sorted/indexed BAM, interval overlaps, bedGraph coverage, and a bigWig track.
 
+To practice with small public examples from ENA/SRA and UCSC:
+
+```bash
+bash public_file_drill.sh
+```
+
+That script downloads files into `public_examples/`, checks file sizes, validates compressed files, prints headers, counts lines or records where appropriate, and demonstrates SAM flag filtering.
+
 ## Files
 
 | File | Purpose |
 |---|---|
 | `environment.yml` | Conda environment with samtools, bedtools, UCSC bigWig utilities, and seqkit |
 | `run_week3_file_lab.sh` | Hands-on tutorial script that connects all file types |
+| `public_file_drill.sh` | Optional public-download drill using ENA/SRA and UCSC examples |
 | `file-format-atlas.md` | Saveable file-format reference |
 | `public_data_manifest.tsv` | Public source map for finding real examples of each file type |
 | `data/tiny_reads.fastq` | Tiny FASTQ example |
@@ -42,6 +51,9 @@ After running the lab, expect:
 | `results/tiny.sorted.bam.bai` | BAM index for fast region lookup |
 | `results/tiny.idxstats.tsv` | Alignment counts by contig |
 | `results/tiny.flagstat.txt` | Alignment summary |
+| `results/count_mapped_reads.txt` | Count of reads kept by `samtools view -F 4` |
+| `results/count_unmapped_reads.txt` | Count of reads kept by `samtools view -f 4` |
+| `results/mapped_reads.sam` | SAM records after filtering out unmapped reads |
 | `results/reads_over_regions.bed` | Reads that overlap BED intervals |
 | `results/tiny.coverage.sorted.bedgraph` | Text coverage signal |
 | `results/tiny.coverage.bw` | Browser-ready bigWig signal track |

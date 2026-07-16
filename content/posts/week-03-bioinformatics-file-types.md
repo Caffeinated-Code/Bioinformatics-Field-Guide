@@ -69,7 +69,7 @@ You do not need to master every tool today. You do need to know which tool is sa
 
 | Job | Tool | Why it matters |
 |---|---|---|
-| Inspect raw reads | FastQC, MultiQC, `seqkit`, `zcat` | Check quality before alignment or quantification |
+| Inspect raw reads | FastQC, MultiQC, `seqkit`, `gzip -cd` | Check quality before alignment or quantification |
 | Work with SAM/BAM/CRAM | `samtools` | Convert, sort, index, slice, and summarize alignment files |
 | Work with variants | `bcftools` | Inspect, filter, normalize, and query VCF files |
 | Work with intervals | `bedtools` | Intersect BED, GTF, VCF, and BAM-derived regions |
@@ -92,16 +92,67 @@ Do not double-click a large bioinformatics file and hope your computer guesses c
 ```bash
 head file.tsv
 less file.vcf
-zcat reads.fastq.gz | head
+gzip -cd reads.fastq.gz | head
 samtools view alignments.bam | head
 bcftools view variants.vcf.gz | head
 ```
 
 Use file-aware tools when files are compressed, indexed, or binary. A spreadsheet is not a safe viewer for FASTQ, BAM, VCF, or large count matrices.
 
+Before interpreting any public file, inspect it from the outside in:
+
+```bash
+ls -lh file
+wc -l file
+head file
+file file
+```
+
+For compressed files:
+
+```bash
+ls -lh file.gz
+gzip -t file.gz
+gzip -cd file.gz | head
+gzip -cd file.gz | wc -l
+```
+
+For indexed binary files:
+
+```bash
+samtools quickcheck file.bam
+samtools view -H file.bam | head
+samtools flagstat file.bam
+```
+
+This habit answers four questions before biology enters the room:
+
+- Did the download finish?
+- Is the file compressed, text, or binary?
+- Does the size look plausible?
+- Do the first few records match the format I think I downloaded?
+
 ## FASTQ: Raw Sequencing Reads
 
 FASTQ stores sequencing reads and quality scores. It is often the first file you receive after sequencing.
+
+For a real public example, the optional resource script downloads a small paired-end FASTQ file from ENA for SRA run `SRR1553607`:
+
+```bash
+cd content/resources/week-03
+bash public_file_drill.sh
+```
+
+The FASTQ part of that script does three checks:
+
+```bash
+ls -lh public_examples/SRR1553607_1.fastq.gz
+gzip -t public_examples/SRR1553607_1.fastq.gz
+gzip -cd public_examples/SRR1553607_1.fastq.gz | head -8
+gzip -cd public_examples/SRR1553607_1.fastq.gz | awk 'END {print NR " lines; " NR/4 " reads"}'
+```
+
+FASTQ records come in groups of four lines:
 
 ```text
 @read_id
@@ -110,7 +161,14 @@ ACGTACGTACGT
 FFFFFFFFFFFF
 ```
 
-The sequence line contains bases. The quality line estimates confidence in each base call.
+| Line | Meaning |
+|---|---|
+| 1 | Read identifier. It starts with `@`. |
+| 2 | DNA or RNA sequence. |
+| 3 | Separator. It starts with `+` and may repeat the identifier. |
+| 4 | Quality string. It must be the same length as the sequence. |
+
+The sequence line contains bases. The quality line encodes confidence in each base call. A valid FASTQ should have a line count divisible by four.
 
 Use FASTQ to ask:
 
@@ -119,7 +177,7 @@ Use FASTQ to ask:
 - Are adapters present?
 - Should reads be aligned or quantified?
 
-Common tools: FastQC, MultiQC, fastp, cutadapt, STAR, HISAT2, Salmon, kallisto.
+Common tools: FastQC, MultiQC, `seqkit`, fastp, cutadapt, STAR, HISAT2, Salmon, kallisto.
 
 Do not edit FASTQ files by hand. If the file ends in `.fastq.gz`, keep it compressed unless a tool specifically requires otherwise.
 
@@ -129,6 +187,35 @@ SAM is a text format for aligned sequencing reads. BAM is the compressed binary 
 
 ```text
 Where did each read align?
+```
+
+For public format practice, the optional drill downloads UCSC example files:
+
+```bash
+curl -L -o public_examples/ucsc.samExample.sam \
+  https://genome.ucsc.edu/goldenPath/help/examples/samExample.sam
+
+curl -L -o public_examples/ucsc.bamExample.bam \
+  https://genome.ucsc.edu/goldenPath/help/examples/bamExample.bam
+
+curl -L -o public_examples/ucsc.cramExample.cram \
+  https://genome.ucsc.edu/goldenPath/help/examples/cramExample.cram
+```
+
+Inspect SAM as text:
+
+```bash
+wc -l public_examples/ucsc.samExample.sam
+head -5 public_examples/ucsc.samExample.sam
+```
+
+Inspect BAM as binary alignment data:
+
+```bash
+samtools quickcheck -v public_examples/ucsc.bamExample.bam
+samtools view -H public_examples/ucsc.bamExample.bam | head
+samtools flagstat public_examples/ucsc.bamExample.bam
+samtools view public_examples/ucsc.bamExample.bam | head
 ```
 
 Use alignment files to ask:
@@ -148,6 +235,23 @@ BAM deserves extra attention because it sits in the middle of many genomics work
 - strand and flags
 - sequence and quality
 - optional tags such as cell barcode, UMI, alignment score, or duplicate status
+
+The core SAM alignment columns are:
+
+| Column | Name | Meaning |
+|---:|---|---|
+| 1 | QNAME | Read name |
+| 2 | FLAG | Bitwise alignment summary |
+| 3 | RNAME | Reference sequence or chromosome |
+| 4 | POS | 1-based leftmost alignment position |
+| 5 | MAPQ | Mapping quality |
+| 6 | CIGAR | How the read aligns |
+| 7 | RNEXT | Mate reference name |
+| 8 | PNEXT | Mate position |
+| 9 | TLEN | Template length |
+| 10 | SEQ | Read sequence |
+| 11 | QUAL | Base qualities |
+| 12+ | Tags | Optional extra fields |
 
 The CIGAR string is the compact description of how a read aligns. For example, `16M` means 16 aligned bases. Real files can contain soft clips, insertions, deletions, splicing, and split alignments.
 
@@ -172,9 +276,71 @@ If a tool complains about a missing `.bai`, it is usually asking for the BAM ind
 
 Common tools: samtools, IGV, featureCounts, bedtools, GATK.
 
+### SAM Flags: Tiny Numbers With A Lot Of Meaning
+
+The SAM `FLAG` column is a bitwise code. It compresses many yes/no alignment properties into one integer.
+
+Common flags:
+
+| Flag | Meaning |
+|---:|---|
+| 1 | read is paired |
+| 2 | read is properly paired |
+| 4 | read is unmapped |
+| 8 | mate is unmapped |
+| 16 | read maps to reverse strand |
+| 32 | mate maps to reverse strand |
+| 64 | first read in pair |
+| 128 | second read in pair |
+| 256 | secondary alignment |
+| 512 | failed vendor/platform QC |
+| 1024 | PCR or optical duplicate |
+| 2048 | supplementary alignment |
+
+Use `samtools flags` to decode a number:
+
+```bash
+samtools flags 4
+samtools flags 16
+samtools flags 260
+```
+
+Use `-f` to keep reads where a flag is present:
+
+```bash
+samtools view -c -f 4 aligned.bam
+```
+
+That counts unmapped reads.
+
+Use `-F` to remove reads where a flag is present:
+
+```bash
+samtools view -c -F 4 aligned.bam
+```
+
+That counts reads that are not marked unmapped. A common beginner-friendly filter is:
+
+```bash
+samtools view -b -F 260 aligned.bam > primary_mapped.bam
+```
+
+`260` combines `4` and `256`, so this removes unmapped and secondary alignments. In serious analyses, write down exactly which flags you filtered and why.
+
 ## VCF: Genetic Variants
 
 VCF stores variants such as single nucleotide variants, insertions, deletions, and structural variants.
+
+For a public example:
+
+```bash
+curl -L -o public_examples/ucsc.vcfExample.vcf.gz \
+  https://genome.ucsc.edu/goldenPath/help/examples/vcfExample.vcf.gz
+
+bcftools view -h public_examples/ucsc.vcfExample.vcf.gz | grep '^##' | head
+bcftools view -h public_examples/ucsc.vcfExample.vcf.gz | grep '^#CHROM' | cut -f1-10
+bcftools view -H public_examples/ucsc.vcfExample.vcf.gz | cut -f1-10 | head
+```
 
 It usually includes:
 
@@ -183,6 +349,21 @@ It usually includes:
 - alternate allele
 - quality information
 - genotype information
+
+The required VCF columns are:
+
+| Column | Meaning |
+|---|---|
+| `CHROM` | Chromosome or contig |
+| `POS` | 1-based variant position |
+| `ID` | Variant identifier, if known |
+| `REF` | Reference allele |
+| `ALT` | Alternate allele |
+| `QUAL` | Variant quality score |
+| `FILTER` | Whether the variant passed filters |
+| `INFO` | Semicolon-separated annotations |
+| `FORMAT` | Genotype fields used by sample columns |
+| sample columns | Genotypes and sample-level values |
 
 Use VCF to ask:
 
@@ -206,6 +387,40 @@ GTF and GFF files describe genomic features:
 
 They help tools connect genomic coordinates to biological labels.
 
+For small format practice, the public drill downloads a UCSC GTF example. For real annotation, use GENCODE, Ensembl, or RefSeq and pay attention to release number and genome build.
+
+```bash
+curl -L -o public_examples/ucsc.bigGenePredExample4.gtf \
+  https://genome.ucsc.edu/goldenPath/help/examples/bigGenePredExample4.gtf
+
+wc -l public_examples/ucsc.bigGenePredExample4.gtf
+head -5 public_examples/ucsc.bigGenePredExample4.gtf
+```
+
+GTF has nine columns:
+
+| Column | Meaning |
+|---:|---|
+| 1 | sequence name |
+| 2 | source |
+| 3 | feature type, such as gene, transcript, exon |
+| 4 | start, 1-based |
+| 5 | end, 1-based and closed |
+| 6 | score |
+| 7 | strand |
+| 8 | frame |
+| 9 | attributes, such as `gene_id` and `transcript_id` |
+
+GFF3 is similar, but its attribute column uses `key=value` style and the file usually starts with `##gff-version 3`.
+
+To stream the first records from a real GENCODE GFF3 without keeping the full file:
+
+```bash
+curl -L https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_50/gencode.v50.basic.annotation.gff3.gz \
+  | gzip -cd \
+  | head
+```
+
 Use annotation files for:
 
 - counting reads per gene
@@ -219,10 +434,30 @@ Always record which annotation version you used.
 
 BED files store genomic intervals. They are common in ATAC-seq, ChIP-seq, enhancer analysis, peak calling, and region overlap work.
 
+For a public example:
+
+```bash
+curl -L -o public_examples/ucsc.bedExample2.bed \
+  https://genome.ucsc.edu/goldenPath/help/examples/bedExample2.bed
+
+wc -l public_examples/ucsc.bedExample2.bed
+head -5 public_examples/ucsc.bedExample2.bed
+```
+
 ```text
 chr1    1000    1250    peak_1
 chr1    3000    3400    peak_2
 ```
+
+The first three BED columns are required:
+
+| Column | Meaning |
+|---:|---|
+| 1 | chromosome |
+| 2 | start, 0-based |
+| 3 | end, half-open |
+
+Common optional columns include name, score, strand, thickStart, thickEnd, itemRgb, blockCount, blockSizes, and blockStarts.
 
 BED coordinates are usually **zero-based and half-open**:
 
@@ -287,6 +522,27 @@ bedGraphToBigWig coverage.sorted.bedgraph chrom.sizes coverage.bw
 
 Use bedGraph when you want to inspect or debug the signal. Use bigWig when you want to view or share a track in IGV or UCSC Genome Browser.
 
+bedGraph has four required columns:
+
+| Column | Meaning |
+|---:|---|
+| 1 | chromosome |
+| 2 | start, 0-based |
+| 3 | end, half-open |
+| 4 | signal value |
+
+For a public bigWig example:
+
+```bash
+curl -L -o public_examples/ucsc.bigWigExample2.bw \
+  https://genome.ucsc.edu/goldenPath/help/examples/bigWigExample2.bw
+
+ls -lh public_examples/ucsc.bigWigExample2.bw
+bigWigInfo public_examples/ucsc.bigWigExample2.bw
+```
+
+You cannot safely `head` a bigWig because it is binary. Use `bigWigInfo`, `bigWigSummary`, IGV, or UCSC Genome Browser.
+
 For RNA-seq, bigWig can show coverage across exons. For ATAC-seq or ChIP-seq, it can show open chromatin or protein-binding signal. For quality control, it helps answer a basic question: does the signal appear where biology says it should?
 
 ## Count Matrix: Where Many Analyses Begin
@@ -303,6 +559,15 @@ GeneC      100         88          140
 Rows are usually genes or features. Columns are samples or cells. Values are counts.
 
 Counts without metadata are just numbers. Also check whether values are raw counts, TPM, CPM, normalized counts, log-transformed values, or scaled values. Many downstream methods expect one of these and fail quietly with another.
+
+Inspect the tiny example:
+
+```bash
+wc -l data/tiny_counts.tsv
+head data/tiny_counts.tsv
+```
+
+The first column is the feature ID. Every other column should match a sample or cell ID in metadata.
 
 ## Metadata: The File People Forget
 
@@ -327,11 +592,20 @@ At minimum, metadata should have:
 - batch or processing labels
 - enough context to reproduce the comparison
 
+Inspect the tiny example:
+
+```bash
+wc -l data/tiny_metadata.tsv
+head data/tiny_metadata.tsv
+```
+
+The key test is whether every count-matrix sample column has exactly one matching metadata row.
+
 ## Save This: File Format Atlas
 
 | File | Stage | Inspect with | Beginner warning |
 |---|---|---|---|
-| FASTQ / FASTQ.GZ | raw reads | `zcat`, `seqkit`, FastQC | do not edit by hand |
+| FASTQ / FASTQ.GZ | raw reads | `gzip -cd`, `seqkit`, FastQC | do not edit by hand |
 | SAM | aligned reads | `head`, `samtools view` | can be huge |
 | BAM / CRAM | aligned reads | `samtools view`, IGV | sort and index before slicing regions |
 | VCF / VCF.GZ | variants | `bcftools view`, `less` | interpretation depends on annotation |
@@ -341,6 +615,50 @@ At minimum, metadata should have:
 | bigWig | indexed signal track | IGV, UCSC | binary; inspect with bigWig tools |
 | count matrix | summarized features | R/Python, `head` | must match metadata |
 | sample sheet | metadata | R/Python, SQL, `csvcut` | protect it like data |
+
+## Optional Public Download Drill
+
+When you are ready to touch real public files, run:
+
+```bash
+cd content/resources/week-03
+conda activate bfg-week3-files
+bash public_file_drill.sh
+```
+
+This creates a local `public_examples/` folder and downloads small public examples from ENA/SRA and UCSC. It does not commit those files to Git. The goal is not biological analysis yet. The goal is to learn how to verify a file before trusting it.
+
+The drill checks:
+
+| File type | Public source used | What the script checks |
+|---|---|---|
+| FASTQ | ENA mirror of SRA run `SRR1553607` | size, gzip integrity, first two records, line count, read count |
+| SAM | UCSC example file | size, line count, header, first records |
+| BAM | UCSC example BAM + BAI | binary validity, header, alignment summary, first records |
+| CRAM | UCSC example CRAM + CRAI | file presence, index presence, quick validity |
+| VCF | UCSC compressed VCF + Tabix index | header and first variant records |
+| BED | UCSC BED example | line count and first intervals |
+| GTF | UCSC GTF example | line count, first records, feature columns |
+| bigWig | UCSC bigWig example | binary track metadata with `bigWigInfo` |
+
+Use this pattern for any public database:
+
+```bash
+mkdir -p public_examples
+curl -L --fail -o public_examples/file.ext URL
+ls -lh public_examples/file.ext
+head public_examples/file.ext
+```
+
+For compressed or binary files, swap `head` for the correct tool:
+
+```bash
+gzip -t reads.fastq.gz
+gzip -cd reads.fastq.gz | head
+samtools quickcheck alignments.bam
+bcftools view -h variants.vcf.gz | head
+bigWigInfo signal.bw
+```
 
 ## Hands-On Mini Lab: One Tiny Gene-Region Investigation
 
@@ -386,6 +704,7 @@ samtools view -bS data/tiny_alignments.sam > results/tiny.bam
 samtools sort results/tiny.bam -o results/tiny.sorted.bam
 samtools index results/tiny.sorted.bam
 samtools idxstats results/tiny.sorted.bam
+samtools flagstat results/tiny.sorted.bam
 ```
 
 You should now have:
@@ -397,7 +716,35 @@ results/tiny.sorted.bam.bai
 
 This is the first moment where the file becomes browser-ready.
 
-### 4. Ask An Interval Question With BED
+### 4. Filter BAM Records With SAM Flags
+
+Decode the unmapped flag:
+
+```bash
+samtools flags 4
+```
+
+Count unmapped reads:
+
+```bash
+samtools view -c -f 4 results/tiny.sorted.bam
+```
+
+Count mapped reads by excluding the unmapped flag:
+
+```bash
+samtools view -c -F 4 results/tiny.sorted.bam
+```
+
+Write only mapped alignments to a SAM-like text file:
+
+```bash
+samtools view -F 4 results/tiny.sorted.bam > results/mapped_reads.sam
+```
+
+In this tiny example, all three reads are mapped. In real public BAMs, flag filtering is one of the first ways to separate primary, secondary, supplementary, duplicate, mapped, and unmapped records.
+
+### 5. Ask An Interval Question With BED
 
 Which reads overlap the two regions in `tiny_regions.bed`?
 
@@ -412,7 +759,7 @@ cat results/reads_over_regions.bed
 
 This converts overlapping BAM alignments into BED-like output so you can inspect the interval logic.
 
-### 5. Create bedGraph And bigWig Coverage
+### 6. Create bedGraph And bigWig Coverage
 
 ```bash
 bedtools genomecov \
@@ -428,7 +775,7 @@ Now you have both:
 - `tiny.coverage.sorted.bedgraph`: text signal you can inspect
 - `tiny.coverage.bw`: compact signal track for genome browsers
 
-### 6. Connect Variants, Genes, Counts, And Metadata
+### 7. Connect Variants, Genes, Counts, And Metadata
 
 ```bash
 bedtools intersect \
@@ -446,7 +793,7 @@ Then compare:
 - Do the count matrix columns match the metadata sample IDs?
 - Does the browser signal support what the table says?
 
-### 7. Visualize In IGV
+### 8. Visualize In IGV
 
 Open IGV, choose a matching genome or create a tiny custom genome if practicing locally, then load:
 
@@ -483,10 +830,15 @@ Next in the Foundation Series: turn these file instincts into a reproducible pro
 
 - SAM/BAM specification: https://samtools.github.io/hts-specs/SAMv1.pdf
 - VCF specification: https://samtools.github.io/hts-specs/VCFv4.3.pdf
+- SAM flags manual: https://www.htslib.org/doc/samtools-flags.html
+- samtools view manual: https://www.htslib.org/doc/samtools-view.html
 - Sequence Ontology GFF/GTF specifications: https://github.com/The-Sequence-Ontology/Specifications
 - UCSC BED format FAQ: https://genome.ucsc.edu/FAQ/FAQformat.html
 - UCSC bedGraph format: https://genome.ucsc.edu/goldenpath/help/bedgraph.html
+- UCSC bigWig format: https://genome.ucsc.edu/goldenpath/help/bigWig.html
+- UCSC public example files: https://genome.ucsc.edu/goldenPath/help/examples/
 - UCSC coordinate systems explainer: https://genome-blog.gi.ucsc.edu/blog/2016/12/12/the-ucsc-genome-browser-coordinate-counting-systems/
+- ENA Browser and API: https://www.ebi.ac.uk/ena/browser/home
 - FastQC: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
 - MultiQC: https://multiqc.info/
 - bedtools: https://bedtools.readthedocs.io/

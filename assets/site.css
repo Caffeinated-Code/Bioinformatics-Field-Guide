@@ -757,6 +757,13 @@ h3 {
   margin-bottom: 0;
 }
 
+.discussion-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
 .site-footer {
   padding: 2rem 0;
   border-top: 1px solid var(--line);

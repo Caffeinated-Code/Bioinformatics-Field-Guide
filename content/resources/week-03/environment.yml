@@ -4,7 +4,9 @@ channels:
   - bioconda
 dependencies:
   - samtools>=1.20
+  - bcftools>=1.20
   - bedtools>=2.31
   - ucsc-bedgraphtobigwig
   - ucsc-bigwigtobedgraph
+  - ucsc-bigwiginfo
   - seqkit
