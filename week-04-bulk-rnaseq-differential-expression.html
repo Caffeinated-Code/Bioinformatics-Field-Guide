@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Nextflow pipelines, count matrices, DESeq2 design
+formulas, replicates, assumptions, outliers, and the caveats that
+matter"
+    />
+    <meta property="og:title" content="Bulk RNA-seq: From FASTQ To
+Differential Expression Without Fooling Yourself" />
+    <meta
+      property="og:description"
+      content="Nextflow pipelines, count matrices, DESeq2 design
+formulas, replicates, assumptions, outliers, and the caveats that
+matter"
+    />
+    <meta property="og:type" content="article" />
+    <title>Bulk RNA-seq: From FASTQ To Differential Expression Without
+Fooling Yourself | Bioinformatics Field Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/site.css?v=20260709-engagement" />
+  </head>
+  <body class="article-page">
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <header class="site-header" id="site-header">
+      <nav class="nav container" aria-label="Primary navigation">
+        <a href="index.html" class="nav__brand">Bioinformatics Field Guide</a>
+        <div class="nav__links" id="nav-links">
+          <a href="index.html#guides">Guides</a>
+          <a href="index.html#resources">Resources</a>
+          <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+        <div class="nav__actions">
+          <button class="icon-button" id="theme-toggle" aria-label="Toggle color theme">
+            <i class="ri-moon-line" aria-hidden="true"></i>
+          </button>
+          <button class="icon-button nav__toggle" id="nav-toggle" aria-label="Open menu">
+            <i class="ri-menu-line" aria-hidden="true"></i>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="article-hero">
+        <div class="container article-hero__grid">
+          <div>
+            <a class="back-link" href="index.html"><i class="ri-arrow-left-line" aria-hidden="true"></i> Field Guide home</a>
+            <p class="eyebrow">Week 4 · 7-minute core + design lab</p>
+            <h1>Bulk RNA-seq: From FASTQ To Differential Expression
+Without Fooling Yourself</h1>
+                        <p class="article-hero__subtitle">Nextflow
+pipelines, count matrices, DESeq2 design formulas, replicates,
+assumptions, outliers, and the caveats that matter</p>
+                        <div class="article-meta">
+              <span><i class="ri-user-smile-line" aria-hidden="true"></i> Beginner friendly</span>
+              <span><i class="ri-terminal-box-line" aria-hidden="true"></i> Tested commands</span>
+              <span><i class="ri-git-repository-line" aria-hidden="true"></i> Reproducible assets</span>
+            </div>
+          </div>
+          <aside class="article-card">
+            <span class="article-card__label">Original asset</span>
+            <p>nf-core/rnaseq samplesheet and DESeq2 design formula
+cheat sheet</p>
+            <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+              View repository <i class="ri-external-link-line" aria-hidden="true"></i>
+            </a>
+          </aside>
+        </div>
+      </section>
+
+      <div class="container article-layout">
+        <aside class="toc" aria-label="Table of contents">
+          <p class="toc__title">On this page</p>
+          <ul>
+          <li><a
+          href="#bulk-rna-seq-from-fastq-to-differential-expression-without-fooling-yourself"
+          id="toc-bulk-rna-seq-from-fastq-to-differential-expression-without-fooling-yourself">Bulk
+          RNA-seq: From FASTQ To Differential Expression Without Fooling
+          Yourself</a>
+          <ul>
+          <li><a href="#the-pattern-behind-many-sequencing-assays"
+          id="toc-the-pattern-behind-many-sequencing-assays">The Pattern
+          Behind Many Sequencing Assays</a></li>
+          <li><a href="#what-bulk-rna-seq-measures"
+          id="toc-what-bulk-rna-seq-measures">What Bulk RNA-seq
+          Measures</a></li>
+          <li><a
+          href="#the-production-path-use-nextflow-when-the-data-is-real"
+          id="toc-the-production-path-use-nextflow-when-the-data-is-real">The
+          Production Path: Use Nextflow When The Data Is Real</a></li>
+          <li><a href="#processing-choices-alignment-or-pseudoalignment"
+          id="toc-processing-choices-alignment-or-pseudoalignment">Processing
+          Choices: Alignment Or Pseudoalignment</a></li>
+          <li><a href="#the-count-matrix-is-the-hand-off"
+          id="toc-the-count-matrix-is-the-hand-off">The Count Matrix Is
+          The Hand-Off</a></li>
+          <li><a href="#the-deseq2-model-in-plain-english"
+          id="toc-the-deseq2-model-in-plain-english">The DESeq2 Model In
+          Plain English</a></li>
+          <li><a href="#replicates-the-part-people-underestimate"
+          id="toc-replicates-the-part-people-underestimate">Replicates:
+          The Part People Underestimate</a></li>
+          <li><a href="#deseq2-design-formulas-you-will-actually-use"
+          id="toc-deseq2-design-formulas-you-will-actually-use">DESeq2
+          Design Formulas You Will Actually Use</a></li>
+          <li><a href="#a-tiny-design-matrix-lab"
+          id="toc-a-tiny-design-matrix-lab">A Tiny Design-Matrix
+          Lab</a></li>
+          <li><a href="#assumptions-and-caveats"
+          id="toc-assumptions-and-caveats">Assumptions And
+          Caveats</a></li>
+          <li><a href="#outliers-do-not-let-one-sample-write-the-story"
+          id="toc-outliers-do-not-let-one-sample-write-the-story">Outliers:
+          Do Not Let One Sample Write The Story</a></li>
+          <li><a href="#what-to-be-careful-with"
+          id="toc-what-to-be-careful-with">What To Be Careful
+          With</a></li>
+          <li><a href="#what-a-good-bulk-rna-seq-result-includes"
+          id="toc-what-a-good-bulk-rna-seq-result-includes">What A Good
+          Bulk RNA-seq Result Includes</a></li>
+          <li><a href="#save-this-bulk-rna-seq-decision-map"
+          id="toc-save-this-bulk-rna-seq-decision-map">Save This: Bulk
+          RNA-seq Decision Map</a></li>
+          <li><a href="#what-to-watch-next"
+          id="toc-what-to-watch-next">What To Watch Next</a></li>
+          <li><a href="#credits-and-references"
+          id="toc-credits-and-references">Credits and
+          References</a></li>
+          </ul></li>
+          </ul>
+        </aside>
+
+        <article class="article-content">
+          <h1
+          id="bulk-rna-seq-from-fastq-to-differential-expression-without-fooling-yourself">Bulk
+          RNA-seq: From FASTQ To Differential Expression Without Fooling
+          Yourself</h1>
+          <p><strong>Takeaway:</strong> Bulk RNA-seq is not just "run a
+          pipeline, make a volcano plot." The processing steps are
+          mostly standardized; the hard part is making sure the
+          statistical model matches the biological experiment.</p>
+          <h2 id="the-pattern-behind-many-sequencing-assays">The Pattern
+          Behind Many Sequencing Assays</h2>
+          <p>Bulk RNA-seq has its own details, but the skeleton is
+          familiar across many sequencing assays:</p>
+          <pre class="text"><code>raw reads -&gt; QC -&gt; trimming/filtering -&gt; alignment or quantification -&gt; feature-level table -&gt; metadata-aware statistical model</code></pre>
+          <p>ATAC-seq, ChIP-seq, CUT&amp;Tag, eCLIP-seq, and many
+          counting-based assays follow the same broad rhythm:</p>
+          <ul>
+          <li>inspect raw reads</li>
+          <li>remove obvious technical problems</li>
+          <li>map or quantify reads against a reference</li>
+          <li>summarize signal into genomic features</li>
+          <li>model the feature table using metadata</li>
+          <li>interpret results with biological context</li>
+          </ul>
+          <p>The tools differ. The statistical assumptions differ. But
+          the discipline is the same: every output is only as
+          trustworthy as the metadata, reference files, QC, and model
+          behind it.</p>
+          <h2 id="what-bulk-rna-seq-measures">What Bulk RNA-seq
+          Measures</h2>
+          <p>Bulk RNA-seq measures RNA abundance averaged across many
+          cells in a sample. A sample might be tissue, a sorted cell
+          population, an organoid, a treatment well, or a patient
+          biopsy.</p>
+          <p>It does not directly measure:</p>
+          <ul>
+          <li>protein abundance</li>
+          <li>cell-type-specific expression</li>
+          <li>causality</li>
+          <li>pathway activity by itself</li>
+          <li>expression in every individual cell</li>
+          </ul>
+          <p>It gives you a count table: genes or transcripts by
+          samples. Differential expression asks whether the observed
+          counts are systematically different between groups after
+          accounting for sequencing depth and biological
+          variability.</p>
+          <h2
+          id="the-production-path-use-nextflow-when-the-data-is-real">The
+          Production Path: Use Nextflow When The Data Is Real</h2>
+          <p>For real projects, do not hand-wire twenty shell commands
+          unless you are deliberately teaching or debugging. Use a
+          maintained workflow.</p>
+          <p>The most common production-grade choice is
+          <strong>nf-core/rnaseq</strong>, a community Nextflow
+          pipeline. It accepts FASTQ files or pre-aligned BAMs, performs
+          QC, trimming and alignment or pseudoalignment, and produces
+          count matrices plus QC reports.</p>
+          <p>Why this matters:</p>
+          <ul>
+          <li>the pipeline records software versions</li>
+          <li>containers reduce environment drift</li>
+          <li>samplesheets make inputs explicit</li>
+          <li>MultiQC centralizes quality reports</li>
+          <li>reruns are easier</li>
+          <li>cluster/cloud execution is more manageable</li>
+          </ul>
+          <p>Minimal nf-core/rnaseq shape:</p>
+          <div class="sourceCode" id="cb2"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install or update Nextflow separately, then run nf-core/rnaseq.</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/rnaseq <span class="dt">\</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> docker <span class="dt">\</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input</span> samplesheet.csv <span class="dt">\</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outdir</span> results/nfcore_rnaseq <span class="dt">\</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">--genome</span> GRCh38</span></code></pre></div>
+          <p>The Week 4 resource folder includes a tiny samplesheet
+          template:</p>
+          <pre class="csv"><code>sample,fastq_1,fastq_2,strandedness
+control_rep1,data/fastq/control_rep1_R1.fastq.gz,data/fastq/control_rep1_R2.fastq.gz,auto
+treated_rep1,data/fastq/treated_rep1_R1.fastq.gz,data/fastq/treated_rep1_R2.fastq.gz,auto</code></pre>
+          <p>Before running a full pipeline, check:</p>
+          <ul>
+          <li>Are sample names unique?</li>
+          <li>Do FASTQ paths exist?</li>
+          <li>Is strandedness known or set to <code>auto</code>
+          intentionally?</li>
+          <li>Is the genome build correct?</li>
+          <li>Is the annotation compatible with the genome?</li>
+          <li>Are treatment labels stored in metadata, not only
+          filenames?</li>
+          </ul>
+          <h2
+          id="processing-choices-alignment-or-pseudoalignment">Processing
+          Choices: Alignment Or Pseudoalignment</h2>
+          <p>Bulk RNA-seq usually goes down one of two paths:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Path</th>
+          <th>Examples</th>
+          <th>Output</th>
+          <th>Use when</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>Alignment</td>
+          <td>STAR, HISAT2</td>
+          <td>BAM plus counts</td>
+          <td>you need genome-aligned reads, splice junctions, IGV
+          tracks</td>
+          </tr>
+          <tr>
+          <td>Pseudoalignment / selective alignment</td>
+          <td>Salmon, kallisto</td>
+          <td>transcript/gene abundance estimates</td>
+          <td>you want fast quantification and do not need full BAM
+          inspection</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>Neither path saves a bad experiment. If the metadata is
+          wrong, if batch equals condition, or if there are no
+          biological replicates, the cleanest pipeline in the world
+          cannot rescue the inference.</p>
+          <h2 id="the-count-matrix-is-the-hand-off">The Count Matrix Is
+          The Hand-Off</h2>
+          <p>Differential expression begins with <strong>raw integer
+          counts</strong>, not TPM, not FPKM, not z-scores, not
+          log-normalized values.</p>
+          <p>The shape is:</p>
+          <pre class="text"><code>gene_id        control_1  control_2  treated_1  treated_2
+ENSG000001        120        98        240        260
+ENSG000002          4         2          3          5
+ENSG000003       9000      8500       8700       9100</code></pre>
+          <p>The metadata must match the count columns exactly:</p>
+          <pre class="text"><code>sample_id   condition  batch
+control_1   control    A
+control_2   control    B
+treated_1   treated    A
+treated_2   treated    B</code></pre>
+          <p>If the count matrix and metadata disagree, the model tests
+          the wrong biology.</p>
+          <h2 id="the-deseq2-model-in-plain-english">The DESeq2 Model In
+          Plain English</h2>
+          <p>DESeq2 models counts using a <strong>negative binomial
+          generalized linear model</strong>. That sounds heavy, but the
+          intuition is manageable.</p>
+          <p>For gene <code>i</code> in sample <code>j</code>:</p>
+          <pre class="text"><code>K_ij ~ NegativeBinomial(mu_ij, alpha_i)</code></pre>
+          <p>Where:</p>
+          <ul>
+          <li><code>K_ij</code> is the observed count</li>
+          <li><code>mu_ij</code> is the expected count</li>
+          <li><code>alpha_i</code> is gene-specific dispersion, or extra
+          variability beyond Poisson noise</li>
+          </ul>
+          <p>DESeq2 separates sequencing depth from biology:</p>
+          <pre class="text"><code>mu_ij = s_j * q_ij</code></pre>
+          <p>Where:</p>
+          <ul>
+          <li><code>s_j</code> is the sample size factor</li>
+          <li><code>q_ij</code> is the expression strength after
+          accounting for library size</li>
+          </ul>
+          <p>Then the design formula models expression:</p>
+          <pre class="text"><code>log2(q_ij) = beta_0 + beta_1 * condition_j + beta_2 * batch_j + ...</code></pre>
+          <p>When you write:</p>
+          <div class="sourceCode" id="cb9"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>design <span class="ot">=</span> <span class="er">~</span> batch <span class="sc">+</span> condition</span></code></pre></div>
+          <p>you are saying:</p>
+          <blockquote>
+          <p>Estimate the condition effect after accounting for
+          batch.</p>
+          </blockquote>
+          <p>The p-value asks whether the relevant coefficient is
+          different from zero, given the model and assumptions. It is
+          not a magical truth score.</p>
+          <h2 id="replicates-the-part-people-underestimate">Replicates:
+          The Part People Underestimate</h2>
+          <p>There are two different things people call replicates:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Replicate type</th>
+          <th>Meaning</th>
+          <th>What to do</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>Biological replicate</td>
+          <td>independent biological unit, such as another mouse, donor,
+          patient, culture, or tissue sample</td>
+          <td>keep separate; this estimates biological variability</td>
+          </tr>
+          <tr>
+          <td>Technical replicate</td>
+          <td>repeated sequencing or measurement of the same
+          library/sample</td>
+          <td>often combine or collapse before modeling</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>Do not collapse biological replicates. They are the
+          evidence for variability.</p>
+          <p>No biological replicates means no reliable estimate of
+          within-group variation. You can explore, plot, and generate
+          hypotheses, but formal differential expression is weak.</p>
+          <h2 id="deseq2-design-formulas-you-will-actually-use">DESeq2
+          Design Formulas You Will Actually Use</h2>
+          <h3 id="1-simple-two-group-design">1. Simple Two-Group
+          Design</h3>
+          <p>Use when you have independent biological replicates:</p>
+          <div class="sourceCode" id="cb10"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dds <span class="ot">&lt;-</span> <span class="fu">DESeqDataSetFromMatrix</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">countData =</span> counts,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">colData =</span> metadata,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> <span class="sc">~</span> condition</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>dds <span class="ot">&lt;-</span> <span class="fu">DESeq</span>(dds)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">results</span>(dds, <span class="at">contrast =</span> <span class="fu">c</span>(<span class="st">&quot;condition&quot;</span>, <span class="st">&quot;treated&quot;</span>, <span class="st">&quot;control&quot;</span>))</span></code></pre></div>
+          <p>Question answered:</p>
+          <pre class="text"><code>Which genes differ between treated and control samples?</code></pre>
+          <h3 id="2-batch-adjusted-design">2. Batch-Adjusted Design</h3>
+          <p>Use when batch affects expression and is not perfectly
+          confounded with condition:</p>
+          <div class="sourceCode" id="cb12"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>design <span class="ot">=</span> <span class="er">~</span> batch <span class="sc">+</span> condition</span></code></pre></div>
+          <p>Question answered:</p>
+          <pre class="text"><code>Which genes differ by condition after accounting for batch?</code></pre>
+          <p>Be careful: this works only if both conditions appear
+          across batches. If all controls are in batch A and all treated
+          samples are in batch B, batch and condition are confounded.
+          The model cannot know whether the difference is biology or
+          batch.</p>
+          <h3 id="3-paired-design">3. Paired Design</h3>
+          <p>Use when the same donor, patient, mouse, or culture is
+          measured before and after treatment:</p>
+          <div class="sourceCode" id="cb14"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>design <span class="ot">=</span> <span class="er">~</span> patient <span class="sc">+</span> condition</span></code></pre></div>
+          <p>Question answered:</p>
+          <pre class="text"><code>Within the same patient, which genes change after treatment?</code></pre>
+          <p>The patient term absorbs baseline differences between
+          individuals. This is often much stronger than pretending
+          before/after samples are independent.</p>
+          <h3 id="4-multi-factor-design">4. Multi-Factor Design</h3>
+          <p>Use when more than one known variable matters:</p>
+          <div class="sourceCode" id="cb16"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>design <span class="ot">=</span> <span class="er">~</span> sex <span class="sc">+</span> batch <span class="sc">+</span> condition</span></code></pre></div>
+          <p>This can be appropriate, but only if sample size supports
+          it. Every extra term costs degrees of freedom. A small study
+          cannot support a huge model.</p>
+          <h3 id="5-interaction-design">5. Interaction Design</h3>
+          <p>Use when the treatment effect may differ by genotype, sex,
+          timepoint, or another factor:</p>
+          <div class="sourceCode" id="cb17"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>design <span class="ot">=</span> <span class="er">~</span> genotype <span class="sc">+</span> treatment <span class="sc">+</span> genotype<span class="sc">:</span>treatment</span></code></pre></div>
+          <p>Shorthand:</p>
+          <div class="sourceCode" id="cb18"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>design <span class="ot">=</span> <span class="er">~</span> genotype <span class="sc">*</span> treatment</span></code></pre></div>
+          <p>Question answered by the interaction:</p>
+          <pre class="text"><code>Is the treatment effect different between genotypes?</code></pre>
+          <p>Interaction terms are powerful and easy to misread. They do
+          not simply mean "genes changed in both groups." They test
+          whether the difference between conditions differs across
+          another variable.</p>
+          <h2 id="a-tiny-design-matrix-lab">A Tiny Design-Matrix
+          Lab</h2>
+          <p>The Week 4 resources include a small R script that shows
+          what formulas become:</p>
+          <div class="sourceCode" id="cb20"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> content/resources/week-04</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> deseq2_design_matrix_demo.R</span></code></pre></div>
+          <p>You should see sections for:</p>
+          <pre class="text"><code>Simple condition-only design
+Batch-adjusted design
+Paired patient design</code></pre>
+          <p>This matters because DESeq2 does not test English
+          sentences. It tests coefficients in a design matrix. If the
+          formula is wrong, the answer is wrong.</p>
+          <h2 id="assumptions-and-caveats">Assumptions And Caveats</h2>
+          <p>Save this list. Most mistakes live here.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Issue</th>
+          <th>Why it matters</th>
+          <th>What to do</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>raw counts required</td>
+          <td>DESeq2 models counts, not TPM/log values</td>
+          <td>use gene-level raw counts</td>
+          </tr>
+          <tr>
+          <td>biological replication</td>
+          <td>dispersion needs within-group variability</td>
+          <td>aim for true independent replicates</td>
+          </tr>
+          <tr>
+          <td>library size differences</td>
+          <td>samples have different sequencing depths</td>
+          <td>use DESeq2 size factors</td>
+          </tr>
+          <tr>
+          <td>composition bias</td>
+          <td>a few genes can dominate counts</td>
+          <td>inspect normalization assumptions</td>
+          </tr>
+          <tr>
+          <td>batch effects</td>
+          <td>technical variation can look biological</td>
+          <td>include batch only when design supports it</td>
+          </tr>
+          <tr>
+          <td>confounding</td>
+          <td>batch and condition cannot be separated</td>
+          <td>redesign, qualify claims, or avoid overtesting</td>
+          </tr>
+          <tr>
+          <td>outliers</td>
+          <td>one sample can drive a gene-level result</td>
+          <td>inspect PCA, sample distances, Cook's distance</td>
+          </tr>
+          <tr>
+          <td>low counts</td>
+          <td>low information inflates noise</td>
+          <td>use independent filtering and sensible thresholds</td>
+          </tr>
+          <tr>
+          <td>multiple testing</td>
+          <td>thousands of genes are tested</td>
+          <td>interpret adjusted p-values, not raw p-values</td>
+          </tr>
+          <tr>
+          <td>effect size</td>
+          <td>tiny changes can be significant in large datasets</td>
+          <td>report log2 fold change and uncertainty</td>
+          </tr>
+          </tbody>
+          </table>
+          <h2
+          id="outliers-do-not-let-one-sample-write-the-story">Outliers:
+          Do Not Let One Sample Write The Story</h2>
+          <p>Outliers happen at two levels.</p>
+          <p>Sample-level outliers:</p>
+          <ul>
+          <li>failed library</li>
+          <li>wrong sample label</li>
+          <li>contamination</li>
+          <li>different tissue composition</li>
+          <li>batch-specific artifact</li>
+          </ul>
+          <p>Gene-level outliers:</p>
+          <ul>
+          <li>one extreme count in one sample</li>
+          <li>mapping artifact</li>
+          <li>unmodeled subgroup</li>
+          <li>low count instability</li>
+          </ul>
+          <p>Before differential expression, inspect:</p>
+          <div class="sourceCode" id="cb22"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>vst_counts <span class="ot">&lt;-</span> <span class="fu">vst</span>(dds)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotPCA</span>(vst_counts, <span class="at">intgroup =</span> <span class="fu">c</span>(<span class="st">&quot;condition&quot;</span>, <span class="st">&quot;batch&quot;</span>))</span></code></pre></div>
+          <p>Also check sample distance heatmaps, library sizes, mapping
+          rates, duplication, strandedness, rRNA content, and assignment
+          rates. A volcano plot should never be the first QC plot you
+          trust.</p>
+          <h2 id="what-to-be-careful-with">What To Be Careful With</h2>
+          <ul>
+          <li>Do not run DESeq2 on TPM.</li>
+          <li>Do not compare groups with no biological replicates and
+          present it as definitive.</li>
+          <li>Do not ignore pairing when samples come from the same
+          patient.</li>
+          <li>Do not include a batch term that is perfectly confounded
+          with condition.</li>
+          <li>Do not use every metadata column just because it
+          exists.</li>
+          <li>Do not interpret pathway enrichment from a poor
+          differential expression model.</li>
+          <li>Do not trust a result that disappears when one sample is
+          removed.</li>
+          <li>Do not hide QC failures because the volcano plot looks
+          exciting.</li>
+          </ul>
+          <h2 id="what-a-good-bulk-rna-seq-result-includes">What A Good
+          Bulk RNA-seq Result Includes</h2>
+          <p>At minimum, report:</p>
+          <ul>
+          <li>reference genome and annotation version</li>
+          <li>pipeline and version, such as nf-core/rnaseq
+          <code>3.26.0</code></li>
+          <li>aligner or quantifier</li>
+          <li>counting method</li>
+          <li>strandedness</li>
+          <li>sample metadata</li>
+          <li>DESeq2 design formula</li>
+          <li>contrast tested</li>
+          <li>number of biological replicates</li>
+          <li>QC summary</li>
+          <li>outlier handling</li>
+          <li>adjusted p-value threshold</li>
+          <li>log2 fold-change threshold, if used</li>
+          </ul>
+          <h2 id="save-this-bulk-rna-seq-decision-map">Save This: Bulk
+          RNA-seq Decision Map</h2>
+          <table>
+          <thead>
+          <tr>
+          <th>Decision</th>
+          <th>Good default</th>
+          <th>Ask yourself</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>Pipeline</td>
+          <td>nf-core/rnaseq</td>
+          <td>Do I need alignment, quantification, or both?</td>
+          </tr>
+          <tr>
+          <td>Input</td>
+          <td>FASTQ samplesheet</td>
+          <td>Are sample names unique and metadata complete?</td>
+          </tr>
+          <tr>
+          <td>Counts</td>
+          <td>raw gene counts</td>
+          <td>Are these integers from a compatible annotation?</td>
+          </tr>
+          <tr>
+          <td>Normalization</td>
+          <td>DESeq2 size factors</td>
+          <td>Are there extreme composition differences?</td>
+          </tr>
+          <tr>
+          <td>Design</td>
+          <td>smallest model that matches the experiment</td>
+          <td>What variation must be accounted for?</td>
+          </tr>
+          <tr>
+          <td>Replicates</td>
+          <td>biological replicates kept separate</td>
+          <td>What is the true independent unit?</td>
+          </tr>
+          <tr>
+          <td>Contrast</td>
+          <td>explicit <code>results()</code> contrast</td>
+          <td>What exact comparison am I testing?</td>
+          </tr>
+          <tr>
+          <td>QC</td>
+          <td>PCA, sample distances, MultiQC</td>
+          <td>Do samples behave as expected before testing?</td>
+          </tr>
+          </tbody>
+          </table>
+          <h2 id="what-to-watch-next">What To Watch Next</h2>
+          <p>Next, we can turn this into a small runnable differential
+          expression lab: take a public count matrix, build metadata,
+          check the design matrix, run DESeq2, inspect PCA, shrink log2
+          fold changes, and make a volcano plot without overclaiming
+          it.</p>
+          <h2 id="credits-and-references">Credits and References</h2>
+          <ul>
+          <li>nf-core/rnaseq documentation: <a
+          href="https://nf-co.re/rnaseq/3.26.0/">https://nf-co.re/rnaseq/3.26.0/</a></li>
+          <li>nf-core/rnaseq usage: <a
+          href="https://nf-co.re/rnaseq/3.26.0/docs/usage/">https://nf-co.re/rnaseq/3.26.0/docs/usage/</a></li>
+          <li>Nextflow documentation: <a
+          href="https://www.nextflow.io/docs/latest/">https://www.nextflow.io/docs/latest/</a></li>
+          <li>DESeq2 vignette: <a
+          href="https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html">https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html</a></li>
+          <li>DESeq2 paper: Love MI, Huber W, Anders S. Moderated
+          estimation of fold change and dispersion for RNA-seq data with
+          DESeq2. Genome Biology. 2014. <a
+          href="https://doi.org/10.1186/s13059-014-0550-8">https://doi.org/10.1186/s13059-014-0550-8</a></li>
+          <li>Bioconductor RNA-seq workflow: <a
+          href="https://www.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html">https://www.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html</a></li>
+          </ul>
+
+          <section class="article-engagement" aria-labelledby="article-engagement-title">
+            <div class="engagement-card">
+              <p class="eyebrow">Share and discuss</p>
+              <h2 id="article-engagement-title">Was this useful?</h2>
+              <p>
+                Share this guide with someone learning bioinformatics, suggest an edit on GitHub,
+                or leave a question below.
+              </p>
+              <div class="share-actions" data-share-title="Bulk RNA-seq:
+From FASTQ To Differential Expression Without Fooling Yourself">
+                <button class="share-button" type="button" data-share-native>
+                  <i class="ri-share-forward-line" aria-hidden="true"></i>
+                  Share
+                </button>
+                <button class="share-button" type="button" data-copy-link>
+                  <i class="ri-link" aria-hidden="true"></i>
+                  Copy link
+                </button>
+                <a class="share-button" data-share-linkedin target="_blank" rel="noreferrer">
+                  <i class="ri-linkedin-box-line" aria-hidden="true"></i>
+                  LinkedIn
+                </a>
+                <a class="share-button" data-share-x target="_blank" rel="noreferrer">
+                  <i class="ri-twitter-x-line" aria-hidden="true"></i>
+                  X
+                </a>
+                <a class="share-button" data-edit-github target="_blank" rel="noreferrer">
+                  <i class="ri-git-pull-request-line" aria-hidden="true"></i>
+                  Suggest edit
+                </a>
+              </div>
+              <p class="share-status" aria-live="polite"></p>
+            </div>
+
+            <div class="discussion-note" aria-label="Comments and reactions">
+              <strong>Join the discussion on GitHub.</strong>
+              <p>
+                Ask a question, suggest an example, or share how you used this guide.
+                Comments are powered by GitHub Discussions through giscus.
+              </p>
+              <div class="discussion-actions">
+                <a class="share-button" data-discuss-question target="_blank" rel="noreferrer">
+                  <i class="ri-question-answer-line" aria-hidden="true"></i>
+                  Ask a question
+                </a>
+                <a class="share-button" data-discuss-general target="_blank" rel="noreferrer">
+                  <i class="ri-discuss-line" aria-hidden="true"></i>
+                  Browse discussions
+                </a>
+              </div>
+            </div>
+
+            <div class="giscus-panel" aria-label="Embedded comments">
+              <script
+                src="https://giscus.app/client.js"
+                data-repo="Caffeinated-Code/Bioinformatics-Field-Guide"
+                data-repo-id="R_kgDOTEbe8w"
+                data-category="General"
+                data-category-id="DIC_kwDOTEbe884DA22S"
+                data-mapping="pathname"
+                data-strict="0"
+                data-reactions-enabled="1"
+                data-emit-metadata="0"
+                data-input-position="top"
+                data-theme="preferred_color_scheme"
+                data-lang="en"
+                data-loading="lazy"
+                crossorigin="anonymous"
+                async>
+              </script>
+            </div>
+          </section>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer__grid">
+        <div>
+          <strong>Bioinformatics Field Guide</strong>
+          <p>Practical bioinformatics guides with reproducible examples.</p>
+        </div>
+        <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
+          GitHub repository <i class="ri-external-link-line" aria-hidden="true"></i>
+        </a>
+      </div>
+    </footer>
+
+    <script src="assets/site.js?v=20260709-engagement"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: false });
+      window.mermaid = mermaid;
+      window.dispatchEvent(new Event("mermaid-ready"));
+    </script>
+  </body>
+</html>

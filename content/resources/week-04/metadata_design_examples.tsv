@@ -1,0 +1,13 @@
+sample_id	condition	batch	patient	timepoint	sex
+control_rep1	control	A	P01	baseline	F
+control_rep2	control	B	P02	baseline	M
+control_rep3	control	A	P03	baseline	F
+treated_rep1	treated	A	P04	baseline	F
+treated_rep2	treated	B	P05	baseline	M
+treated_rep3	treated	A	P06	baseline	F
+patient01_before	before	A	PT01	before	F
+patient01_after	after	A	PT01	after	F
+patient02_before	before	B	PT02	before	M
+patient02_after	after	B	PT02	after	M
+patient03_before	before	A	PT03	before	F
+patient03_after	after	A	PT03	after	F

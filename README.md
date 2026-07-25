@@ -23,6 +23,7 @@ This project turns those rough edges into guided, testable lessons:
 | 01 | [Set Up Your Laptop For Bioinformatics](https://caffeinated-code.github.io/Bioinformatics-Field-Guide/week-01-laptop-setup-for-bioinformatics.html) | Conda, Docker, JupyterLab, VS Code, Ollama, BioChatter | [Week 1 resources](content/resources/week-01/) |
 | 02 | [What Programming Languages Should A Bioinformatician Know?](https://caffeinated-code.github.io/Bioinformatics-Field-Guide/week-02-languages-for-bioinformatics.html) | Bash, Python, R, SQL, notebooks, AI-assisted learning | [Week 2 resources](content/resources/week-02/) |
 | 03 | [The Bioinformatics File Types You Must Know](https://caffeinated-code.github.io/Bioinformatics-Field-Guide/week-03-bioinformatics-file-types.html) | FASTQ, SAM/BAM/CRAM, VCF, GTF/GFF, BED, bedGraph, bigWig, metadata | [Week 3 resources](content/resources/week-03/) |
+| 04 | [Bulk RNA-seq: From FASTQ To Differential Expression Without Fooling Yourself](https://caffeinated-code.github.io/Bioinformatics-Field-Guide/week-04-bulk-rnaseq-differential-expression.html) | nf-core/rnaseq, count matrices, DESeq2 design formulas, replicates, assumptions, outliers | [Week 4 resources](content/resources/week-04/) |
 
 Only published guides are listed here. Draft and future articles are intentionally hidden from this landing page until they are ready.
 
@@ -33,8 +34,9 @@ If you are new to bioinformatics:
 1. Start with **Week 1** to set up a working environment.
 2. Use **Week 2** to understand when to use Bash, Python, R, and SQL.
 3. Spend extra time on **Week 3** because file literacy is where many real projects succeed or fail.
+4. Use **Week 4** to understand how bulk RNA-seq processing connects to differential expression statistics.
 
-If you already work in bioinformatics, jump directly to Week 3 and run the file-format lab.
+If you already work in bioinformatics, jump directly to Week 4 for the DESeq2 design-model section.
 
 ## Repository Structure
 
@@ -52,4 +54,4 @@ Each article supports GitHub-powered discussion through giscus. If something is 
 
 ## Status
 
-Published through **Week 3**. Future guides will be added only after review, testing, and cleanup.
+Published through **Week 4**. Future guides will be added only after review, testing, and cleanup.
