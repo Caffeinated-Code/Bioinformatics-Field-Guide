@@ -2,6 +2,28 @@
 
 Use this before running `DESeq()`.
 
+## Inputs DESeq2 Expects
+
+Use:
+
+```text
+raw gene-level counts + sample metadata
+```
+
+Do not use:
+
+```text
+TPM
+FPKM/RPKM
+z-scores
+log-normalized expression
+batch-corrected expression matrices
+negative values
+percentages
+```
+
+For Salmon/kallisto outputs, use a transcript-to-gene import workflow such as `tximport` instead of passing TPM directly to DESeq2.
+
 ## Simple Two-Group Comparison
 
 ```r

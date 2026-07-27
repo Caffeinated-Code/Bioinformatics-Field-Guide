@@ -5,21 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Nextflow pipelines, count matrices, DESeq2 design
+      content="Nextflow pipelines, raw counts, TPM/FPKM, DESeq2 design
 formulas, replicates, assumptions, outliers, and the caveats that
 matter"
     />
-    <meta property="og:title" content="Bulk RNA-seq: From FASTQ To
-Differential Expression Without Fooling Yourself" />
+    <meta property="og:title" content="Bulk RNA-seq Field Guide: From
+Reads To Rigorous Differential Expression" />
     <meta
       property="og:description"
-      content="Nextflow pipelines, count matrices, DESeq2 design
+      content="Nextflow pipelines, raw counts, TPM/FPKM, DESeq2 design
 formulas, replicates, assumptions, outliers, and the caveats that
 matter"
     />
     <meta property="og:type" content="article" />
-    <title>Bulk RNA-seq: From FASTQ To Differential Expression Without
-Fooling Yourself | Bioinformatics Field Guide</title>
+    <title>Bulk RNA-seq Field Guide: From Reads To Rigorous Differential
+Expression | Bioinformatics Field Guide</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -60,10 +60,10 @@ Fooling Yourself | Bioinformatics Field Guide</title>
           <div>
             <a class="back-link" href="index.html"><i class="ri-arrow-left-line" aria-hidden="true"></i> Field Guide home</a>
             <p class="eyebrow">Week 4 · 7-minute core + design lab</p>
-            <h1>Bulk RNA-seq: From FASTQ To Differential Expression
-Without Fooling Yourself</h1>
+            <h1>Bulk RNA-seq Field Guide: From Reads To Rigorous
+Differential Expression</h1>
                         <p class="article-hero__subtitle">Nextflow
-pipelines, count matrices, DESeq2 design formulas, replicates,
+pipelines, raw counts, TPM/FPKM, DESeq2 design formulas, replicates,
 assumptions, outliers, and the caveats that matter</p>
                         <div class="article-meta">
               <span><i class="ri-user-smile-line" aria-hidden="true"></i> Beginner friendly</span>
@@ -87,10 +87,10 @@ cheat sheet</p>
           <p class="toc__title">On this page</p>
           <ul>
           <li><a
-          href="#bulk-rna-seq-from-fastq-to-differential-expression-without-fooling-yourself"
-          id="toc-bulk-rna-seq-from-fastq-to-differential-expression-without-fooling-yourself">Bulk
-          RNA-seq: From FASTQ To Differential Expression Without Fooling
-          Yourself</a>
+          href="#bulk-rna-seq-field-guide-from-reads-to-rigorous-differential-expression"
+          id="toc-bulk-rna-seq-field-guide-from-reads-to-rigorous-differential-expression">Bulk
+          RNA-seq Field Guide: From Reads To Rigorous Differential
+          Expression</a>
           <ul>
           <li><a href="#the-pattern-behind-many-sequencing-assays"
           id="toc-the-pattern-behind-many-sequencing-assays">The Pattern
@@ -98,16 +98,34 @@ cheat sheet</p>
           <li><a href="#what-bulk-rna-seq-measures"
           id="toc-what-bulk-rna-seq-measures">What Bulk RNA-seq
           Measures</a></li>
+          <li><a href="#the-vocabulary-you-will-keep-seeing"
+          id="toc-the-vocabulary-you-will-keep-seeing">The Vocabulary
+          You Will Keep Seeing</a></li>
+          <li><a href="#where-raw-counts-come-from"
+          id="toc-where-raw-counts-come-from">Where Raw Counts Come
+          From</a></li>
+          <li><a href="#hypothesis-testing-what-are-we-testing"
+          id="toc-hypothesis-testing-what-are-we-testing">Hypothesis
+          Testing: What Are We Testing?</a></li>
           <li><a
           href="#the-production-path-use-nextflow-when-the-data-is-real"
           id="toc-the-production-path-use-nextflow-when-the-data-is-real">The
           Production Path: Use Nextflow When The Data Is Real</a></li>
+          <li><a href="#strandedness-why-the-samplesheet-asks"
+          id="toc-strandedness-why-the-samplesheet-asks">Strandedness:
+          Why The Samplesheet Asks</a></li>
+          <li><a href="#genome-build-and-annotation-must-match"
+          id="toc-genome-build-and-annotation-must-match">Genome Build
+          And Annotation Must Match</a></li>
           <li><a href="#processing-choices-alignment-or-pseudoalignment"
           id="toc-processing-choices-alignment-or-pseudoalignment">Processing
           Choices: Alignment Or Pseudoalignment</a></li>
           <li><a href="#the-count-matrix-is-the-hand-off"
           id="toc-the-count-matrix-is-the-hand-off">The Count Matrix Is
           The Hand-Off</a></li>
+          <li><a href="#data-that-does-not-belong-in-deseq2"
+          id="toc-data-that-does-not-belong-in-deseq2">Data That Does
+          Not Belong In DESeq2</a></li>
           <li><a href="#the-deseq2-model-in-plain-english"
           id="toc-the-deseq2-model-in-plain-english">The DESeq2 Model In
           Plain English</a></li>
@@ -146,9 +164,9 @@ cheat sheet</p>
 
         <article class="article-content">
           <h1
-          id="bulk-rna-seq-from-fastq-to-differential-expression-without-fooling-yourself">Bulk
-          RNA-seq: From FASTQ To Differential Expression Without Fooling
-          Yourself</h1>
+          id="bulk-rna-seq-field-guide-from-reads-to-rigorous-differential-expression">Bulk
+          RNA-seq Field Guide: From Reads To Rigorous Differential
+          Expression</h1>
           <p><strong>Takeaway:</strong> Bulk RNA-seq is not just "run a
           pipeline, make a volcano plot." The processing steps are
           mostly standardized; the hard part is making sure the
@@ -178,6 +196,12 @@ cheat sheet</p>
           cells in a sample. A sample might be tissue, a sorted cell
           population, an organoid, a treatment well, or a patient
           biopsy.</p>
+          <p>The "bulk" part matters. A bulk sample mixes signal across
+          all cells in the submitted material. If a treated tissue has
+          more immune cells than a control tissue, the RNA-seq signal
+          can change because cell composition changed, because gene
+          regulation changed within the same cells, or both. Bulk
+          RNA-seq is powerful, but it is not cell-type resolved.</p>
           <p>It does not directly measure:</p>
           <ul>
           <li>protein abundance</li>
@@ -191,6 +215,137 @@ cheat sheet</p>
           counts are systematically different between groups after
           accounting for sequencing depth and biological
           variability.</p>
+          <h2 id="the-vocabulary-you-will-keep-seeing">The Vocabulary
+          You Will Keep Seeing</h2>
+          <p>You will see raw counts, TPM, FPKM, normalized counts,
+          log-normalized counts, z-scores, and transformed counts in
+          papers and public databases. Do not be scared by the alphabet
+          soup. These are different answers to different questions.</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Term</th>
+          <th>What it is</th>
+          <th>Good for</th>
+          <th>Not good for</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>raw counts</td>
+          <td>integer-ish reads or fragments assigned to a
+          gene/transcript</td>
+          <td>DESeq2, edgeR, count-based modeling</td>
+          <td>comparing gene A to gene B directly</td>
+          </tr>
+          <tr>
+          <td>TPM</td>
+          <td>transcripts per million; adjusted for transcript length
+          and sequencing depth</td>
+          <td>comparing relative expression of genes/transcripts within
+          or across descriptive contexts</td>
+          <td>direct DESeq2 input</td>
+          </tr>
+          <tr>
+          <td>FPKM/RPKM</td>
+          <td>fragments/reads per kilobase per million</td>
+          <td>older expression summaries; rough descriptive plots</td>
+          <td>differential expression with DESeq2/edgeR</td>
+          </tr>
+          <tr>
+          <td>DESeq2 normalized counts</td>
+          <td>raw counts divided by sample-specific size factors</td>
+          <td>plotting same-gene expression across samples</td>
+          <td>replacing raw counts in <code>DESeq()</code></td>
+          </tr>
+          <tr>
+          <td>log-normalized counts</td>
+          <td>log-transformed normalized expression values</td>
+          <td>heatmaps, PCA-like exploration, clustering</td>
+          <td>DESeq2 model input</td>
+          </tr>
+          <tr>
+          <td>z-scores</td>
+          <td>centered/scaled values, often per gene</td>
+          <td>heatmaps showing relative high/low patterns</td>
+          <td>differential expression testing</td>
+          </tr>
+          <tr>
+          <td>VST/rlog values</td>
+          <td>DESeq2 variance-stabilized transformations</td>
+          <td>PCA, sample distances, visualization</td>
+          <td>raw differential expression model input</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>The short rule:</p>
+          <pre class="text"><code>Use raw counts for DESeq2 modeling.
+Use transformed values for visualization and QC.
+Use TPM/FPKM carefully for descriptive expression, not DESeq2 differential expression.</code></pre>
+          <h2 id="where-raw-counts-come-from">Where Raw Counts Come
+          From</h2>
+          <p>Raw counts are not typed by hand. They come from assigning
+          sequencing evidence to genes, transcripts, or other
+          features.</p>
+          <p>Common routes:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Route</th>
+          <th>Tools</th>
+          <th>What becomes the count</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>align then count</td>
+          <td>STAR/HISAT2 + featureCounts/HTSeq</td>
+          <td>reads/fragments overlapping gene features in a
+          GTF/GFF</td>
+          </tr>
+          <tr>
+          <td>transcript quantification</td>
+          <td>Salmon/kallisto + tximport</td>
+          <td>estimated transcript abundance summarized to gene-level
+          counts</td>
+          </tr>
+          <tr>
+          <td>pipeline output</td>
+          <td>nf-core/rnaseq</td>
+          <td>gene count matrices from configured aligner/quantifier
+          choices</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>For DESeq2, the safest mental model is:</p>
+          <pre class="text"><code>FASTQ -&gt; alignment/quantification -&gt; raw gene-level count matrix -&gt; DESeq2</code></pre>
+          <p>Salmon and kallisto produce estimated counts and TPM. When
+          using transcript-level estimates for gene-level DESeq2
+          analysis, use a workflow such as <code>tximport</code> so
+          abundance, counts, and effective lengths are handled
+          correctly. Do not grab the TPM column and feed it directly
+          into DESeq2.</p>
+          <h2 id="hypothesis-testing-what-are-we-testing">Hypothesis
+          Testing: What Are We Testing?</h2>
+          <p>Differential expression is hypothesis testing repeated
+          across thousands of genes.</p>
+          <p>For one gene, a simple treated-vs-control test is:</p>
+          <pre class="text"><code>Null hypothesis H0: after accounting for the design, the treatment effect is 0.
+Alternative hypothesis H1: after accounting for the design, the treatment effect is not 0.</code></pre>
+          <p>In DESeq2 language, this often becomes:</p>
+          <pre class="text"><code>H0: log2 fold change = 0
+H1: log2 fold change != 0</code></pre>
+          <p>DESeq2 estimates a model coefficient for the contrast you
+          ask for, such as treated versus control. It then asks whether
+          that coefficient is far enough from zero relative to its
+          uncertainty. Because this happens for thousands of genes, you
+          must control for multiple testing. That is why adjusted
+          p-values matter.</p>
+          <p>Important distinction:</p>
+          <pre class="text"><code>The p-value asks about evidence against the null.
+The log2 fold change tells you effect size.
+The adjusted p-value accounts for many genes being tested.</code></pre>
+          <p>You need all three, plus QC and biological judgment.</p>
           <h2
           id="the-production-path-use-nextflow-when-the-data-is-real">The
           Production Path: Use Nextflow When The Data Is Real</h2>
@@ -212,13 +367,13 @@ cheat sheet</p>
           <li>cluster/cloud execution is more manageable</li>
           </ul>
           <p>Minimal nf-core/rnaseq shape:</p>
-          <div class="sourceCode" id="cb2"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install or update Nextflow separately, then run nf-core/rnaseq.</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/rnaseq <span class="dt">\</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> docker <span class="dt">\</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input</span> samplesheet.csv <span class="dt">\</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outdir</span> results/nfcore_rnaseq <span class="dt">\</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">--genome</span> GRCh38</span></code></pre></div>
+          <div class="sourceCode" id="cb7"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install or update Nextflow separately, then run nf-core/rnaseq.</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/rnaseq <span class="dt">\</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> docker <span class="dt">\</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input</span> samplesheet.csv <span class="dt">\</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outdir</span> results/nfcore_rnaseq <span class="dt">\</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">--genome</span> GRCh38</span></code></pre></div>
           <p>The Week 4 resource folder includes a tiny samplesheet
           template:</p>
           <pre class="csv"><code>sample,fastq_1,fastq_2,strandedness
@@ -234,6 +389,127 @@ treated_rep1,data/fastq/treated_rep1_R1.fastq.gz,data/fastq/treated_rep1_R2.fast
           <li>Is the annotation compatible with the genome?</li>
           <li>Are treatment labels stored in metadata, not only
           filenames?</li>
+          </ul>
+          <h2 id="strandedness-why-the-samplesheet-asks">Strandedness:
+          Why The Samplesheet Asks</h2>
+          <p>RNA-seq libraries can preserve information about which DNA
+          strand the RNA came from. This is called
+          <strong>strandedness</strong>.</p>
+          <p>You will commonly see:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Value</th>
+          <th>Meaning</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>unstranded</td>
+          <td>strand information is not preserved</td>
+          </tr>
+          <tr>
+          <td>forward</td>
+          <td>reads follow one expected strand convention</td>
+          </tr>
+          <tr>
+          <td>reverse</td>
+          <td>reads follow the opposite strand convention</td>
+          </tr>
+          <tr>
+          <td>auto</td>
+          <td>let the pipeline infer strandedness when supported</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>Why this matters:</p>
+          <ul>
+          <li>gene counts can be wrong if strandedness is set
+          incorrectly</li>
+          <li>antisense or overlapping genes are especially
+          affected</li>
+          <li>assignment rates may drop</li>
+          <li>a pipeline may produce plausible-looking but biased
+          counts</li>
+          </ul>
+          <p>If you do not know strandedness, check the library prep
+          kit, sequencing provider notes, or run an inference tool such
+          as RSeQC/infer_experiment through a pipeline-supported QC
+          step. Setting <code>auto</code> is convenient, but you should
+          still inspect the final strandedness/QC report.</p>
+          <h2 id="genome-build-and-annotation-must-match">Genome Build
+          And Annotation Must Match</h2>
+          <p>Genome build and annotation compatibility is one of the
+          easiest ways to quietly ruin an RNA-seq analysis.</p>
+          <p>Bad:</p>
+          <pre class="text"><code>Genome: human
+Annotation: genes.gtf</code></pre>
+          <p>Better:</p>
+          <pre class="text"><code>Genome FASTA: GRCh38 primary assembly
+Annotation GTF: GENCODE release 44 for GRCh38
+Source URL:
+Download date:
+Pipeline parameter:</code></pre>
+          <p>The FASTA and GTF/GFF must describe the same coordinate
+          system. If the FASTA says <code>chr1</code> and the annotation
+          says <code>1</code>, or if one file is GRCh37 and the other is
+          GRCh38, counting can fail or silently undercount.</p>
+          <p>Where to find references:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Source</th>
+          <th>Use it for</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>GENCODE</td>
+          <td>human/mouse gene annotation and reference files</td>
+          </tr>
+          <tr>
+          <td>Ensembl</td>
+          <td>many species, FASTA/GTF/GFF resources</td>
+          </tr>
+          <tr>
+          <td>NCBI RefSeq</td>
+          <td>curated reference sequences and annotation</td>
+          </tr>
+          <tr>
+          <td>UCSC</td>
+          <td>genome browser tracks and selected reference
+          resources</td>
+          </tr>
+          <tr>
+          <td>nf-core reference docs</td>
+          <td>guidance for pipeline reference handling</td>
+          </tr>
+          <tr>
+          <td>AWS iGenomes</td>
+          <td>public S3-hosted legacy/common reference bundles</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>nf-core pipelines support reference catalogues through
+          <code>--genome</code>, and nf-core/rnaseq ships the AWS
+          iGenomes catalogue by default. The nf-core docs now recommend
+          user-maintained catalogues for modern references when you want
+          the same <code>--genome</code> convenience with current
+          reference files.</p>
+          <p>AWS iGenomes is useful when working on AWS because common
+          reference genomes are hosted in public S3. The general pattern
+          is:</p>
+          <div class="sourceCode" id="cb11"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example pattern, not a universal path for every organism/build.</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> s3 ls s3://ngi-igenomes/igenomes/</span></code></pre></div>
+          <p>Use public S3 references thoughtfully:</p>
+          <ul>
+          <li>confirm the organism</li>
+          <li>confirm the genome build</li>
+          <li>confirm the annotation source and release</li>
+          <li>record the exact S3 path</li>
+          <li>avoid mixing an iGenomes FASTA with an unrelated local
+          GTF</li>
           </ul>
           <h2
           id="processing-choices-alignment-or-pseudoalignment">Processing
@@ -287,6 +563,64 @@ treated_1   treated    A
 treated_2   treated    B</code></pre>
           <p>If the count matrix and metadata disagree, the model tests
           the wrong biology.</p>
+          <h2 id="data-that-does-not-belong-in-deseq2">Data That Does
+          Not Belong In DESeq2</h2>
+          <p>DESeq2 expects a matrix of non-negative raw counts, plus
+          metadata describing the samples. These inputs are not
+          appropriate:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Input</th>
+          <th>Why it does not work</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>TPM</td>
+          <td>already length/depth normalized; count-variance
+          relationship is changed</td>
+          </tr>
+          <tr>
+          <td>FPKM/RPKM</td>
+          <td>same problem; not raw count evidence</td>
+          </tr>
+          <tr>
+          <td>z-scores</td>
+          <td>centered/scaled values have lost count scale</td>
+          </tr>
+          <tr>
+          <td>log-normalized expression</td>
+          <td>useful for plots, not count modeling</td>
+          </tr>
+          <tr>
+          <td>percentages or proportions</td>
+          <td>different distribution and variance structure</td>
+          </tr>
+          <tr>
+          <td>negative values</td>
+          <td>impossible as raw counts</td>
+          </tr>
+          <tr>
+          <td>batch-corrected expression matrix</td>
+          <td>model has already been transformed/corrected outside
+          DESeq2</td>
+          </tr>
+          <tr>
+          <td>single-cell normalized matrix</td>
+          <td>use single-cell-aware workflows or pseudobulk counts</td>
+          </tr>
+          <tr>
+          <td>no-replicate count matrix</td>
+          <td>can be explored, but formal DE is weak</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>Important nuance: transcript quantifiers such as Salmon
+          produce estimated counts that may be non-integer. DESeq2
+          workflows commonly use <code>tximport</code> to summarize
+          transcript-level estimates to gene-level inputs in a way that
+          preserves the information DESeq2 needs.</p>
           <h2 id="the-deseq2-model-in-plain-english">The DESeq2 Model In
           Plain English</h2>
           <p>DESeq2 models counts using a <strong>negative binomial
@@ -312,8 +646,8 @@ treated_2   treated    B</code></pre>
           <p>Then the design formula models expression:</p>
           <pre class="text"><code>log2(q_ij) = beta_0 + beta_1 * condition_j + beta_2 * batch_j + ...</code></pre>
           <p>When you write:</p>
-          <div class="sourceCode" id="cb9"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>design <span class="ot">=</span> <span class="er">~</span> batch <span class="sc">+</span> condition</span></code></pre></div>
+          <div class="sourceCode" id="cb17"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>design <span class="ot">=</span> <span class="er">~</span> batch <span class="sc">+</span> condition</span></code></pre></div>
           <p>you are saying:</p>
           <blockquote>
           <p>Estimate the condition effect after accounting for
@@ -322,6 +656,23 @@ treated_2   treated    B</code></pre>
           <p>The p-value asks whether the relevant coefficient is
           different from zero, given the model and assumptions. It is
           not a magical truth score.</p>
+          <p>Under the hood, DESeq2 does a few important things:</p>
+          <ol type="1">
+          <li>estimates size factors for sequencing-depth
+          normalization</li>
+          <li>estimates gene-wise dispersion</li>
+          <li>borrows information across genes to stabilize dispersion
+          estimates</li>
+          <li>fits a negative binomial GLM for each gene</li>
+          <li>tests coefficients for the requested contrast</li>
+          <li>adjusts p-values for multiple testing</li>
+          <li>optionally shrinks log2 fold changes for more stable
+          ranking and visualization</li>
+          </ol>
+          <p>That borrowing-across-genes step is why DESeq2 works well
+          with modest sample sizes compared with trying to estimate
+          every gene completely independently. But it is still not
+          magic. The design must be valid.</p>
           <h2 id="replicates-the-part-people-underestimate">Replicates:
           The Part People Underestimate</h2>
           <p>There are two different things people call replicates:</p>
@@ -358,22 +709,22 @@ treated_2   treated    B</code></pre>
           <h3 id="1-simple-two-group-design">1. Simple Two-Group
           Design</h3>
           <p>Use when you have independent biological replicates:</p>
-          <div class="sourceCode" id="cb10"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dds <span class="ot">&lt;-</span> <span class="fu">DESeqDataSetFromMatrix</span>(</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">countData =</span> counts,</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">colData =</span> metadata,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> <span class="sc">~</span> condition</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>dds <span class="ot">&lt;-</span> <span class="fu">DESeq</span>(dds)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">results</span>(dds, <span class="at">contrast =</span> <span class="fu">c</span>(<span class="st">&quot;condition&quot;</span>, <span class="st">&quot;treated&quot;</span>, <span class="st">&quot;control&quot;</span>))</span></code></pre></div>
+          <div class="sourceCode" id="cb18"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>dds <span class="ot">&lt;-</span> <span class="fu">DESeqDataSetFromMatrix</span>(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">countData =</span> counts,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">colData =</span> metadata,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> <span class="sc">~</span> condition</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>dds <span class="ot">&lt;-</span> <span class="fu">DESeq</span>(dds)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">results</span>(dds, <span class="at">contrast =</span> <span class="fu">c</span>(<span class="st">&quot;condition&quot;</span>, <span class="st">&quot;treated&quot;</span>, <span class="st">&quot;control&quot;</span>))</span></code></pre></div>
           <p>Question answered:</p>
           <pre class="text"><code>Which genes differ between treated and control samples?</code></pre>
           <h3 id="2-batch-adjusted-design">2. Batch-Adjusted Design</h3>
           <p>Use when batch affects expression and is not perfectly
           confounded with condition:</p>
-          <div class="sourceCode" id="cb12"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>design <span class="ot">=</span> <span class="er">~</span> batch <span class="sc">+</span> condition</span></code></pre></div>
+          <div class="sourceCode" id="cb20"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>design <span class="ot">=</span> <span class="er">~</span> batch <span class="sc">+</span> condition</span></code></pre></div>
           <p>Question answered:</p>
           <pre class="text"><code>Which genes differ by condition after accounting for batch?</code></pre>
           <p>Be careful: this works only if both conditions appear
@@ -384,8 +735,8 @@ treated_2   treated    B</code></pre>
           <h3 id="3-paired-design">3. Paired Design</h3>
           <p>Use when the same donor, patient, mouse, or culture is
           measured before and after treatment:</p>
-          <div class="sourceCode" id="cb14"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>design <span class="ot">=</span> <span class="er">~</span> patient <span class="sc">+</span> condition</span></code></pre></div>
+          <div class="sourceCode" id="cb22"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>design <span class="ot">=</span> <span class="er">~</span> patient <span class="sc">+</span> condition</span></code></pre></div>
           <p>Question answered:</p>
           <pre class="text"><code>Within the same patient, which genes change after treatment?</code></pre>
           <p>The patient term absorbs baseline differences between
@@ -393,19 +744,19 @@ treated_2   treated    B</code></pre>
           before/after samples are independent.</p>
           <h3 id="4-multi-factor-design">4. Multi-Factor Design</h3>
           <p>Use when more than one known variable matters:</p>
-          <div class="sourceCode" id="cb16"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>design <span class="ot">=</span> <span class="er">~</span> sex <span class="sc">+</span> batch <span class="sc">+</span> condition</span></code></pre></div>
+          <div class="sourceCode" id="cb24"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>design <span class="ot">=</span> <span class="er">~</span> sex <span class="sc">+</span> batch <span class="sc">+</span> condition</span></code></pre></div>
           <p>This can be appropriate, but only if sample size supports
           it. Every extra term costs degrees of freedom. A small study
           cannot support a huge model.</p>
           <h3 id="5-interaction-design">5. Interaction Design</h3>
           <p>Use when the treatment effect may differ by genotype, sex,
           timepoint, or another factor:</p>
-          <div class="sourceCode" id="cb17"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>design <span class="ot">=</span> <span class="er">~</span> genotype <span class="sc">+</span> treatment <span class="sc">+</span> genotype<span class="sc">:</span>treatment</span></code></pre></div>
+          <div class="sourceCode" id="cb25"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>design <span class="ot">=</span> <span class="er">~</span> genotype <span class="sc">+</span> treatment <span class="sc">+</span> genotype<span class="sc">:</span>treatment</span></code></pre></div>
           <p>Shorthand:</p>
-          <div class="sourceCode" id="cb18"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>design <span class="ot">=</span> <span class="er">~</span> genotype <span class="sc">*</span> treatment</span></code></pre></div>
+          <div class="sourceCode" id="cb26"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>design <span class="ot">=</span> <span class="er">~</span> genotype <span class="sc">*</span> treatment</span></code></pre></div>
           <p>Question answered by the interaction:</p>
           <pre class="text"><code>Is the treatment effect different between genotypes?</code></pre>
           <p>Interaction terms are powerful and easy to misread. They do
@@ -416,9 +767,9 @@ treated_2   treated    B</code></pre>
           Lab</h2>
           <p>The Week 4 resources include a small R script that shows
           what formulas become:</p>
-          <div class="sourceCode" id="cb20"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> content/resources/week-04</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> deseq2_design_matrix_demo.R</span></code></pre></div>
+          <div class="sourceCode" id="cb28"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> content/resources/week-04</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Rscript</span> deseq2_design_matrix_demo.R</span></code></pre></div>
           <p>You should see sections for:</p>
           <pre class="text"><code>Simple condition-only design
 Batch-adjusted design
@@ -509,9 +860,9 @@ Paired patient design</code></pre>
           <li>low count instability</li>
           </ul>
           <p>Before differential expression, inspect:</p>
-          <div class="sourceCode" id="cb22"><pre
-          class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>vst_counts <span class="ot">&lt;-</span> <span class="fu">vst</span>(dds)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotPCA</span>(vst_counts, <span class="at">intgroup =</span> <span class="fu">c</span>(<span class="st">&quot;condition&quot;</span>, <span class="st">&quot;batch&quot;</span>))</span></code></pre></div>
+          <div class="sourceCode" id="cb30"><pre
+          class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>vst_counts <span class="ot">&lt;-</span> <span class="fu">vst</span>(dds)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotPCA</span>(vst_counts, <span class="at">intgroup =</span> <span class="fu">c</span>(<span class="st">&quot;condition&quot;</span>, <span class="st">&quot;batch&quot;</span>))</span></code></pre></div>
           <p>Also check sample distance heatmaps, library sizes, mapping
           rates, duplication, strandedness, rRNA content, and assignment
           rates. A volcano plot should never be the first QC plot you
@@ -618,6 +969,8 @@ Paired patient design</code></pre>
           href="https://nf-co.re/rnaseq/3.26.0/">https://nf-co.re/rnaseq/3.26.0/</a></li>
           <li>nf-core/rnaseq usage: <a
           href="https://nf-co.re/rnaseq/3.26.0/docs/usage/">https://nf-co.re/rnaseq/3.26.0/docs/usage/</a></li>
+          <li>nf-core reference genome documentation: <a
+          href="https://nf-co.re/docs/running/reference-genomes">https://nf-co.re/docs/running/reference-genomes</a></li>
           <li>Nextflow documentation: <a
           href="https://www.nextflow.io/docs/latest/">https://www.nextflow.io/docs/latest/</a></li>
           <li>DESeq2 vignette: <a
@@ -626,8 +979,18 @@ Paired patient design</code></pre>
           estimation of fold change and dispersion for RNA-seq data with
           DESeq2. Genome Biology. 2014. <a
           href="https://doi.org/10.1186/s13059-014-0550-8">https://doi.org/10.1186/s13059-014-0550-8</a></li>
+          <li>tximport vignette: <a
+          href="https://www.bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html">https://www.bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html</a></li>
           <li>Bioconductor RNA-seq workflow: <a
           href="https://www.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html">https://www.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html</a></li>
+          <li>AWS iGenomes Registry of Open Data: <a
+          href="https://registry.opendata.aws/aws-igenomes/">https://registry.opendata.aws/aws-igenomes/</a></li>
+          <li>AWS iGenomes documentation: <a
+          href="https://ewels.github.io/AWS-iGenomes/">https://ewels.github.io/AWS-iGenomes/</a></li>
+          <li>GENCODE: <a
+          href="https://www.gencodegenes.org/">https://www.gencodegenes.org/</a></li>
+          <li>Ensembl: <a
+          href="https://www.ensembl.org/">https://www.ensembl.org/</a></li>
           </ul>
 
           <section class="article-engagement" aria-labelledby="article-engagement-title">
@@ -638,8 +1001,8 @@ Paired patient design</code></pre>
                 Share this guide with someone learning bioinformatics, suggest an edit on GitHub,
                 or leave a question below.
               </p>
-              <div class="share-actions" data-share-title="Bulk RNA-seq:
-From FASTQ To Differential Expression Without Fooling Yourself">
+              <div class="share-actions" data-share-title="Bulk RNA-seq
+Field Guide: From Reads To Rigorous Differential Expression">
                 <button class="share-button" type="button" data-share-native>
                   <i class="ri-share-forward-line" aria-hidden="true"></i>
                   Share

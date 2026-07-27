@@ -1,13 +1,13 @@
 ---
-title: "Bulk RNA-seq: From FASTQ To Differential Expression Without Fooling Yourself"
-subtitle: "Nextflow pipelines, count matrices, DESeq2 design formulas, replicates, assumptions, outliers, and the caveats that matter"
+title: "Bulk RNA-seq Field Guide: From Reads To Rigorous Differential Expression"
+subtitle: "Nextflow pipelines, raw counts, TPM/FPKM, DESeq2 design formulas, replicates, assumptions, outliers, and the caveats that matter"
 week: 4
 audience: ["beginner", "practitioner", "researcher"]
 reading_time: "7-minute core + design lab"
 asset: "nf-core/rnaseq samplesheet and DESeq2 design formula cheat sheet"
 ---
 
-# Bulk RNA-seq: From FASTQ To Differential Expression Without Fooling Yourself
+# Bulk RNA-seq Field Guide: From Reads To Rigorous Differential Expression
 
 **Takeaway:** Bulk RNA-seq is not just "run a pipeline, make a volcano plot." The processing steps are mostly standardized; the hard part is making sure the statistical model matches the biological experiment.
 
@@ -34,6 +34,8 @@ The tools differ. The statistical assumptions differ. But the discipline is the 
 
 Bulk RNA-seq measures RNA abundance averaged across many cells in a sample. A sample might be tissue, a sorted cell population, an organoid, a treatment well, or a patient biopsy.
 
+The "bulk" part matters. A bulk sample mixes signal across all cells in the submitted material. If a treated tissue has more immune cells than a control tissue, the RNA-seq signal can change because cell composition changed, because gene regulation changed within the same cells, or both. Bulk RNA-seq is powerful, but it is not cell-type resolved.
+
 It does not directly measure:
 
 - protein abundance
@@ -43,6 +45,78 @@ It does not directly measure:
 - expression in every individual cell
 
 It gives you a count table: genes or transcripts by samples. Differential expression asks whether the observed counts are systematically different between groups after accounting for sequencing depth and biological variability.
+
+## The Vocabulary You Will Keep Seeing
+
+You will see raw counts, TPM, FPKM, normalized counts, log-normalized counts, z-scores, and transformed counts in papers and public databases. Do not be scared by the alphabet soup. These are different answers to different questions.
+
+| Term | What it is | Good for | Not good for |
+|---|---|---|---|
+| raw counts | integer-ish reads or fragments assigned to a gene/transcript | DESeq2, edgeR, count-based modeling | comparing gene A to gene B directly |
+| TPM | transcripts per million; adjusted for transcript length and sequencing depth | comparing relative expression of genes/transcripts within or across descriptive contexts | direct DESeq2 input |
+| FPKM/RPKM | fragments/reads per kilobase per million | older expression summaries; rough descriptive plots | differential expression with DESeq2/edgeR |
+| DESeq2 normalized counts | raw counts divided by sample-specific size factors | plotting same-gene expression across samples | replacing raw counts in `DESeq()` |
+| log-normalized counts | log-transformed normalized expression values | heatmaps, PCA-like exploration, clustering | DESeq2 model input |
+| z-scores | centered/scaled values, often per gene | heatmaps showing relative high/low patterns | differential expression testing |
+| VST/rlog values | DESeq2 variance-stabilized transformations | PCA, sample distances, visualization | raw differential expression model input |
+
+The short rule:
+
+```text
+Use raw counts for DESeq2 modeling.
+Use transformed values for visualization and QC.
+Use TPM/FPKM carefully for descriptive expression, not DESeq2 differential expression.
+```
+
+## Where Raw Counts Come From
+
+Raw counts are not typed by hand. They come from assigning sequencing evidence to genes, transcripts, or other features.
+
+Common routes:
+
+| Route | Tools | What becomes the count |
+|---|---|---|
+| align then count | STAR/HISAT2 + featureCounts/HTSeq | reads/fragments overlapping gene features in a GTF/GFF |
+| transcript quantification | Salmon/kallisto + tximport | estimated transcript abundance summarized to gene-level counts |
+| pipeline output | nf-core/rnaseq | gene count matrices from configured aligner/quantifier choices |
+
+For DESeq2, the safest mental model is:
+
+```text
+FASTQ -> alignment/quantification -> raw gene-level count matrix -> DESeq2
+```
+
+Salmon and kallisto produce estimated counts and TPM. When using transcript-level estimates for gene-level DESeq2 analysis, use a workflow such as `tximport` so abundance, counts, and effective lengths are handled correctly. Do not grab the TPM column and feed it directly into DESeq2.
+
+## Hypothesis Testing: What Are We Testing?
+
+Differential expression is hypothesis testing repeated across thousands of genes.
+
+For one gene, a simple treated-vs-control test is:
+
+```text
+Null hypothesis H0: after accounting for the design, the treatment effect is 0.
+Alternative hypothesis H1: after accounting for the design, the treatment effect is not 0.
+```
+
+In DESeq2 language, this often becomes:
+
+```text
+H0: log2 fold change = 0
+H1: log2 fold change != 0
+```
+
+DESeq2 estimates a model coefficient for the contrast you ask for, such as treated versus control. It then asks whether that coefficient is far enough from zero relative to its uncertainty. Because this happens for thousands of genes, you must control for multiple testing. That is why adjusted p-values matter.
+
+Important distinction:
+
+```text
+The p-value asks about evidence against the null.
+The log2 fold change tells you effect size.
+The adjusted p-value accounts for many genes being tested.
+```
+
+You need all three, plus QC and biological judgment.
 
 ## The Production Path: Use Nextflow When The Data Is Real
 
@@ -87,6 +161,79 @@ Before running a full pipeline, check:
 - Is the annotation compatible with the genome?
 - Are treatment labels stored in metadata, not only filenames?
 
+## Strandedness: Why The Samplesheet Asks
+
+RNA-seq libraries can preserve information about which DNA strand the RNA came from. This is called **strandedness**.
+
+You will commonly see:
+
+| Value | Meaning |
+|---|---|
+| unstranded | strand information is not preserved |
+| forward | reads follow one expected strand convention |
+| reverse | reads follow the opposite strand convention |
+| auto | let the pipeline infer strandedness when supported |
+
+Why this matters:
+
+- gene counts can be wrong if strandedness is set incorrectly
+- antisense or overlapping genes are especially affected
+- assignment rates may drop
+- a pipeline may produce plausible-looking but biased counts
+
+If you do not know strandedness, check the library prep kit, sequencing provider notes, or run an inference tool such as RSeQC/infer_experiment through a pipeline-supported QC step. Setting `auto` is convenient, but you should still inspect the final strandedness/QC report.
+
+## Genome Build And Annotation Must Match
+
+Genome build and annotation compatibility is one of the easiest ways to quietly ruin an RNA-seq analysis.
+
+Bad:
+
+```text
+Genome: human
+Annotation: genes.gtf
+```
+
+Better:
+
+```text
+Genome FASTA: GRCh38 primary assembly
+Annotation GTF: GENCODE release 44 for GRCh38
+Source URL:
+Download date:
+Pipeline parameter:
+```
+
+The FASTA and GTF/GFF must describe the same coordinate system. If the FASTA says `chr1` and the annotation says `1`, or if one file is GRCh37 and the other is GRCh38, counting can fail or silently undercount.
+
+Where to find references:
+
+| Source | Use it for |
+|---|---|
+| GENCODE | human/mouse gene annotation and reference files |
+| Ensembl | many species, FASTA/GTF/GFF resources |
+| NCBI RefSeq | curated reference sequences and annotation |
+| UCSC | genome browser tracks and selected reference resources |
+| nf-core reference docs | guidance for pipeline reference handling |
+| AWS iGenomes | public S3-hosted legacy/common reference bundles |
+
+nf-core pipelines support reference catalogues through `--genome`, and nf-core/rnaseq ships the AWS iGenomes catalogue by default. The nf-core docs now recommend user-maintained catalogues for modern references when you want the same `--genome` convenience with current reference files.
+
+AWS iGenomes is useful when working on AWS because common reference genomes are hosted in public S3. The general pattern is:
+
+```bash
+# Example pattern, not a universal path for every organism/build.
+aws s3 ls s3://ngi-igenomes/igenomes/
+```
+
+Use public S3 references thoughtfully:
+
+- confirm the organism
+- confirm the genome build
+- confirm the annotation source and release
+- record the exact S3 path
+- avoid mixing an iGenomes FASTA with an unrelated local GTF
+
 ## Processing Choices: Alignment Or Pseudoalignment
 
 Bulk RNA-seq usually goes down one of two paths:
@@ -122,6 +269,24 @@ treated_2   treated    B
 ```
 
 If the count matrix and metadata disagree, the model tests the wrong biology.
+
+## Data That Does Not Belong In DESeq2
+
+DESeq2 expects a matrix of non-negative raw counts, plus metadata describing the samples. These inputs are not appropriate:
+
+| Input | Why it does not work |
+|---|---|
+| TPM | already length/depth normalized; count-variance relationship is changed |
+| FPKM/RPKM | same problem; not raw count evidence |
+| z-scores | centered/scaled values have lost count scale |
+| log-normalized expression | useful for plots, not count modeling |
+| percentages or proportions | different distribution and variance structure |
+| negative values | impossible as raw counts |
+| batch-corrected expression matrix | model has already been transformed/corrected outside DESeq2 |
+| single-cell normalized matrix | use single-cell-aware workflows or pseudobulk counts |
+| no-replicate count matrix | can be explored, but formal DE is weak |
+
+Important nuance: transcript quantifiers such as Salmon produce estimated counts that may be non-integer. DESeq2 workflows commonly use `tximport` to summarize transcript-level estimates to gene-level inputs in a way that preserves the information DESeq2 needs.
 
 ## The DESeq2 Model In Plain English
 
@@ -167,6 +332,18 @@ you are saying:
 > Estimate the condition effect after accounting for batch.
 
 The p-value asks whether the relevant coefficient is different from zero, given the model and assumptions. It is not a magical truth score.
+
+Under the hood, DESeq2 does a few important things:
+
+1. estimates size factors for sequencing-depth normalization
+2. estimates gene-wise dispersion
+3. borrows information across genes to stabilize dispersion estimates
+4. fits a negative binomial GLM for each gene
+5. tests coefficients for the requested contrast
+6. adjusts p-values for multiple testing
+7. optionally shrinks log2 fold changes for more stable ranking and visualization
+
+That borrowing-across-genes step is why DESeq2 works well with modest sample sizes compared with trying to estimate every gene completely independently. But it is still not magic. The design must be valid.
 
 ## Replicates: The Part People Underestimate
 
@@ -382,7 +559,13 @@ Next, we can turn this into a small runnable differential expression lab: take a
 
 - nf-core/rnaseq documentation: https://nf-co.re/rnaseq/3.26.0/
 - nf-core/rnaseq usage: https://nf-co.re/rnaseq/3.26.0/docs/usage/
+- nf-core reference genome documentation: https://nf-co.re/docs/running/reference-genomes
 - Nextflow documentation: https://www.nextflow.io/docs/latest/
 - DESeq2 vignette: https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html
 - DESeq2 paper: Love MI, Huber W, Anders S. Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. Genome Biology. 2014. https://doi.org/10.1186/s13059-014-0550-8
+- tximport vignette: https://www.bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html
 - Bioconductor RNA-seq workflow: https://www.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html
+- AWS iGenomes Registry of Open Data: https://registry.opendata.aws/aws-igenomes/
+- AWS iGenomes documentation: https://ewels.github.io/AWS-iGenomes/
+- GENCODE: https://www.gencodegenes.org/
+- Ensembl: https://www.ensembl.org/

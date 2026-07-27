@@ -1,6 +1,6 @@
 # Week 4 Resources: Bulk RNA-seq And Differential Expression
 
-These files support Week 4: "Bulk RNA-seq: From FASTQ To Differential Expression Without Fooling Yourself."
+These files support Week 4: "Bulk RNA-seq Field Guide: From Reads To Rigorous Differential Expression."
 
 ## Files
 

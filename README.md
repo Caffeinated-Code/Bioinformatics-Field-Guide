@@ -23,7 +23,7 @@ This project turns those rough edges into guided, testable lessons:
 | 01 | [Set Up Your Laptop For Bioinformatics](https://caffeinated-code.github.io/Bioinformatics-Field-Guide/week-01-laptop-setup-for-bioinformatics.html) | Conda, Docker, JupyterLab, VS Code, Ollama, BioChatter | [Week 1 resources](content/resources/week-01/) |
 | 02 | [What Programming Languages Should A Bioinformatician Know?](https://caffeinated-code.github.io/Bioinformatics-Field-Guide/week-02-languages-for-bioinformatics.html) | Bash, Python, R, SQL, notebooks, AI-assisted learning | [Week 2 resources](content/resources/week-02/) |
 | 03 | [The Bioinformatics File Types You Must Know](https://caffeinated-code.github.io/Bioinformatics-Field-Guide/week-03-bioinformatics-file-types.html) | FASTQ, SAM/BAM/CRAM, VCF, GTF/GFF, BED, bedGraph, bigWig, metadata | [Week 3 resources](content/resources/week-03/) |
-| 04 | [Bulk RNA-seq: From FASTQ To Differential Expression Without Fooling Yourself](https://caffeinated-code.github.io/Bioinformatics-Field-Guide/week-04-bulk-rnaseq-differential-expression.html) | nf-core/rnaseq, count matrices, DESeq2 design formulas, replicates, assumptions, outliers | [Week 4 resources](content/resources/week-04/) |
+| 04 | [Bulk RNA-seq Field Guide: From Reads To Rigorous Differential Expression](https://caffeinated-code.github.io/Bioinformatics-Field-Guide/week-04-bulk-rnaseq-differential-expression.html) | nf-core/rnaseq, raw counts, TPM/FPKM, DESeq2 design formulas, replicates, assumptions, outliers | [Week 4 resources](content/resources/week-04/) |
 
 Only published guides are listed here. Draft and future articles are intentionally hidden from this landing page until they are ready.
 
