@@ -48,17 +48,23 @@ It gives you a count table: genes or transcripts by samples. Differential expres
 
 ## The Vocabulary You Will Keep Seeing
 
-You will see raw counts, TPM, FPKM, normalized counts, log-normalized counts, z-scores, and transformed counts in papers and public databases. Do not be scared by the alphabet soup. These are different answers to different questions.
+You will see raw counts, TPM, FPKM, normalized counts, log-normalized counts, z-scores, and transformed counts in papers and public databases. These are not interchangeable. Each one answers a different question.
+
+The safest habit is to ask:
+
+```text
+What question was this number designed to answer?
+```
 
 | Term | What it is | Good for | Not good for |
 |---|---|---|---|
-| raw counts | integer-ish reads or fragments assigned to a gene/transcript | DESeq2, edgeR, count-based modeling | comparing gene A to gene B directly |
-| TPM | transcripts per million; adjusted for transcript length and sequencing depth | comparing relative expression of genes/transcripts within or across descriptive contexts | direct DESeq2 input |
-| FPKM/RPKM | fragments/reads per kilobase per million | older expression summaries; rough descriptive plots | differential expression with DESeq2/edgeR |
-| DESeq2 normalized counts | raw counts divided by sample-specific size factors | plotting same-gene expression across samples | replacing raw counts in `DESeq()` |
-| log-normalized counts | log-transformed normalized expression values | heatmaps, PCA-like exploration, clustering | DESeq2 model input |
-| z-scores | centered/scaled values, often per gene | heatmaps showing relative high/low patterns | differential expression testing |
-| VST/rlog values | DESeq2 variance-stabilized transformations | PCA, sample distances, visualization | raw differential expression model input |
+| Raw counts | reads or fragments assigned to a gene/transcript | DESeq2, edgeR, count-based modeling | comparing gene A to gene B directly |
+| TPM | transcript-per-million abundance after length normalization | descriptive expression comparisons and browser-style summaries | direct DESeq2 input |
+| FPKM/RPKM | fragments/reads per kilobase per million mapped reads | older expression summaries | modern differential expression testing |
+| DESeq2 normalized counts | raw counts divided by sample size factors | plotting the same gene across samples | replacing raw counts in `DESeq()` |
+| log-normalized counts | log-transformed normalized values | reducing visual domination by highly expressed genes | count-based modeling |
+| z-scores | centered and scaled values, often per gene | heatmaps showing relative high/low patterns | abundance or DE testing |
+| VST/rlog values | DESeq2 variance-stabilized transformed values | PCA, sample distances, clustering | raw DESeq2 model input |
 
 The short rule:
 
@@ -67,6 +73,166 @@ Use raw counts for DESeq2 modeling.
 Use transformed values for visualization and QC.
 Use TPM/FPKM carefully for descriptive expression, not DESeq2 differential expression.
 ```
+
+### Raw Counts
+
+Raw counts are the evidence table for count-based differential expression. A gene count is usually the number of reads or fragments assigned to that gene in one sample.
+
+For paired-end RNA-seq, many tools count **fragments** rather than individual reads because the two reads came from the same original RNA fragment. For single-end RNA-seq, the read and fragment distinction is less important.
+
+Raw counts are:
+
+- non-negative
+- usually integer-like
+- strongly right-skewed
+- full of low-count genes
+- often zero-heavy
+- more variable at higher expression levels
+
+That last point matters. RNA-seq counts are not well described by a simple normal distribution. They are commonly modeled with a **negative binomial distribution** because the variance is usually larger than the mean. This extra variability is called **overdispersion**.
+
+### FPKM And RPKM
+
+FPKM means **fragments per kilobase per million mapped fragments**. RPKM is the older single-end read version. The idea is to adjust for two obvious biases:
+
+- longer genes collect more reads
+- deeper-sequenced samples collect more reads
+
+Formula:
+
+```text
+gene length in kb = gene length in base pairs / 1000
+library size in millions = total mapped fragments / 1,000,000
+
+FPKM = raw fragment count / (gene length in kb * library size in millions)
+```
+
+FPKM can be useful when you need a rough descriptive expression value, especially in older papers and databases. It is not the preferred input for differential expression because the raw count-variance relationship has already been changed.
+
+### TPM
+
+TPM means **transcripts per million**. TPM also corrects for gene or transcript length and sequencing depth, but the order of operations is different from FPKM.
+
+Formula:
+
+```text
+RPK = raw count / gene length in kb
+TPM = RPK / sum(all RPK values in that sample) * 1,000,000
+```
+
+The important difference:
+
+```text
+FPKM scales by sequencing depth first.
+TPM length-normalizes first, then forces each sample to sum to 1 million.
+```
+
+Because every sample's TPM values sum to the same total, TPM is often easier to compare as a relative abundance measure. If gene A is 50 TPM and gene B is 5 TPM in the same sample, gene A has higher relative abundance. But TPM is still not raw count evidence, so it should not be fed directly into DESeq2.
+
+### Normalized Counts
+
+DESeq2 normalized counts are raw counts divided by a sample-specific size factor. A sample with more sequencing depth gets scaled down; a sample with less sequencing depth gets scaled up.
+
+Conceptually:
+
+```text
+normalized count = raw count / sample size factor
+```
+
+DESeq2 estimates size factors with a median-ratio method, not by simply dividing by total library size. The point is to handle sequencing-depth differences while being less sensitive to a small number of very highly expressed genes.
+
+Normalized counts are good for plotting the same gene across samples. They are not what you pass into `DESeq()`. DESeq2 wants the raw counts and estimates the needed normalization internally.
+
+### Log-Normalized Counts
+
+RNA-seq expression has a huge dynamic range. One gene might have 2 counts, another 20,000. A log transform compresses that range:
+
+```text
+log-normalized count = log2(normalized count + pseudocount)
+```
+
+The pseudocount prevents `log2(0)`, which is undefined. `+ 1` is common for simple teaching examples.
+
+Log-normalized values are useful for plots because they make low and medium expression patterns visible. They are not raw counts anymore.
+
+### Z-Scores
+
+A z-score asks whether a value is high or low relative to that gene's own pattern:
+
+```text
+z = (value - mean for that gene) / standard deviation for that gene
+```
+
+This is common in heatmaps. A red square might mean "higher than this gene's average," not "highly expressed in absolute terms." Z-scores are excellent for patterns and terrible for abundance claims.
+
+### VST, rlog, And Other Transformed Counts
+
+DESeq2's variance-stabilizing transformation and regularized log transformation are designed for sample-level exploration:
+
+- PCA
+- sample distance heatmaps
+- clustering
+- outlier inspection
+
+They reduce the mean-variance relationship so high-count genes do not dominate every plot. They are not the input to the differential expression model.
+
+### Try It: Same Counts, Different Units
+
+The Week 4 resources include a tiny script that converts the same toy count table into FPKM, TPM, normalized counts, log-normalized counts, and z-scores.
+
+```bash
+# Go to the Week 4 resource folder.
+cd content/resources/week-04
+
+# Run the expression-units demo.
+Rscript expression_units_demo.R
+```
+
+You should see raw counts first:
+
+```text
+Raw counts
+----------
+         gene_id length_bp control_1 control_2 treated_1 treated_2
+  GENE_LONG_HIGH      4000      1200       900      2400      2600
+ GENE_SHORT_HIGH      1000       600       700       650       800
+        GENE_LOW      2000        12        15        20        18
+ GENE_ZERO_HEAVY      1500         0         1         0         2
+```
+
+Then compare FPKM and TPM:
+
+```text
+FPKM
+----
+GENE_LONG_HIGH   control_1 = 165562.91
+GENE_SHORT_HIGH  control_1 = 331125.83
+
+TPM
+---
+GENE_LONG_HIGH   control_1 = 331125.83
+GENE_SHORT_HIGH  control_1 = 662251.66
+```
+
+The short gene gets a larger length-normalized value because 600 fragments over 1 kb is denser than 1200 fragments over 4 kb. This is exactly why raw counts cannot be used to compare expression between genes without thinking about gene length.
+
+Now compare normalized, log-normalized, and z-scored values:
+
+```text
+DESeq2-style normalized counts, simplified
+GENE_LONG_HIGH   control_1 = 1559.42
+GENE_SHORT_HIGH  control_1 =  779.71
+
+log2(normalized count + 1)
+GENE_LONG_HIGH   control_1 = 10.61
+GENE_SHORT_HIGH  control_1 =  9.61
+
+Per-gene z-scores from log-normalized counts
+GENE_LONG_HIGH   control_1 = -0.21
+GENE_SHORT_HIGH  control_1 =  0.40
+```
+
+The same sample can have a high raw expression value, a compressed log value, and a negative z-score. That is not a contradiction. It means the units answer different questions.
 
 ## Where Raw Counts Come From
 
@@ -90,7 +256,16 @@ Salmon and kallisto produce estimated counts and TPM. When using transcript-leve
 
 ## Hypothesis Testing: What Are We Testing?
 
-Differential expression is hypothesis testing repeated across thousands of genes.
+Differential expression is hypothesis testing repeated across thousands of genes. Start with one gene first.
+
+Imagine a gene has higher counts in treated samples than controls. There are two possible explanations:
+
+```text
+Biological signal: treatment changed expression.
+Noise: the samples differ because of biological variation, sequencing depth, or random sampling.
+```
+
+A statistical test asks whether the observed difference is large relative to the uncertainty.
 
 For one gene, a simple treated-vs-control test is:
 
@@ -106,17 +281,61 @@ H0: log2 fold change = 0
 H1: log2 fold change != 0
 ```
 
-DESeq2 estimates a model coefficient for the contrast you ask for, such as treated versus control. It then asks whether that coefficient is far enough from zero relative to its uncertainty. Because this happens for thousands of genes, you must control for multiple testing. That is why adjusted p-values matter.
+A **p-value** is the probability of seeing a test statistic at least this extreme if the null hypothesis were true. It is not the probability that the null is true. It is not the probability that the result will reproduce. It is not a measure of effect size.
+
+In RNA-seq, the p-value depends on:
+
+- the estimated log2 fold change
+- the counts available for that gene
+- the dispersion, or gene-level variability
+- the number and quality of biological replicates
+- the design formula and contrast
+
+This is why volcano plots can surprise beginners:
+
+- A large log2 fold change with noisy replicates may not be statistically convincing.
+- A small log2 fold change with many clean replicates may have a tiny p-value.
+- A tiny p-value does not automatically mean the change is biologically important.
+
+DESeq2 estimates a model coefficient for the contrast you ask for, such as treated versus control. It then asks whether that coefficient is far enough from zero relative to its uncertainty.
+
+Now scale that up. A typical RNA-seq analysis may test 15,000 to 30,000 genes. If you used raw `p < 0.05` across 20,000 genes and every null hypothesis were actually true, you would still expect:
+
+```text
+20,000 genes * 0.05 = 1,000 false positives
+```
+
+That is why genome-wide RNA-seq results need multiple-testing correction.
 
 Important distinction:
 
 ```text
-The p-value asks about evidence against the null.
-The log2 fold change tells you effect size.
-The adjusted p-value accounts for many genes being tested.
+The p-value asks the evidence question.
+The adjusted p-value asks the genome-wide error-control question.
+The log2 fold change asks the magnitude question.
 ```
 
 You need all three, plus QC and biological judgment.
+
+### Common P-Value Adjustment Methods
+
+| Method | What it controls | When to use it |
+|---|---|---|
+| Bonferroni | family-wise error rate | very small, confirmatory gene families when you want a strict rule |
+| Holm | family-wise error rate, usually less conservative than Bonferroni | small confirmatory analyses with strong error control |
+| Benjamini-Hochberg | false discovery rate | default choice for genome-wide differential expression |
+| Benjamini-Yekutieli | false discovery rate under arbitrary dependence | conservative option when dependency assumptions are a major concern |
+| Independent filtering / IHW-style approaches | improves power while preserving error control when valid | genome-wide workflows using independent covariates such as mean expression |
+
+DESeq2 reports Benjamini-Hochberg adjusted p-values by default in the `padj` column. It also uses independent filtering by default to avoid spending testing power on genes with too little count information to be useful.
+
+Practical interpretation:
+
+```text
+Use adjusted p-value for the statistical threshold.
+Use log2 fold change for the biological size of the effect.
+Use plots and QC to decide whether the result is believable.
+```
 
 ## The Production Path: Use Nextflow When The Data Is Real
 
@@ -280,6 +499,7 @@ DESeq2 expects a matrix of non-negative raw counts, plus metadata describing the
 | FPKM/RPKM | same problem; not raw count evidence |
 | z-scores | centered/scaled values have lost count scale |
 | log-normalized expression | useful for plots, not count modeling |
+| VST/rlog/transformed counts | useful for PCA and sample distances, not model input |
 | percentages or proportions | different distribution and variance structure |
 | negative values | impossible as raw counts |
 | batch-corrected expression matrix | model has already been transformed/corrected outside DESeq2 |
@@ -287,6 +507,8 @@ DESeq2 expects a matrix of non-negative raw counts, plus metadata describing the
 | no-replicate count matrix | can be explored, but formal DE is weak |
 
 Important nuance: transcript quantifiers such as Salmon produce estimated counts that may be non-integer. DESeq2 workflows commonly use `tximport` to summarize transcript-level estimates to gene-level inputs in a way that preserves the information DESeq2 needs.
+
+Another important nuance: single-cell RNA-seq can use DESeq2 in **pseudobulk** workflows when raw counts are summed per biological sample, donor, condition, and cell type. A normalized cell-by-gene matrix from Seurat or Scanpy is not the same thing.
 
 ## The DESeq2 Model In Plain English
 
@@ -335,7 +557,7 @@ The p-value asks whether the relevant coefficient is different from zero, given 
 
 Under the hood, DESeq2 does a few important things:
 
-1. estimates size factors for sequencing-depth normalization
+1. estimates size factors using the median-ratio approach
 2. estimates gene-wise dispersion
 3. borrows information across genes to stabilize dispersion estimates
 4. fits a negative binomial GLM for each gene
@@ -344,6 +566,8 @@ Under the hood, DESeq2 does a few important things:
 7. optionally shrinks log2 fold changes for more stable ranking and visualization
 
 That borrowing-across-genes step is why DESeq2 works well with modest sample sizes compared with trying to estimate every gene completely independently. But it is still not magic. The design must be valid.
+
+Log2 fold-change shrinkage is especially useful for ranking genes and making interpretable plots. It should be reported clearly because shrunken fold changes and test statistics answer related but not identical questions.
 
 ## Replicates: The Part People Underestimate
 
@@ -565,6 +789,9 @@ Next, we can turn this into a small runnable differential expression lab: take a
 - DESeq2 paper: Love MI, Huber W, Anders S. Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. Genome Biology. 2014. https://doi.org/10.1186/s13059-014-0550-8
 - tximport vignette: https://www.bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html
 - Bioconductor RNA-seq workflow: https://www.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html
+- Wagner GP, Kin K, Lynch VJ. Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples. Theory in Biosciences. 2012. https://doi.org/10.1007/s12064-012-0162-3
+- R `p.adjust` documentation: https://stat.ethz.ch/R-manual/R-devel/library/stats/html/p.adjust.html
+- edgeR user's guide: https://bioconductor.org/packages/release/bioc/vignettes/edgeR/inst/doc/edgeRUsersGuide.pdf
 - AWS iGenomes Registry of Open Data: https://registry.opendata.aws/aws-igenomes/
 - AWS iGenomes documentation: https://ewels.github.io/AWS-iGenomes/
 - GENCODE: https://www.gencodegenes.org/

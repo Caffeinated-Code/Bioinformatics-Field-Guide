@@ -10,15 +10,17 @@ These files support Week 4: "Bulk RNA-seq Field Guide: From Reads To Rigorous Di
 | `metadata_design_examples.tsv` | Toy metadata for simple, batch-adjusted, paired, and interaction designs |
 | `deseq2_design_cheatsheet.md` | Saveable DESeq2 design formula reference |
 | `deseq2_design_matrix_demo.R` | Runnable R script showing what common design formulas create |
+| `expression_units_demo.R` | Runnable R script showing raw counts, FPKM, TPM, normalized counts, log counts, and z-scores |
 
 ## Quick Start
 
 ```bash
 cd content/resources/week-04
 Rscript deseq2_design_matrix_demo.R
+Rscript expression_units_demo.R
 ```
 
-This script does not require DESeq2. It uses base R model matrices so you can inspect design formulas before running a differential expression analysis.
+These scripts do not require DESeq2. They use base R so you can inspect design formulas and expression units before running a differential expression analysis.
 
 ## Key Lesson
 

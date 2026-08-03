@@ -24,6 +24,18 @@ percentages
 
 For Salmon/kallisto outputs, use a transcript-to-gene import workflow such as `tximport` instead of passing TPM directly to DESeq2.
 
+## Expression Units Quick Rule
+
+```text
+Raw counts -> DESeq2/edgeR statistical model
+Normalized counts -> same-gene plots across samples
+TPM/FPKM -> descriptive abundance summaries, not DESeq2 input
+log-normalized/VST/rlog -> PCA, clustering, sample distances, heatmaps
+z-scores -> heatmap pattern only; not abundance and not differential expression
+```
+
+Why this matters: RNA-seq raw counts are discrete, right-skewed, and overdispersed. Count-based tools model that mean-variance relationship. TPM, FPKM, log values, and z-scores have already changed the scale.
+
 ## Simple Two-Group Comparison
 
 ```r
