@@ -100,6 +100,9 @@ config profiles, samplesheet, and parameter file</p>
           <li><a href="#ont-long-read-strategy"
           id="toc-ont-long-read-strategy">ONT Long-Read
           Strategy</a></li>
+          <li><a href="#ont-specific-qc-checklist"
+          id="toc-ont-specific-qc-checklist">ONT-Specific QC
+          Checklist</a></li>
           <li><a href="#project-structure"
           id="toc-project-structure">Project Structure</a></li>
           <li><a href="#samplesheet-contract"
@@ -115,9 +118,14 @@ config profiles, samplesheet, and parameter file</p>
           Module</a></li>
           <li><a href="#bam-sorting-and-qc"
           id="toc-bam-sorting-and-qc">BAM Sorting And QC</a></li>
+          <li><a href="#public-ont-qc-demo"
+          id="toc-public-ont-qc-demo">Public ONT QC Demo</a></li>
           <li><a href="#isoform-collapse-handoff"
           id="toc-isoform-collapse-handoff">Isoform-Collapse
           Handoff</a></li>
+          <li><a href="#sqanti3-annotation-and-curation"
+          id="toc-sqanti3-annotation-and-curation">SQANTI3 Annotation
+          And Curation</a></li>
           <li><a href="#execution-config"
           id="toc-execution-config">Execution Config</a></li>
           <li><a href="#local-hpc-and-aws-profiles"
@@ -166,7 +174,8 @@ config profiles, samplesheet, and parameter file</p>
   -&gt; minimap2 long-read alignment
   -&gt; sorted and indexed BAM
   -&gt; alignment QC
-  -&gt; isoform-collapse handoff</code></pre>
+  -&gt; isoform-collapse handoff
+  -&gt; SQANTI3 annotation and curation</code></pre>
           <p>This is not trying to beat <code>nf-core/nanoseq</code>. It
           is a learning pipeline that shows how pieces fit together.
           After you understand the pieces, you can decide whether to use
@@ -240,7 +249,90 @@ Which transcript ends are fuzzy?
 Which reads are partial?
 Which isoform calls are redundant?</code></pre>
           <p>That is why a custom pipeline should keep the BAM, QC
-          metrics, and read-to-isoform handoff clean.</p>
+          metrics, read-to-isoform handoff, and SQANTI3 annotation layer
+          clean.</p>
+          <h2 id="ont-specific-qc-checklist">ONT-Specific QC
+          Checklist</h2>
+          <p>ONT long-read RNA QC needs more than "did the command
+          finish?"</p>
+          <table>
+          <thead>
+          <tr>
+          <th>QC layer</th>
+          <th>Metrics to inspect</th>
+          <th>Why it matters</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>raw FASTQ</td>
+          <td>read count, read length N50, length distribution, quality
+          distribution</td>
+          <td>tells you whether the library produced enough useful long
+          molecules</td>
+          </tr>
+          <tr>
+          <td>adapters and contamination</td>
+          <td>adapter signal, lambda or other control contamination,
+          unexpected sequence content</td>
+          <td>prevents technical molecules from becoming biological
+          claims</td>
+          </tr>
+          <tr>
+          <td>protocol fit</td>
+          <td>direct RNA vs cDNA vs PCR-cDNA, strand behavior, polyA
+          expectations</td>
+          <td>changes alignment and interpretation choices</td>
+          </tr>
+          <tr>
+          <td>alignment</td>
+          <td>mapping rate, supplementary/secondary rate, soft clipping,
+          mismatch/indel profile</td>
+          <td>tells you whether reads align cleanly to the
+          reference</td>
+          </tr>
+          <tr>
+          <td>splice alignment</td>
+          <td>intron count, canonical junction fraction, junction
+          wobble, unannotated junction support</td>
+          <td>central for isoform discovery</td>
+          </tr>
+          <tr>
+          <td>transcript ends</td>
+          <td>TSS/TES spread, internal priming risk, truncation
+          patterns</td>
+          <td>long-read transcript ends are often noisy</td>
+          </tr>
+          <tr>
+          <td>isoform models</td>
+          <td>read support per isoform, redundant model rate,
+          partial-read support</td>
+          <td>prevents overcalling weak or duplicate isoforms</td>
+          </tr>
+          <tr>
+          <td>SQANTI3</td>
+          <td>structural category, junction support, TSS/TES
+          descriptors, artifact flags</td>
+          <td>annotates and curates transcript models before reporting
+          novelty</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>Useful first-pass tools:</p>
+          <ul>
+          <li>NanoPlot or pycoQC for read-level summaries</li>
+          <li>NanoFilt or filtlong for filtering when appropriate</li>
+          <li>samtools <code>flagstat</code>, <code>idxstats</code>, and
+          <code>stats</code> for alignment summaries</li>
+          <li>minimap2 logs and BAM inspection for alignment
+          behavior</li>
+          <li>IGV or JBrowse for targeted loci</li>
+          <li>SQANTI3 for isoform model annotation, QC, filtering, and
+          curation</li>
+          </ul>
+          <p>For ONT isoform work, your QC question is:</p>
+          <pre class="text"><code>Are my reads long and clean enough to support transcript structure,
+and are my transcript models plausible after annotation-aware curation?</code></pre>
           <h2 id="project-structure">Project Structure</h2>
           <p>The Week 6 resources include this mini-pipeline:</p>
           <pre class="text"><code>content/resources/week-06/
@@ -254,7 +346,8 @@ Which isoform calls are redundant?</code></pre>
       align_minimap2.nf
       sort_index_bam.nf
       alignment_qc.nf
-      isoform_collapse_placeholder.nf</code></pre>
+      isoform_collapse_placeholder.nf
+      sqanti3_annotation.nf</code></pre>
           <p>This is a simplified DSL2 structure:</p>
           <ul>
           <li><code>main.nf</code> wires the workflow together.</li>
@@ -289,14 +382,14 @@ ONT_TREATED_2,data/ont/treated_2.fastq.gz,cDNA,treated</code></pre>
           them.</p>
           <h2 id="parameter-file">Parameter File</h2>
           <p>Use a parameter file instead of a very long command:</p>
-          <div class="sourceCode" id="cb6"><pre
-          class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">input</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;samplesheet_ont.csv&quot;</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">outdir</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;results/ont_custom&quot;</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">reference</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;references/genome.fa&quot;</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">annotation</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;references/genes.gtf&quot;</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">minimap2_preset</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;splice&quot;</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">strand_mode</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;unknown&quot;</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">save_intermediate_bam</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code></pre></div>
+          <div class="sourceCode" id="cb7"><pre
+          class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">input</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;samplesheet_ont.csv&quot;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">outdir</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;results/ont_custom&quot;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">reference</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;references/genome.fa&quot;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">annotation</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;references/genes.gtf&quot;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">minimap2_preset</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;splice&quot;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">strand_mode</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;unknown&quot;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">save_intermediate_bam</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code></pre></div>
           <p>The important choices:</p>
           <table>
           <thead>
@@ -334,6 +427,15 @@ ONT_TREATED_2,data/ont/treated_2.fastq.gz,cDNA,treated</code></pre>
           <tr>
           <td><code>save_intermediate_bam</code></td>
           <td>whether to publish unsorted alignment output</td>
+          </tr>
+          <tr>
+          <td><code>sqanti3_container</code></td>
+          <td>tested SQANTI3 runtime image or local environment</td>
+          </tr>
+          <tr>
+          <td><code>sqanti3_extra_args</code></td>
+          <td>extra SQANTI3 QC options after version-specific
+          review</td>
           </tr>
           </tbody>
           </table>
@@ -450,6 +552,73 @@ samtools idxstats sample.sorted.bam</code></pre>
   -&gt; ALIGNMENT_QC</code></pre>
           <p>That separation is useful. You may later swap the aligner,
           but still keep the sorting and QC steps.</p>
+          <h2 id="public-ont-qc-demo">Public ONT QC Demo</h2>
+          <p>For public practice data, use the <strong>Singapore
+          Nanopore Expression Data Set (SG-NEx)</strong>. SG-NEx is a
+          public benchmark resource for long-read RNA-seq with Nanopore
+          PCR-cDNA, direct cDNA, direct RNA, PacBio Iso-Seq, matched
+          short-read RNA-seq, and processed alignment files.</p>
+          <p>The Week 6 resources include one public direct-cDNA A549
+          sample:</p>
+          <pre class="text"><code>content/resources/week-06/sgnex_ont_demo_samples.tsv</code></pre>
+          <p>The demo script streams a small prefix of the public FASTQ
+          file and writes a local subset:</p>
+          <div class="sourceCode" id="cb18"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># From the repository root.</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> content/resources/week-06/run_sgnex_ont_qc_demo.sh 10000</span></code></pre></div>
+          <p>What it does:</p>
+          <pre class="text"><code>public SG-NEx FASTQ URL
+  -&gt; stream with curl
+  -&gt; decompress
+  -&gt; keep first 10,000 reads
+  -&gt; recompress local teaching FASTQ
+  -&gt; check gzip integrity
+  -&gt; count FASTQ lines and reads</code></pre>
+          <p>Expected local output:</p>
+          <pre class="text"><code>data/sgnex_demo/
+  SGNex_A549_directcDNA_replicate1_run3.10000_reads.fastq.gz</code></pre>
+          <p>Then run read-level QC if NanoPlot is installed:</p>
+          <div class="sourceCode" id="cb21"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">NanoPlot</span> <span class="dt">\</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--fastq</span> data/sgnex_demo/SGNex_A549_directcDNA_replicate1_run3.10000_reads.fastq.gz <span class="dt">\</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outdir</span> data/sgnex_demo/nanoplot <span class="dt">\</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--prefix</span> SGNex_A549_directcDNA_</span></code></pre></div>
+          <p>Interpret the NanoPlot-style report:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Plot or metric</th>
+          <th>What to ask</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>read length histogram</td>
+          <td>are reads long enough for transcript-spanning
+          evidence?</td>
+          </tr>
+          <tr>
+          <td>read quality distribution</td>
+          <td>is quality consistent with the chemistry/basecaller?</td>
+          </tr>
+          <tr>
+          <td>yield over reads</td>
+          <td>is the subset behaving normally or dominated by a few huge
+          reads?</td>
+          </tr>
+          <tr>
+          <td>N50</td>
+          <td>does the library preserve long molecules?</td>
+          </tr>
+          <tr>
+          <td>quality vs length</td>
+          <td>are long reads unusually low quality?</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>This is intentionally a QC demo, not a complete SG-NEx
+          analysis. Full SG-NEx files can be large. Start small, learn
+          the checks, then scale deliberately.</p>
           <h2 id="isoform-collapse-handoff">Isoform-Collapse
           Handoff</h2>
           <p>The final module is intentionally a placeholder:</p>
@@ -462,6 +631,13 @@ samtools idxstats sample.sorted.bam</code></pre>
           <li>TALON</li>
           <li>a custom splice-junction-first collapse engine</li>
           </ul>
+          <p>This is also where SQANTI3 enters the plan, but with a very
+          specific role:</p>
+          <pre class="text"><code>isoform discovery/collapse creates transcript models
+SQANTI3 annotates, classifies, QC-checks, filters, and helps curate those models</code></pre>
+          <p>SQANTI3 is not a direct replacement for minimap2, IsoQuant,
+          FLAIR, StringTie2, or a custom collapse algorithm. It
+          evaluates the transcript models they produce.</p>
           <p>For your own ONT isoform-collapse algorithm, a sensible
           plan is:</p>
           <pre class="text"><code>sorted BAM
@@ -477,6 +653,71 @@ samtools idxstats sample.sorted.bam</code></pre>
           <strong>splice structure</strong>, not raw sequence identity.
           ONT errors should not create new transcript models just
           because a read has small indels.</p>
+          <h2 id="sqanti3-annotation-and-curation">SQANTI3 Annotation
+          And Curation</h2>
+          <p>After isoform discovery, run SQANTI3 before treating novel
+          isoforms as biological findings.</p>
+          <p>Conceptual flow:</p>
+          <pre class="text"><code>sorted BAM
+  -&gt; isoform discovery/collapse
+  -&gt; collapsed_isoforms.gtf
+  -&gt; SQANTI3 QC and annotation
+  -&gt; structural categories, junction descriptors, TSS/TES descriptors, artifact flags</code></pre>
+          <p>SQANTI3 helps answer:</p>
+          <table>
+          <thead>
+          <tr>
+          <th>Question</th>
+          <th>Why it matters</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+          <td>full splice match or incomplete splice match?</td>
+          <td>distinguishes known transcripts from partial models</td>
+          </tr>
+          <tr>
+          <td>novel in catalog or novel not in catalog?</td>
+          <td>separates known-junction combinations from novel-junction
+          models</td>
+          </tr>
+          <tr>
+          <td>canonical or noncanonical junctions?</td>
+          <td>flags potential alignment or transcript artifacts</td>
+          </tr>
+          <tr>
+          <td>suspicious TSS/TES?</td>
+          <td>transcript ends are noisy in long-read data</td>
+          </tr>
+          <tr>
+          <td>ORF/CDS support?</td>
+          <td>helps functional interpretation</td>
+          </tr>
+          <tr>
+          <td>likely artifact?</td>
+          <td>prevents weak models from becoming claims</td>
+          </tr>
+          </tbody>
+          </table>
+          <p>Typical command shape:</p>
+          <div class="sourceCode" id="cb26"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">sqanti3_qc.py</span> <span class="dt">\</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  collapsed_isoforms.gtf <span class="dt">\</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  reference_annotation.gtf <span class="dt">\</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  genome.fa <span class="dt">\</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--dir</span> sqanti3 <span class="dt">\</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">--output</span> sample_sqanti3</span></code></pre></div>
+          <p>The Week 6 resources include:</p>
+          <pre class="text"><code>modules/local/sqanti3_annotation.nf</code></pre>
+          <p>That module is a skeleton because SQANTI3 releases and
+          runtime setup can change. Before using it in production:</p>
+          <pre class="text"><code>1. Pick a SQANTI3 release.
+2. Pin and test the container or Conda environment.
+3. Confirm the command-line arguments for that release.
+4. Provide collapsed transcript models, reference annotation, and genome FASTA.
+5. Review SQANTI3 output before reporting novel isoforms.</code></pre>
+          <p>Practical rule:</p>
+          <pre class="text"><code>Do not publish novel ONT isoforms without annotation-aware QC such as SQANTI3.</code></pre>
           <h2 id="execution-config">Execution Config</h2>
           <p>The <code>nextflow.config</code> file controls
           execution:</p>
@@ -530,24 +771,24 @@ samtools idxstats sample.sorted.bam</code></pre>
           containers carefully before running production data.</p>
           <h2 id="run-the-pipeline">Run The Pipeline</h2>
           <p>From the Week 6 resource folder:</p>
-          <div class="sourceCode" id="cb22"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> content/resources/week-06</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># See the help message.</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run main.nf <span class="at">--help</span></span></code></pre></div>
+          <div class="sourceCode" id="cb34"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> content/resources/week-06</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co"># See the help message.</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run main.nf <span class="at">--help</span></span></code></pre></div>
           <p>For real data:</p>
-          <div class="sourceCode" id="cb23"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run main.nf <span class="dt">\</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> docker <span class="dt">\</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-params-file</span> params.local.yml <span class="dt">\</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-resume</span></span></code></pre></div>
+          <div class="sourceCode" id="cb35"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run main.nf <span class="dt">\</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> docker <span class="dt">\</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-params-file</span> params.local.yml <span class="dt">\</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-resume</span></span></code></pre></div>
           <p>Before the real run, check:</p>
-          <div class="sourceCode" id="cb24"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> <span class="at">-version</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> info</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="bu">test</span> <span class="at">-f</span> references/genome.fa</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="bu">test</span> <span class="at">-f</span> references/genes.gtf</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="bu">test</span> <span class="at">-f</span> data/ont/control_1.fastq.gz</span></code></pre></div>
+          <div class="sourceCode" id="cb36"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> <span class="at">-version</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> info</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="bu">test</span> <span class="at">-f</span> references/genome.fa</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="bu">test</span> <span class="at">-f</span> references/genes.gtf</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="bu">test</span> <span class="at">-f</span> data/ont/control_1.fastq.gz</span></code></pre></div>
           <h2 id="production-features-to-add-later">Production Features
           To Add Later</h2>
           <p>Once the skeleton works, add features deliberately:</p>
@@ -592,6 +833,10 @@ samtools idxstats sample.sorted.bam</code></pre>
           <td>especially for direct RNA</td>
           </tr>
           <tr>
+          <td>SQANTI3 module</td>
+          <td>annotation-aware isoform QC and curation</td>
+          </tr>
+          <tr>
           <td>isoform benchmark outputs</td>
           <td>compare tools and custom algorithms</td>
           </tr>
@@ -611,17 +856,17 @@ samtools idxstats sample.sorted.bam</code></pre>
           support for <code>directRNA</code>, <code>cDNA</code>, and
           DNA-style protocols.</p>
           <p>Typical launch shape:</p>
-          <div class="sourceCode" id="cb25"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/nanoseq <span class="dt">\</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input</span> samplesheet.csv <span class="dt">\</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--protocol</span> cDNA <span class="dt">\</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> docker</span></code></pre></div>
+          <div class="sourceCode" id="cb37"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/nanoseq <span class="dt">\</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input</span> samplesheet.csv <span class="dt">\</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--protocol</span> cDNA <span class="dt">\</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> docker</span></code></pre></div>
           <p>Or for direct RNA:</p>
-          <div class="sourceCode" id="cb26"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/nanoseq <span class="dt">\</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input</span> samplesheet.csv <span class="dt">\</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--protocol</span> directRNA <span class="dt">\</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> docker</span></code></pre></div>
+          <div class="sourceCode" id="cb38"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/nanoseq <span class="dt">\</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input</span> samplesheet.csv <span class="dt">\</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--protocol</span> directRNA <span class="dt">\</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> docker</span></code></pre></div>
           <p>Use <code>nf-core/nanoseq</code> when:</p>
           <ul>
           <li>your analysis fits its supported routes</li>
@@ -635,6 +880,8 @@ samtools idxstats sample.sorted.bam</code></pre>
           <li>you are prototyping a new isoform-collapse method</li>
           <li>you need a very small targeted-locus workflow</li>
           <li>you want to benchmark alternative tools</li>
+          <li>you need explicit SQANTI3 curation after custom isoform
+          discovery</li>
           <li>you need to expose algorithmic choices for a methods
           project</li>
           <li>you are teaching how Nextflow works</li>
@@ -652,6 +899,7 @@ samtools idxstats sample.sorted.bam</code></pre>
   -&gt; sorting/indexing module
   -&gt; alignment QC module
   -&gt; isoform-collapse handoff
+  -&gt; SQANTI3 annotation and curation layer
   -&gt; local/Docker/Singularity/AWS profiles
   -&gt; trace/report/timeline outputs</code></pre>
           <p>That is the core of production bioinformatics engineering:
@@ -702,7 +950,8 @@ samtools idxstats sample.sorted.bam</code></pre>
           </tr>
           <tr>
           <td>What is not solved yet?</td>
-          <td>isoform-collapse accuracy and benchmarking</td>
+          <td>isoform-collapse accuracy, SQANTI3 curation, and
+          benchmarking</td>
           </tr>
           </tbody>
           </table>
@@ -725,6 +974,20 @@ samtools idxstats sample.sorted.bam</code></pre>
           href="https://nf-co.re/nanoseq/">https://nf-co.re/nanoseq/</a></li>
           <li>nf-core/nanoseq usage documentation: <a
           href="https://nf-co.re/nanoseq/3.1.0/docs/usage/">https://nf-co.re/nanoseq/3.1.0/docs/usage/</a></li>
+          <li>SG-NEx AWS Open Data Registry: <a
+          href="https://registry.opendata.aws/sgnex/">https://registry.opendata.aws/sgnex/</a></li>
+          <li>SG-NEx data repository: <a
+          href="https://github.com/GoekeLab/sg-nex-data">https://github.com/GoekeLab/sg-nex-data</a></li>
+          <li>Chen Y et al. A systematic benchmark of Nanopore long-read
+          RNA sequencing for transcript-level analysis in human cell
+          lines. Nature Methods. 2025. <a
+          href="https://doi.org/10.1038/s41592-025-02623-4">https://doi.org/10.1038/s41592-025-02623-4</a></li>
+          <li>SQANTI3 GitHub repository and documentation: <a
+          href="https://github.com/ConesaLab/SQANTI3">https://github.com/ConesaLab/SQANTI3</a></li>
+          <li>SQANTI3 paper: Pardo-Palacios FJ et al. SQANTI3: curation
+          of long-read transcriptomes for accurate identification of
+          known and novel isoforms. Nature Methods. 2024. <a
+          href="https://doi.org/10.1038/s41592-024-02229-2">https://doi.org/10.1038/s41592-024-02229-2</a></li>
           <li>Oxford Nanopore EPI2ME workflows: <a
           href="https://epi2me.nanoporetech.com/wfindex/">https://epi2me.nanoporetech.com/wfindex/</a></li>
           <li>Minimap2 paper: Li H. Minimap2: pairwise alignment for

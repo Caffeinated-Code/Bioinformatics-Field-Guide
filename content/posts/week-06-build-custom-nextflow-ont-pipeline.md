@@ -24,6 +24,7 @@ ONT FASTQ
   -> sorted and indexed BAM
   -> alignment QC
   -> isoform-collapse handoff
+  -> SQANTI3 annotation and curation
 ```
 
 This is not trying to beat `nf-core/nanoseq`. It is a learning pipeline that shows how pieces fit together. After you understand the pieces, you can decide whether to use an existing pipeline, customize one, or build a specialized method for a specific research problem.
@@ -77,7 +78,38 @@ Which reads are partial?
 Which isoform calls are redundant?
 ```
 
-That is why a custom pipeline should keep the BAM, QC metrics, and read-to-isoform handoff clean.
+That is why a custom pipeline should keep the BAM, QC metrics, read-to-isoform handoff, and SQANTI3 annotation layer clean.
+
+## ONT-Specific QC Checklist
+
+ONT long-read RNA QC needs more than "did the command finish?"
+
+| QC layer | Metrics to inspect | Why it matters |
+|---|---|---|
+| raw FASTQ | read count, read length N50, length distribution, quality distribution | tells you whether the library produced enough useful long molecules |
+| adapters and contamination | adapter signal, lambda or other control contamination, unexpected sequence content | prevents technical molecules from becoming biological claims |
+| protocol fit | direct RNA vs cDNA vs PCR-cDNA, strand behavior, polyA expectations | changes alignment and interpretation choices |
+| alignment | mapping rate, supplementary/secondary rate, soft clipping, mismatch/indel profile | tells you whether reads align cleanly to the reference |
+| splice alignment | intron count, canonical junction fraction, junction wobble, unannotated junction support | central for isoform discovery |
+| transcript ends | TSS/TES spread, internal priming risk, truncation patterns | long-read transcript ends are often noisy |
+| isoform models | read support per isoform, redundant model rate, partial-read support | prevents overcalling weak or duplicate isoforms |
+| SQANTI3 | structural category, junction support, TSS/TES descriptors, artifact flags | annotates and curates transcript models before reporting novelty |
+
+Useful first-pass tools:
+
+- NanoPlot or pycoQC for read-level summaries
+- NanoFilt or filtlong for filtering when appropriate
+- samtools `flagstat`, `idxstats`, and `stats` for alignment summaries
+- minimap2 logs and BAM inspection for alignment behavior
+- IGV or JBrowse for targeted loci
+- SQANTI3 for isoform model annotation, QC, filtering, and curation
+
+For ONT isoform work, your QC question is:
+
+```text
+Are my reads long and clean enough to support transcript structure,
+and are my transcript models plausible after annotation-aware curation?
+```
 
 ## Project Structure
 
@@ -96,6 +128,7 @@ content/resources/week-06/
       sort_index_bam.nf
       alignment_qc.nf
       isoform_collapse_placeholder.nf
+      sqanti3_annotation.nf
 ```
 
 This is a simplified DSL2 structure:
@@ -157,6 +190,8 @@ The important choices:
 | `minimap2_preset` | long-read alignment mode, often `splice` for RNA |
 | `strand_mode` | helps direct RNA or cDNA-specific choices |
 | `save_intermediate_bam` | whether to publish unsorted alignment output |
+| `sqanti3_container` | tested SQANTI3 runtime image or local environment |
+| `sqanti3_extra_args` | extra SQANTI3 QC options after version-specific review |
 
 For real ONT transcript analysis, reference and annotation compatibility matter just as much as they did in [Week 4](week-04-bulk-rnaseq-differential-expression.html).
 
@@ -300,6 +335,63 @@ ALIGN_MINIMAP2
 
 That separation is useful. You may later swap the aligner, but still keep the sorting and QC steps.
 
+## Public ONT QC Demo
+
+For public practice data, use the **Singapore Nanopore Expression Data Set (SG-NEx)**. SG-NEx is a public benchmark resource for long-read RNA-seq with Nanopore PCR-cDNA, direct cDNA, direct RNA, PacBio Iso-Seq, matched short-read RNA-seq, and processed alignment files.
+
+The Week 6 resources include one public direct-cDNA A549 sample:
+
+```text
+content/resources/week-06/sgnex_ont_demo_samples.tsv
+```
+
+The demo script streams a small prefix of the public FASTQ file and writes a local subset:
+
+```bash
+# From the repository root.
+bash content/resources/week-06/run_sgnex_ont_qc_demo.sh 10000
+```
+
+What it does:
+
+```text
+public SG-NEx FASTQ URL
+  -> stream with curl
+  -> decompress
+  -> keep first 10,000 reads
+  -> recompress local teaching FASTQ
+  -> check gzip integrity
+  -> count FASTQ lines and reads
+```
+
+Expected local output:
+
+```text
+data/sgnex_demo/
+  SGNex_A549_directcDNA_replicate1_run3.10000_reads.fastq.gz
+```
+
+Then run read-level QC if NanoPlot is installed:
+
+```bash
+NanoPlot \
+  --fastq data/sgnex_demo/SGNex_A549_directcDNA_replicate1_run3.10000_reads.fastq.gz \
+  --outdir data/sgnex_demo/nanoplot \
+  --prefix SGNex_A549_directcDNA_
+```
+
+Interpret the NanoPlot-style report:
+
+| Plot or metric | What to ask |
+|---|---|
+| read length histogram | are reads long enough for transcript-spanning evidence? |
+| read quality distribution | is quality consistent with the chemistry/basecaller? |
+| yield over reads | is the subset behaving normally or dominated by a few huge reads? |
+| N50 | does the library preserve long molecules? |
+| quality vs length | are long reads unusually low quality? |
+
+This is intentionally a QC demo, not a complete SG-NEx analysis. Full SG-NEx files can be large. Start small, learn the checks, then scale deliberately.
+
 ## Isoform-Collapse Handoff
 
 The final module is intentionally a placeholder:
@@ -316,6 +408,15 @@ This is where a real project might call:
 - TALON
 - a custom splice-junction-first collapse engine
 
+This is also where SQANTI3 enters the plan, but with a very specific role:
+
+```text
+isoform discovery/collapse creates transcript models
+SQANTI3 annotates, classifies, QC-checks, filters, and helps curate those models
+```
+
+SQANTI3 is not a direct replacement for minimap2, IsoQuant, FLAIR, StringTie2, or a custom collapse algorithm. It evaluates the transcript models they produce.
+
 For your own ONT isoform-collapse algorithm, a sensible plan is:
 
 ```text
@@ -331,6 +432,64 @@ sorted BAM
 ```
 
 The key idea is to make isoform collapse mostly about **splice structure**, not raw sequence identity. ONT errors should not create new transcript models just because a read has small indels.
+
+## SQANTI3 Annotation And Curation
+
+After isoform discovery, run SQANTI3 before treating novel isoforms as biological findings.
+
+Conceptual flow:
+
+```text
+sorted BAM
+  -> isoform discovery/collapse
+  -> collapsed_isoforms.gtf
+  -> SQANTI3 QC and annotation
+  -> structural categories, junction descriptors, TSS/TES descriptors, artifact flags
+```
+
+SQANTI3 helps answer:
+
+| Question | Why it matters |
+|---|---|
+| full splice match or incomplete splice match? | distinguishes known transcripts from partial models |
+| novel in catalog or novel not in catalog? | separates known-junction combinations from novel-junction models |
+| canonical or noncanonical junctions? | flags potential alignment or transcript artifacts |
+| suspicious TSS/TES? | transcript ends are noisy in long-read data |
+| ORF/CDS support? | helps functional interpretation |
+| likely artifact? | prevents weak models from becoming claims |
+
+Typical command shape:
+
+```bash
+sqanti3_qc.py \
+  collapsed_isoforms.gtf \
+  reference_annotation.gtf \
+  genome.fa \
+  --dir sqanti3 \
+  --output sample_sqanti3
+```
+
+The Week 6 resources include:
+
+```text
+modules/local/sqanti3_annotation.nf
+```
+
+That module is a skeleton because SQANTI3 releases and runtime setup can change. Before using it in production:
+
+```text
+1. Pick a SQANTI3 release.
+2. Pin and test the container or Conda environment.
+3. Confirm the command-line arguments for that release.
+4. Provide collapsed transcript models, reference annotation, and genome FASTA.
+5. Review SQANTI3 output before reporting novel isoforms.
+```
+
+Practical rule:
+
+```text
+Do not publish novel ONT isoforms without annotation-aware QC such as SQANTI3.
+```
 
 ## Execution Config
 
@@ -440,6 +599,7 @@ Once the skeleton works, add features deliberately:
 | region restriction | useful for targeted locus analysis |
 | UMI handling | if protocol includes UMIs |
 | strandedness checks | especially for direct RNA |
+| SQANTI3 module | annotation-aware isoform QC and curation |
 | isoform benchmark outputs | compare tools and custom algorithms |
 | CI tests | make sure the pipeline keeps running after edits |
 
@@ -479,6 +639,7 @@ Use your custom pipeline when:
 - you are prototyping a new isoform-collapse method
 - you need a very small targeted-locus workflow
 - you want to benchmark alternative tools
+- you need explicit SQANTI3 curation after custom isoform discovery
 - you need to expose algorithmic choices for a methods project
 - you are teaching how Nextflow works
 
@@ -496,6 +657,7 @@ samplesheet
   -> sorting/indexing module
   -> alignment QC module
   -> isoform-collapse handoff
+  -> SQANTI3 annotation and curation layer
   -> local/Docker/Singularity/AWS profiles
   -> trace/report/timeline outputs
 ```
@@ -514,7 +676,7 @@ That is the core of production bioinformatics engineering: clear inputs, modular
 | What is published? | final outputs only, not random `work/` files |
 | What is cached? | task executions, reused with `-resume` |
 | What is tested? | syntax, tiny data, containers, expected outputs |
-| What is not solved yet? | isoform-collapse accuracy and benchmarking |
+| What is not solved yet? | isoform-collapse accuracy, SQANTI3 curation, and benchmarking |
 
 ## Next In The Series
 
@@ -528,6 +690,11 @@ Week 7 will cover CI/CD in bioinformatics: how to test pipelines, validate small
 - nf-core documentation: https://nf-co.re/
 - nf-core/nanoseq documentation: https://nf-co.re/nanoseq/
 - nf-core/nanoseq usage documentation: https://nf-co.re/nanoseq/3.1.0/docs/usage/
+- SG-NEx AWS Open Data Registry: https://registry.opendata.aws/sgnex/
+- SG-NEx data repository: https://github.com/GoekeLab/sg-nex-data
+- Chen Y et al. A systematic benchmark of Nanopore long-read RNA sequencing for transcript-level analysis in human cell lines. Nature Methods. 2025. https://doi.org/10.1038/s41592-025-02623-4
+- SQANTI3 GitHub repository and documentation: https://github.com/ConesaLab/SQANTI3
+- SQANTI3 paper: Pardo-Palacios FJ et al. SQANTI3: curation of long-read transcriptomes for accurate identification of known and novel isoforms. Nature Methods. 2024. https://doi.org/10.1038/s41592-024-02229-2
 - Oxford Nanopore EPI2ME workflows: https://epi2me.nanoporetech.com/wfindex/
 - Minimap2 paper: Li H. Minimap2: pairwise alignment for nucleotide sequences. Bioinformatics. 2018. https://doi.org/10.1093/bioinformatics/bty191
 - SAMtools paper: Danecek P et al. Twelve years of SAMtools and BCFtools. GigaScience. 2021. https://doi.org/10.1093/gigascience/giab008

@@ -25,6 +25,7 @@ Possible next tools:
 - IsoQuant
 - FLAIR
 - TALON
+- SQANTI3 for annotation, QC, and curation after transcript models are built
 - custom splice-junction-first isoform collapse engine
 
 For a custom ONT isoform collapse algorithm:
@@ -35,6 +36,7 @@ For a custom ONT isoform collapse algorithm:
 5. Cluster fuzzy TSS/TES endpoints inside each intron-chain bucket.
 6. Require minimum read support.
 7. Export GFF3, BED12, read assignments, and QC metrics.
+8. Run SQANTI3 on collapsed transcript models before publishing novel isoforms.
 EOF
   """
 }
