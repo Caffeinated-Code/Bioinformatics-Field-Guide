@@ -1,0 +1,5 @@
+sample,fastq,protocol,condition
+ONT_CONTROL_1,data/ont/control_1.fastq.gz,cDNA,control
+ONT_CONTROL_2,data/ont/control_2.fastq.gz,cDNA,control
+ONT_TREATED_1,data/ont/treated_1.fastq.gz,cDNA,treated
+ONT_TREATED_2,data/ont/treated_2.fastq.gz,cDNA,treated

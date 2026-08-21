@@ -1,283 +1,234 @@
 ---
-title: "Nextflow And nf-core/rnaseq: From FASTQ Files To A Reproducible Count Matrix"
-subtitle: "A practical deep dive into workflow engines, channels, processes, profiles, modules, parallel execution, and how nf-core/rnaseq turns sequencing files into QC reports and expression matrices"
+title: "Nextflow For Bioinformatics: The Big Picture Before You Run nf-core/rnaseq"
+subtitle: "Why workflow engines matter, how Nextflow runs locally or on AWS, what caching and parallel execution actually do, and how to launch nf-core/rnaseq without getting lost"
 week: 5
 audience: ["beginner", "practitioner", "researcher"]
-reading_time: "Deep dive"
-asset: "Nextflow syntax cheat sheet, nf-core/rnaseq test runner, samplesheet template, and output folder map"
+reading_time: "7-minute core + practical run notes"
+asset: "nf-core/rnaseq test runner, samplesheet template, and output folder map"
 ---
 
-# Nextflow And nf-core/rnaseq: From FASTQ Files To A Reproducible Count Matrix
+# Nextflow For Bioinformatics: The Big Picture Before You Run nf-core/rnaseq
 
-**Takeaway:** Nextflow is the engine that decides what should run, when it should run, and where it should run. nf-core/rnaseq is the community-curated RNA-seq pipeline built on that engine.
+**Takeaway:** Nextflow is not an RNA-seq tool. It is the workflow engine that makes complex bioinformatics analyses portable, parallel, resumable, and easier to audit.
 
-If RNA-seq differential expression starts with a count matrix, this guide explains how that count matrix is made.
+If you need a refresher on what bulk RNA-seq measures, what raw counts mean, or why TPM should not go into DESeq2, start with [Week 4: Bulk RNA-seq Field Guide](week-04-bulk-rnaseq-differential-expression.html). This week answers a different question:
 
-## Why Workflow Engines Exist
+```text
+How do professional bioinformatics pipelines run the same analysis across many samples without becoming chaos?
+```
 
-A real RNA-seq project is not one command. It is a chain of decisions:
+## The Problem Nextflow Solves
+
+A real RNA-seq analysis is not one command. It is a chain:
 
 ```text
 FASTQ files
-  -> raw read QC
+  -> read QC
   -> trimming or filtering
   -> strandedness checks
   -> reference preparation
   -> alignment or pseudoalignment
-  -> gene or transcript quantification
-  -> merged count matrices
+  -> quantification
+  -> merged expression matrices
   -> MultiQC report
   -> downstream statistics
 ```
 
-You can run those steps manually while learning. That is useful. But manual commands become fragile when you have many samples, many projects, multiple users, an HPC cluster, cloud storage, containers, and reruns after failure.
+Running that by hand teaches you what the tools do. But for real projects, hand-wired commands become fragile. You need to know:
 
-The common failure is not that a tool never runs. The common failure is that nobody can confidently answer:
-
-```text
-Which version ran?
-Which reference was used?
-Which samples failed QC?
-Which command produced this count matrix?
-Can I rerun only the failed step?
-Can another lab reproduce this?
-```
+- which software versions ran
+- which reference genome and annotation were used
+- which samples failed QC
+- which command produced the count matrix
+- whether failed steps can resume without rerunning everything
+- whether the same workflow can run on a laptop, HPC, or AWS
 
 Nextflow exists to make those questions answerable.
 
 ## What Nextflow Is
 
-Nextflow is a workflow system for scalable, portable, and reproducible scientific pipelines. It uses a dataflow model: tasks run when their inputs are available, and outputs flow into the next step.
+Nextflow is a workflow engine. It connects computational steps and decides when each step can run.
 
-That is the key idea. You do not write:
-
-```text
-Run sample 1, then sample 2, then sample 3.
-```
-
-You write:
+The mental model is:
 
 ```text
-For every sample with FASTQ files, run the appropriate process.
-When outputs are ready, pass them to the next process.
+inputs become channels
+channels feed processes
+processes produce outputs
+outputs feed the next steps
+independent steps run in parallel
 ```
 
-Nextflow handles scheduling. On your laptop, that may mean local parallel jobs. On a cluster, that may mean submitting jobs to Slurm or another scheduler. On cloud, that may mean AWS Batch, Google Cloud Batch, Azure Batch, Kubernetes, or another supported executor.
+You describe the analysis. Nextflow handles the execution.
 
-## The Five Concepts To Learn First
+That distinction matters. A workflow engine is not trying to replace `STAR`, `Salmon`, `FastQC`, `samtools`, or `DESeq2`. It coordinates those tools in a reproducible way.
 
-| Concept | Plain-language meaning | RNA-seq example |
-|---|---|---|
-| Channel | a stream of values or files | sample metadata plus FASTQ paths |
-| Process | one computational step | run FastQC on reads |
-| Workflow | how processes connect | QC -> trim -> align -> quantify |
-| Module | reusable process definition | a standard FastQC module |
-| Profile | execution environment | Docker locally, Singularity on HPC |
+## Why Bioinformaticians Use It
 
-Once these click, Nextflow stops feeling like a black box.
-
-## A Tiny Nextflow Example
-
-This simplified example is not nf-core/rnaseq. It is a teaching version of the pattern.
-
-```nextflow
-process COUNT_LINES {
-  input:
-  path file_to_count
-
-  output:
-  path "${file_to_count}.lines.txt"
-
-  script:
-  """
-  wc -l ${file_to_count} > ${file_to_count}.lines.txt
-  """
-}
-
-workflow {
-  Channel.fromPath("data/*.fastq.gz") | COUNT_LINES
-}
-```
-
-Read it like this:
-
-```text
-Find every FASTQ file in data/.
-For each file, run COUNT_LINES independently.
-Write one output per input.
-```
-
-If there are 20 FASTQ files and enough compute resources, those jobs do not need to wait politely in a single-file line. Nextflow can schedule independent tasks in parallel because each task has its own input and output.
-
-## Why Nextflow Is Good For Bioinformatics
-
-Nextflow solves several problems that bioinformatics keeps creating.
-
-| Problem | What Nextflow helps with |
+| Need | What Nextflow gives you |
 |---|---|
-| Many samples | runs independent sample-level tasks in parallel |
-| Many tools | connects tools into a formal workflow |
-| Fragile environments | supports Docker, Singularity/Apptainer, Conda, Podman, and other runtimes |
-| Reruns after failure | caches successful tasks and supports `-resume` |
-| HPC and cloud execution | separates workflow logic from execution backend |
-| Hidden provenance | records reports, traces, timelines, parameters, and logs |
-| Collaboration | pipelines can be shared through Git repositories |
+| many samples | runs independent sample-level tasks in parallel |
+| many tools | connects tools into a formal workflow |
+| reproducibility | records logs, reports, parameters, versions, and task traces |
+| environment control | supports Docker, Singularity/Apptainer, Podman, Conda, and more |
+| failure recovery | caches completed tasks and resumes with `-resume` |
+| portability | same pipeline logic can run locally, on HPC, or in cloud |
+| collaboration | pipeline code, configs, and parameters can be version-controlled |
 
-The practical win is not glamour. It is trust.
+The point is not that Nextflow makes analysis effortless. The point is that it makes complex analysis **inspectable**.
 
-## The Pitfalls
+## What It Competes With
 
-Nextflow is powerful, but beginners usually struggle in predictable places.
+Nextflow is not the only workflow system.
 
-| Pitfall | What it looks like | How to avoid it |
+| Tool | Strength | Common fit |
 |---|---|---|
-| confusing `params` and config | pipeline behaves differently than expected | pass pipeline parameters through CLI or `-params-file` |
-| treating `work/` as final output | lost in hashed task folders | use `--outdir` outputs for scientific results |
-| forgetting `-resume` | reruns expensive completed tasks | use `-resume` after fixing a failed run |
-| wrong profile | Docker command on HPC, Singularity command on laptop | choose profile for the environment |
-| underestimating disk | `work/` grows quickly | plan storage before full datasets |
-| changing inputs silently | cached tasks no longer mean what you think | keep samplesheet, params, references, and command |
-| mixing genome and annotation | low assignment or broken counting | record FASTA and GTF/GFF source and release |
+| Nextflow | portable, strong cloud/HPC support, widely used in bioinformatics, nf-core ecosystem | production bioinformatics workflows |
+| Snakemake | Pythonic, very readable for many researchers, strong rule-based workflows | lab-scale pipelines and custom analysis |
+| WDL/Cromwell | common in Broad/GATK-style environments | genomics workflows in WDL ecosystems |
+| CWL | standards-focused and portable | formal workflow portability requirements |
+| Galaxy | graphical, accessible, training-friendly | users who prefer web-based workflows |
 
-Most Nextflow problems are not syntax problems. They are input, environment, and expectation problems.
-
-## Important Syntax Without The Panic
-
-### Channels
-
-A channel is a stream. It may contain paths, values, or structured tuples.
-
-```nextflow
-Channel.fromPath("data/*.fastq.gz")
-```
-
-In RNA-seq, a channel often carries a sample ID plus one or two FASTQ files:
+My practical recommendation:
 
 ```text
-[sample metadata, reads]
+Use nf-core/Nextflow when a mature community pipeline exists.
+Use custom Nextflow when you need production portability and modular execution.
+Use Snakemake when a small lab pipeline needs to stay Python-adjacent and simple.
+Use Galaxy when accessibility and GUI training matter most.
 ```
 
-That pairing matters. You do not want reads floating around without their sample identity.
+## Local, HPC, And AWS: Same Logic, Different Execution
 
-### Processes
+Nextflow separates workflow logic from execution environment.
 
-A process is one step. It declares what it needs and what it produces.
+On a laptop, you might run:
 
-```nextflow
-process FASTQC {
-  input:
-  tuple val(meta), path(reads)
-
-  output:
-  tuple val(meta), path("*_fastqc.html")
-
-  script:
-  """
-  fastqc ${reads}
-  """
-}
+```bash
+nextflow run nf-core/rnaseq \
+  -profile test,docker \
+  --outdir results/week-05-rnaseq-test \
+  -resume
 ```
 
-The process says:
+On an HPC cluster, the profile might use Singularity/Apptainer and a scheduler such as Slurm:
+
+```bash
+nextflow run nf-core/rnaseq \
+  -profile test,singularity \
+  --outdir results/week-05-rnaseq-test \
+  -resume
+```
+
+On AWS, the same pipeline logic can run with AWS Batch or through Seqera Platform. In cloud runs, input, output, and work directories often live in S3:
+
+```bash
+nextflow run nf-core/rnaseq \
+  --input s3://my-bucket/project/samplesheet.csv \
+  --outdir s3://my-bucket/project/results \
+  --fasta s3://my-bucket/references/genome.fa \
+  --gtf s3://my-bucket/references/genes.gtf \
+  -profile awsbatch \
+  -resume
+```
+
+The exact AWS profile depends on your infrastructure. The big idea is stable:
 
 ```text
-Give me sample metadata and read files.
-Run FastQC.
-Return the sample metadata with the FastQC report.
+pipeline code stays the same
+executor changes
+storage location changes
+container strategy changes
 ```
 
-Keeping `meta` with outputs is how large pipelines avoid losing sample identity.
+## Caching And `-resume`
 
-### Workflows
+Nextflow automatically records task executions in a task cache. On local/HPC runs, this is commonly stored under `.nextflow/cache`; in cloud runs, cache behavior can use cloud storage associated with the work directory.
 
-A workflow connects processes.
+When you run with:
 
-```nextflow
-workflow {
-  reads_ch | FASTQC
-}
+```bash
+-resume
 ```
 
-nf-core/rnaseq uses much larger workflows and subworkflows, but the idea is the same: channels enter, processes run, outputs continue.
+Nextflow checks which tasks already completed with the same inputs, code, parameters, and environment. Completed tasks can be reused. Failed or changed tasks run again.
 
-### Operators
+This is why a failed 100-sample workflow does not always need to restart from zero.
 
-Operators transform channels.
+Things that can invalidate cache:
 
-| Operator | What it does |
-|---|---|
-| `.map { }` | changes each item |
-| `.filter { }` | keeps selected items |
-| `.branch { }` | splits a channel into named routes |
-| `.mix()` | combines streams |
-| `.join()` | combines streams by matching keys |
-| `.collect()` | gathers items together |
+- changing input files
+- changing process code
+- changing relevant parameters
+- changing container versions
+- moving paths in ways that affect task hashes
+- deleting the `work/` directory or cache metadata
 
-These are how Nextflow supports modular, parallel processing. Independent branches can run separately, then join later when the workflow needs combined evidence.
+Beginner rule:
+
+```text
+Use -resume after fixing a failed run.
+Do not delete work/ until you know you no longer need to resume or debug.
+```
+
+## How Nextflow Parallelizes
+
+Nextflow runs tasks when their inputs are ready. If 24 samples each need FastQC, those 24 FastQC tasks are independent. Nextflow can schedule them in parallel, limited by your machine, cluster queue, cloud settings, and process resource requests.
+
+That is why workflow structure matters. This:
+
+```text
+sample_1 -> FastQC
+sample_2 -> FastQC
+sample_3 -> FastQC
+...
+```
+
+is naturally parallel. Later, a summary step such as MultiQC waits until the QC files are ready:
+
+```text
+all FastQC outputs -> MultiQC
+```
+
+Parallel where possible. Join where necessary.
 
 ## What nf-core Adds
 
-nf-core is a community project that provides curated Nextflow pipelines for bioinformatics. It adds:
+nf-core is a community collection of curated Nextflow pipelines. It adds:
 
-- standardized pipeline templates
-- reusable modules and subworkflows
-- consistent documentation
-- parameter schemas
+- standard pipeline structure
+- documentation
+- stable releases
 - test profiles
 - container support
-- versioned releases
-- community review and maintenance
+- parameter schemas
+- reusable modules and subworkflows
+- community review
 
-That matters because a pipeline is not only code. It is an agreement about structure.
-
-The nf-core ecosystem includes pipelines across many areas: RNA-seq, variant calling, single-cell, methylation, metagenomics, proteomics, viral reconstruction, and more. The point is not that nf-core has one magic RNA-seq pipeline. The point is that the community has built a shared pattern for running complex bioscience workflows.
-
-## How nf-core Pipelines Are Structured
-
-A typical nf-core pipeline has several layers:
-
-```text
-main.nf
-  -> imports workflows and subworkflows
-workflows/
-  -> defines the main analysis logic
-subworkflows/
-  -> groups related steps
-modules/
-  -> reusable tool-level processes
-conf/
-  -> profiles and process-specific settings
-nextflow_schema.json
-  -> parameter validation and launch forms
-assets/
-  -> schemas, report text, templates, helper files
-```
-
-That structure is why nf-core pipelines can be large without becoming a single unreadable script.
+That means you do not need to write a new RNA-seq pipeline just to process ordinary bulk RNA-seq data. You can use `nf-core/rnaseq`, then focus your attention on experimental design, QC, and interpretation.
 
 ## What nf-core/rnaseq Does
 
-nf-core/rnaseq analyzes RNA-seq data from organisms with a reference genome and annotation. It accepts FASTQ files or selected pre-aligned BAM workflows, runs QC and processing steps, and produces expression outputs plus QC reports.
+nf-core/rnaseq analyzes RNA-seq data from organisms with a reference genome and annotation. According to current pipeline documentation, it takes a samplesheet and FASTQ files, performs QC, trimming and alignment or pseudoalignment, and produces a gene expression matrix plus extensive QC reports.
 
 At a high level:
 
 ```text
 samplesheet.csv
-  -> reference preparation
-  -> raw FASTQ QC
-  -> trimming/filtering/optional rRNA removal
+  -> FastQC / read QC
+  -> trimming and optional filtering
   -> strandedness inference when requested
-  -> STAR, HISAT2, Bowtie2+Salmon, Salmon, kallisto, or RSEM-style routes
+  -> STAR / Salmon / RSEM / HISAT2-style routes depending on parameters
   -> count and abundance outputs
-  -> MultiQC report
+  -> MultiQC
   -> pipeline_info provenance
 ```
 
-It does **not** replace your biological interpretation. It does **not** prove differential expression by itself. It gets you to QC reports and expression matrices so downstream analysis can begin responsibly.
+Important: nf-core/rnaseq does **not** perform statistical differential expression testing. It produces count and abundance outputs. For the statistical side, return to [Week 4](week-04-bulk-rnaseq-differential-expression.html).
 
 ## The Samplesheet Is The Contract
 
-The samplesheet tells nf-core/rnaseq what biological files exist and how they should be grouped.
+A minimal paired-end samplesheet looks like:
 
 ```csv
 sample,fastq_1,fastq_2,strandedness,seq_platform
@@ -287,175 +238,33 @@ TREATED_REP1,data/fastq/treated_rep1_R1.fastq.gz,data/fastq/treated_rep1_R2.fast
 TREATED_REP2,data/fastq/treated_rep2_R1.fastq.gz,data/fastq/treated_rep2_R2.fastq.gz,auto,ILLUMINA
 ```
 
-The first columns matter:
+Check before running:
 
-| Column | Meaning | Common mistake |
-|---|---|---|
-| `sample` | sample identifier | using filenames instead of stable sample names |
-| `fastq_1` | R1 file or single-end FASTQ | path does not exist |
-| `fastq_2` | R2 file for paired-end data | R1/R2 pairs mismatched |
-| `strandedness` | `forward`, `reverse`, `unstranded`, or `auto` | guessing instead of checking kit/QC |
-| `seq_platform` | optional sequencing platform information | inconsistent spelling |
+- sample names are stable and unique
+- FASTQ paths exist
+- R1 and R2 files are correctly paired
+- strandedness is known or intentionally set to `auto`
+- genome FASTA and GTF/GFF annotation match
+- output directory has enough space
 
-Rows with the same sample identifier can represent repeated sequencing runs for the same sample; nf-core/rnaseq can merge them before downstream steps. That is useful for technical runs. It is not a license to collapse biological replicates.
+If `strandedness` is `auto`, inspect the inferred strandedness evidence in MultiQC. Do not treat `auto` as a reason to ignore library prep.
 
-If `strandedness` is set to `auto`, nf-core/rnaseq does not shrug and guess. Current documentation describes a subsampling-based inference step that uses Salmon and reports strandedness evidence in MultiQC. Treat that as a QC result to inspect, especially if the library-prep kit says one thing and the inferred result says another.
+## Run The Test Profile First
 
-## A Real Pipeline Excerpt: Top-Level Wiring
-
-In nf-core/rnaseq, the top-level `main.nf` imports the main RNA-seq workflow and supporting subworkflows. A shortened excerpt looks like this:
-
-```nextflow
-include { RNASEQ                  } from './workflows/rnaseq'
-include { PREPARE_GENOME          } from './subworkflows/local/prepare_genome'
-include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
-include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_rnaseq_pipeline'
-```
-
-This teaches a big idea:
-
-```text
-The top-level pipeline does not do every tool step directly.
-It imports reusable workflows and coordinates them.
-```
-
-Then the pipeline prepares reference files before launching the main RNA-seq workflow:
-
-```nextflow
-PREPARE_GENOME(...)
-RNASEQ(ch_samplesheet, PREPARE_GENOME.out.fasta, PREPARE_GENOME.out.gtf, ...)
-```
-
-That is the handoff pattern: one subworkflow emits reference outputs; the main RNA-seq workflow consumes them.
-
-## A Real Pipeline Excerpt: Branching FASTQ And BAM Inputs
-
-Inside the RNA-seq workflow, nf-core/rnaseq converts the samplesheet into structured channel records. A shortened teaching excerpt:
-
-```nextflow
-channel
-  .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
-  .map { meta, fastq_1, fastq_2, genome_bam, transcriptome_bam ->
-    if (!fastq_2) {
-      return [ meta.id, meta + [ single_end:true ], [ fastq_1 ], genome_bam, transcriptome_bam ]
-    } else {
-      return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ], genome_bam, transcriptome_bam ]
-    }
-  }
-  .groupTuple()
-  .branch {
-    bam: params.skip_alignment && (genome_bam || transcriptome_bam)
-    fastq: reads.size() > 0 && reads[0]
-  }
-```
-
-Do not worry about every character. Read the shape:
-
-```text
-Read samplesheet.
-Attach metadata.
-Detect single-end vs paired-end.
-Group repeated rows for a sample.
-Branch inputs into BAM route or FASTQ route.
-```
-
-This is how one pipeline supports multiple input styles without becoming a pile of separate scripts.
-
-## A Real Pipeline Excerpt: Conditional Alignment
-
-nf-core/rnaseq does not blindly run every aligner. It checks parameters and follows the selected route.
-
-```nextflow
-if (!params.skip_alignment && (params.aligner == 'star_salmon' || params.aligner == 'star_rsem')) {
-  ALIGN_STAR(...)
-}
-
-if (!params.skip_alignment && params.aligner == 'hisat2') {
-  FASTQ_ALIGN_HISAT2(...)
-}
-```
-
-That is modular processing in practice:
-
-```text
-If STAR route is selected, run STAR-related subworkflow.
-If HISAT2 route is selected, run HISAT2-related subworkflow.
-If alignment is skipped, do not waste time aligning.
-```
-
-The same pipeline can behave differently based on parameters while preserving the same overall structure.
-
-## A Real Pipeline Excerpt: Parallel QC Evidence
-
-nf-core/rnaseq collects QC evidence from many places and feeds it into MultiQC. You will see patterns like:
-
-```nextflow
-ch_multiqc_files = ch_multiqc_files.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files)
-ch_multiqc_files = ch_multiqc_files.mix(ALIGN_STAR.out.log_final)
-```
-
-Plain English:
-
-```text
-Take QC files from read-level processing.
-Take QC files from alignment.
-Mix them into the MultiQC input stream.
-```
-
-That is why MultiQC can show read quality, trimming, alignment, strandedness, duplication, assignment, and other metrics in one report.
-
-## Profiles: Same Pipeline, Different Compute Reality
-
-The same nf-core/rnaseq pipeline can run in different environments.
-
-| Profile | Use when |
-|---|---|
-| `docker` | local laptop or workstation with Docker/Colima |
-| `singularity` / `apptainer` | HPC where Docker is not allowed |
-| `conda` | local learning or when containers are unavailable |
-| institute profile | your organization has a maintained config |
-| cloud profile | running through supported cloud infrastructure |
-
-For a local test:
+From the repository root:
 
 ```bash
-nextflow run nf-core/rnaseq \
-  -profile test,docker \
-  --outdir results/week-05-nfcore-rnaseq-test \
-  -resume
-```
+# Confirm Nextflow is installed.
+nextflow -version
 
-The `test` profile supplies a tiny input dataset and reference files. The `docker` profile tells Nextflow to use Docker containers. The `-resume` flag tells Nextflow to reuse successful cached tasks if the run is restarted.
+# Confirm Docker Desktop or Colima is running.
+docker info
 
-If you are on an HPC cluster, the equivalent might be:
-
-```bash
-nextflow run nf-core/rnaseq \
-  -profile test,singularity \
-  --outdir results/week-05-nfcore-rnaseq-test \
-  -resume
-```
-
-Use the profile your computing environment supports.
-
-## Run The Week 5 Test Helper
-
-The resource folder includes a small wrapper script:
-
-```bash
-# From the repository root:
+# Run the official nf-core/rnaseq test profile.
 bash content/resources/week-05/run_nfcore_rnaseq_test.sh
 ```
 
-Before using the Docker profile, make sure Docker Desktop or Colima is running:
-
-```bash
-docker info
-```
-
-If that command cannot connect to Docker, start Docker Desktop or run `colima start` before launching the pipeline.
-
-The script runs:
+The helper script runs:
 
 ```bash
 nextflow run nf-core/rnaseq \
@@ -464,120 +273,84 @@ nextflow run nf-core/rnaseq \
   -resume
 ```
 
-This is a pipeline machinery test, not a publishable biological analysis. It answers:
+This test answers:
 
 ```text
-Can this machine run Nextflow?
-Can it pull the pipeline?
-Can it use the selected container profile?
-Can it produce the expected output structure?
+Can Nextflow run here?
+Can containers run here?
+Can the nf-core/rnaseq pipeline launch and finish?
+Can I find the output report?
 ```
 
-## What Happens During A Run
+It is not a biological analysis.
 
-When you launch a Nextflow pipeline, several things happen:
+## Run Your Own RNA-seq Data
 
-| Thing | Meaning |
-|---|---|
-| `.nextflow.log` | main run log |
-| `.nextflow/` | Nextflow metadata |
-| `work/` | task-level working directories and cache |
-| `results/` or your `--outdir` | published results |
-| execution report | resource and task summary |
-| trace file | task-level runtime details |
-| timeline file | when tasks ran |
+Once the test profile works, a real run looks more like:
 
-The `work/` directory is important for caching and debugging. It is not the folder you hand to a collaborator as final results.
+```bash
+nextflow run nf-core/rnaseq \
+  --input samplesheet.csv \
+  --outdir results/my_rnaseq_project \
+  --fasta references/GRCh38.primary_assembly.fa.gz \
+  --gtf references/gencode.v44.annotation.gtf.gz \
+  -profile docker \
+  -resume
+```
 
-## Output Folder Tour
+For reproducibility, save:
 
-The exact output structure depends on pipeline version and parameters, but a typical RNA-seq run may include:
+- exact command
+- pipeline version
+- Nextflow version
+- samplesheet
+- params file, if used
+- FASTA and GTF/GFF source
+- MultiQC report
+- `pipeline_info/`
 
-| Output area | Why it matters |
-|---|---|
-| `multiqc/` | start here; one report summarizing many QC tools |
-| `fastqc/` | raw and/or trimmed read quality |
-| trimming folder | adapter removal and reads retained |
-| aligner folder | mapping summaries, BAMs, logs, indexes |
-| quantification folder | gene/transcript counts and abundance |
-| `rseqc/` | strandedness and RNA-seq-specific QC when enabled |
-| `pipeline_info/` | versions, parameters, reports, timeline, trace |
+## First Output To Open
 
-The resource file `output_folder_map.md` gives a practical folder-by-folder checklist.
-
-## How To Read The First MultiQC Report
-
-Open MultiQC before opening a count matrix.
+Open MultiQC before touching the count matrix.
 
 Look for:
 
-- Did all expected samples appear?
-- Are read qualities acceptable?
-- Is adapter content under control?
-- Did trimming remove a suspicious amount of data?
-- Are mapping rates reasonable for the organism and assay?
-- Is strandedness consistent with the expected library prep?
-- Are duplication levels plausible?
-- Are any samples extreme outliers?
-- Did assignment or quantification look unusually low?
+- missing samples
+- low read quality
+- adapter issues
+- suspicious trimming
+- poor mapping rate
+- strandedness mismatch
+- high duplication
+- failed assignment or quantification
 
-If MultiQC is alarming, do not rush into DESeq2. A bad count matrix still produces a volcano plot.
+A count matrix can look tidy even when the data behind it is not trustworthy.
 
-## Where Week 5 Hands Off To Week 4
+## Save This: Week 5 Decision Map
 
-Week 5 is about producing and auditing the count matrix.
-
-Week 4 is about interpreting the count matrix correctly:
-
-```text
-Week 5:
-FASTQ -> nf-core/rnaseq -> QC reports -> count matrix
-
-Week 4:
-count matrix + metadata -> DESeq2 model -> cautious biological interpretation
-```
-
-That separation matters. Pipelines create structured evidence. Statistical models test biological questions. Neither replaces experimental judgment.
-
-## Save This: Nextflow + nf-core/rnaseq Decision Map
-
-| Decision | Good beginner default | Ask before changing |
+| Decision | Good default | Why |
 |---|---|---|
-| pipeline | nf-core/rnaseq stable release | Do I need a custom workflow or a community pipeline? |
-| first run | `-profile test,docker` | Does my compute environment support Docker? |
-| local containers | Docker or Colima | Is Docker running and allowed? |
-| HPC containers | Singularity/Apptainer | Does my cluster provide a profile? |
-| input | validated samplesheet | Are sample names, FASTQs, and strandedness correct? |
-| reference | matched FASTA + GTF/GFF | Are genome build and annotation compatible? |
-| rerun | `-resume` | Did I change inputs or parameters intentionally? |
-| first output to inspect | MultiQC | Do QC metrics support downstream analysis? |
-| final handoff | count matrix + metadata + QC | Is this ready for DESeq2 or should I stop? |
+| first run | `-profile test,docker` | confirms the machine can run the pipeline |
+| local execution | Docker or Colima | easiest reproducible setup on a laptop |
+| HPC execution | Singularity/Apptainer | common where Docker is restricted |
+| cloud execution | AWS Batch or Seqera Platform | scalable for larger projects |
+| restart failed run | `-resume` | avoids rerunning completed tasks |
+| first report | MultiQC | tells you whether outputs are believable |
+| statistical testing | downstream DESeq2/edgeR/etc. | nf-core/rnaseq does not assign DE significance |
 
-## Common Mistakes Worth Avoiding
+## What Comes Next
 
-- Running a full dataset before the test profile works.
-- Using Docker on a cluster where Docker is blocked.
-- Treating `auto` strandedness as a substitute for checking the report.
-- Mixing `GRCh37` FASTA with `GRCh38` annotation.
-- Deleting `work/` before a failed run is debugged.
-- Forgetting to save the exact command, pipeline version, and parameter file.
-- Assuming nf-core/rnaseq performs statistical differential expression. It does not.
-- Trusting a count matrix before reading MultiQC.
-
-## What To Watch Next
-
-Next, the natural follow-up is **RNA-seq QC: When To Trust, Pause, Or Re-run Your Analysis**. That article should be less about launching the pipeline and more about reading the evidence: FastQC, MultiQC, mapping rate, duplication, strandedness, assignment, sample swaps, and batch patterns.
+Week 6 goes under the hood. We will build a custom Nextflow pipeline for Oxford Nanopore long-read data, step by step, then compare that custom pipeline to the existing nf-core/nanoseq pipeline.
 
 ## Credits and References
 
 - Nextflow documentation: https://docs.seqera.io/nextflow/
-- Nextflow GitHub repository: https://github.com/nextflow-io/nextflow
+- Nextflow workflow documentation: https://docs.seqera.io/nextflow/workflow
+- Nextflow cache and resume documentation: https://docs.seqera.io/platform-enterprise/launch/cache-resume
 - nf-core website and documentation: https://nf-co.re/
-- nf-core/rnaseq documentation: https://nf-co.re/rnaseq/3.26.0/
-- nf-core/rnaseq usage documentation: https://nf-co.re/rnaseq/3.26.0/docs/usage/
-- nf-core/rnaseq output documentation: https://nf-co.re/rnaseq/3.26.0/docs/output/
+- nf-core terminology: https://nf-co.re/docs/community/terminology
+- nf-core/rnaseq documentation: https://nf-co.re/rnaseq/
 - nf-core/rnaseq source code: https://github.com/nf-core/rnaseq
-- nf-core modules documentation: https://nf-co.re/docs/contributing/modules
 - MultiQC documentation: https://docs.seqera.io/multiqc/
 - Ewels PA et al. The nf-core framework for community-curated bioinformatics pipelines. Nature Biotechnology. 2020. https://doi.org/10.1038/s41587-020-0439-x
 - Di Tommaso P et al. Nextflow enables reproducible computational workflows. Nature Biotechnology. 2017. https://doi.org/10.1038/nbt.3820

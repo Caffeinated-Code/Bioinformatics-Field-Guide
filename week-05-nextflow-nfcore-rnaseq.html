@@ -5,21 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="A practical deep dive into workflow engines, channels,
-processes, profiles, modules, parallel execution, and how nf-core/rnaseq
-turns sequencing files into QC reports and expression matrices"
+      content="Why workflow engines matter, how Nextflow runs locally or
+on AWS, what caching and parallel execution actually do, and how to
+launch nf-core/rnaseq without getting lost"
     />
-    <meta property="og:title" content="Nextflow And nf-core/rnaseq: From
-FASTQ Files To A Reproducible Count Matrix" />
+    <meta property="og:title" content="Nextflow For Bioinformatics: The
+Big Picture Before You Run nf-core/rnaseq" />
     <meta
       property="og:description"
-      content="A practical deep dive into workflow engines, channels,
-processes, profiles, modules, parallel execution, and how nf-core/rnaseq
-turns sequencing files into QC reports and expression matrices"
+      content="Why workflow engines matter, how Nextflow runs locally or
+on AWS, what caching and parallel execution actually do, and how to
+launch nf-core/rnaseq without getting lost"
     />
     <meta property="og:type" content="article" />
-    <title>Nextflow And nf-core/rnaseq: From FASTQ Files To A
-Reproducible Count Matrix | Bioinformatics Field Guide</title>
+    <title>Nextflow For Bioinformatics: The Big Picture Before You Run
+nf-core/rnaseq | Bioinformatics Field Guide</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -59,13 +59,14 @@ Reproducible Count Matrix | Bioinformatics Field Guide</title>
         <div class="container article-hero__grid">
           <div>
             <a class="back-link" href="index.html"><i class="ri-arrow-left-line" aria-hidden="true"></i> Field Guide home</a>
-            <p class="eyebrow">Week 5 · Deep dive</p>
-            <h1>Nextflow And nf-core/rnaseq: From FASTQ Files To A
-Reproducible Count Matrix</h1>
-                        <p class="article-hero__subtitle">A practical
-deep dive into workflow engines, channels, processes, profiles, modules,
-parallel execution, and how nf-core/rnaseq turns sequencing files into
-QC reports and expression matrices</p>
+            <p class="eyebrow">Week 5 · 7-minute core + practical run
+notes</p>
+            <h1>Nextflow For Bioinformatics: The Big Picture Before You
+Run nf-core/rnaseq</h1>
+                        <p class="article-hero__subtitle">Why workflow
+engines matter, how Nextflow runs locally or on AWS, what caching and
+parallel execution actually do, and how to launch nf-core/rnaseq without
+getting lost</p>
                         <div class="article-meta">
               <span><i class="ri-user-smile-line" aria-hidden="true"></i> Beginner friendly</span>
               <span><i class="ri-terminal-box-line" aria-hidden="true"></i> Tested commands</span>
@@ -74,8 +75,8 @@ QC reports and expression matrices</p>
           </div>
           <aside class="article-card">
             <span class="article-card__label">Original asset</span>
-            <p>Nextflow syntax cheat sheet, nf-core/rnaseq test runner,
-samplesheet template, and output folder map</p>
+            <p>nf-core/rnaseq test runner, samplesheet template, and
+output folder map</p>
             <a href="https://github.com/Caffeinated-Code/Bioinformatics-Field-Guide" target="_blank" rel="noreferrer">
               View repository <i class="ri-external-link-line" aria-hidden="true"></i>
             </a>
@@ -88,80 +89,52 @@ samplesheet template, and output folder map</p>
           <p class="toc__title">On this page</p>
           <ul>
           <li><a
-          href="#nextflow-and-nf-corernaseq-from-fastq-files-to-a-reproducible-count-matrix"
-          id="toc-nextflow-and-nf-corernaseq-from-fastq-files-to-a-reproducible-count-matrix">Nextflow
-          And nf-core/rnaseq: From FASTQ Files To A Reproducible Count
-          Matrix</a>
+          href="#nextflow-for-bioinformatics-the-big-picture-before-you-run-nf-corernaseq"
+          id="toc-nextflow-for-bioinformatics-the-big-picture-before-you-run-nf-corernaseq">Nextflow
+          For Bioinformatics: The Big Picture Before You Run
+          nf-core/rnaseq</a>
           <ul>
-          <li><a href="#why-workflow-engines-exist"
-          id="toc-why-workflow-engines-exist">Why Workflow Engines
-          Exist</a></li>
+          <li><a href="#the-problem-nextflow-solves"
+          id="toc-the-problem-nextflow-solves">The Problem Nextflow
+          Solves</a></li>
           <li><a href="#what-nextflow-is" id="toc-what-nextflow-is">What
           Nextflow Is</a></li>
-          <li><a href="#the-five-concepts-to-learn-first"
-          id="toc-the-five-concepts-to-learn-first">The Five Concepts To
-          Learn First</a></li>
-          <li><a href="#a-tiny-nextflow-example"
-          id="toc-a-tiny-nextflow-example">A Tiny Nextflow
-          Example</a></li>
-          <li><a href="#why-nextflow-is-good-for-bioinformatics"
-          id="toc-why-nextflow-is-good-for-bioinformatics">Why Nextflow
-          Is Good For Bioinformatics</a></li>
-          <li><a href="#the-pitfalls" id="toc-the-pitfalls">The
-          Pitfalls</a></li>
-          <li><a href="#important-syntax-without-the-panic"
-          id="toc-important-syntax-without-the-panic">Important Syntax
-          Without The Panic</a></li>
+          <li><a href="#why-bioinformaticians-use-it"
+          id="toc-why-bioinformaticians-use-it">Why Bioinformaticians
+          Use It</a></li>
+          <li><a href="#what-it-competes-with"
+          id="toc-what-it-competes-with">What It Competes With</a></li>
+          <li><a
+          href="#local-hpc-and-aws-same-logic-different-execution"
+          id="toc-local-hpc-and-aws-same-logic-different-execution">Local,
+          HPC, And AWS: Same Logic, Different Execution</a></li>
+          <li><a href="#caching-and--resume"
+          id="toc-caching-and--resume">Caching And
+          <code>-resume</code></a></li>
+          <li><a href="#how-nextflow-parallelizes"
+          id="toc-how-nextflow-parallelizes">How Nextflow
+          Parallelizes</a></li>
           <li><a href="#what-nf-core-adds"
           id="toc-what-nf-core-adds">What nf-core Adds</a></li>
-          <li><a href="#how-nf-core-pipelines-are-structured"
-          id="toc-how-nf-core-pipelines-are-structured">How nf-core
-          Pipelines Are Structured</a></li>
           <li><a href="#what-nf-corernaseq-does"
           id="toc-what-nf-corernaseq-does">What nf-core/rnaseq
           Does</a></li>
           <li><a href="#the-samplesheet-is-the-contract"
           id="toc-the-samplesheet-is-the-contract">The Samplesheet Is
           The Contract</a></li>
-          <li><a href="#a-real-pipeline-excerpt-top-level-wiring"
-          id="toc-a-real-pipeline-excerpt-top-level-wiring">A Real
-          Pipeline Excerpt: Top-Level Wiring</a></li>
-          <li><a
-          href="#a-real-pipeline-excerpt-branching-fastq-and-bam-inputs"
-          id="toc-a-real-pipeline-excerpt-branching-fastq-and-bam-inputs">A
-          Real Pipeline Excerpt: Branching FASTQ And BAM Inputs</a></li>
-          <li><a href="#a-real-pipeline-excerpt-conditional-alignment"
-          id="toc-a-real-pipeline-excerpt-conditional-alignment">A Real
-          Pipeline Excerpt: Conditional Alignment</a></li>
-          <li><a href="#a-real-pipeline-excerpt-parallel-qc-evidence"
-          id="toc-a-real-pipeline-excerpt-parallel-qc-evidence">A Real
-          Pipeline Excerpt: Parallel QC Evidence</a></li>
-          <li><a
-          href="#profiles-same-pipeline-different-compute-reality"
-          id="toc-profiles-same-pipeline-different-compute-reality">Profiles:
-          Same Pipeline, Different Compute Reality</a></li>
-          <li><a href="#run-the-week-5-test-helper"
-          id="toc-run-the-week-5-test-helper">Run The Week 5 Test
-          Helper</a></li>
-          <li><a href="#what-happens-during-a-run"
-          id="toc-what-happens-during-a-run">What Happens During A
-          Run</a></li>
-          <li><a href="#output-folder-tour"
-          id="toc-output-folder-tour">Output Folder Tour</a></li>
-          <li><a href="#how-to-read-the-first-multiqc-report"
-          id="toc-how-to-read-the-first-multiqc-report">How To Read The
-          First MultiQC Report</a></li>
-          <li><a href="#where-week-5-hands-off-to-week-4"
-          id="toc-where-week-5-hands-off-to-week-4">Where Week 5 Hands
-          Off To Week 4</a></li>
-          <li><a href="#save-this-nextflow--nf-corernaseq-decision-map"
-          id="toc-save-this-nextflow--nf-corernaseq-decision-map">Save
-          This: Nextflow + nf-core/rnaseq Decision Map</a></li>
-          <li><a href="#common-mistakes-worth-avoiding"
-          id="toc-common-mistakes-worth-avoiding">Common Mistakes Worth
-          Avoiding</a></li>
-          <li><a href="#what-to-watch-next"
-          id="toc-what-to-watch-next">What To Watch Next</a></li>
+          <li><a href="#run-the-test-profile-first"
+          id="toc-run-the-test-profile-first">Run The Test Profile
+          First</a></li>
+          <li><a href="#run-your-own-rna-seq-data"
+          id="toc-run-your-own-rna-seq-data">Run Your Own RNA-seq
+          Data</a></li>
+          <li><a href="#first-output-to-open"
+          id="toc-first-output-to-open">First Output To Open</a></li>
+          <li><a href="#save-this-week-5-decision-map"
+          id="toc-save-this-week-5-decision-map">Save This: Week 5
+          Decision Map</a></li>
+          <li><a href="#what-comes-next" id="toc-what-comes-next">What
+          Comes Next</a></li>
           <li><a href="#credits-and-references"
           id="toc-credits-and-references">Credits and
           References</a></li>
@@ -171,796 +144,425 @@ samplesheet template, and output folder map</p>
 
         <article class="article-content">
           <h1
-          id="nextflow-and-nf-corernaseq-from-fastq-files-to-a-reproducible-count-matrix">Nextflow
-          And nf-core/rnaseq: From FASTQ Files To A Reproducible Count
-          Matrix</h1>
-          <p><strong>Takeaway:</strong> Nextflow is the engine that
-          decides what should run, when it should run, and where it
-          should run. nf-core/rnaseq is the community-curated RNA-seq
-          pipeline built on that engine.</p>
-          <p>If RNA-seq differential expression starts with a count
-          matrix, this guide explains how that count matrix is made.</p>
-          <h2 id="why-workflow-engines-exist">Why Workflow Engines
-          Exist</h2>
-          <p>A real RNA-seq project is not one command. It is a chain of
-          decisions:</p>
+          id="nextflow-for-bioinformatics-the-big-picture-before-you-run-nf-corernaseq">Nextflow
+          For Bioinformatics: The Big Picture Before You Run
+          nf-core/rnaseq</h1>
+          <p><strong>Takeaway:</strong> Nextflow is not an RNA-seq tool.
+          It is the workflow engine that makes complex bioinformatics
+          analyses portable, parallel, resumable, and easier to
+          audit.</p>
+          <p>If you need a refresher on what bulk RNA-seq measures, what
+          raw counts mean, or why TPM should not go into DESeq2, start
+          with <a
+          href="week-04-bulk-rnaseq-differential-expression.html">Week
+          4: Bulk RNA-seq Field Guide</a>. This week answers a different
+          question:</p>
+          <pre class="text"><code>How do professional bioinformatics pipelines run the same analysis across many samples without becoming chaos?</code></pre>
+          <h2 id="the-problem-nextflow-solves">The Problem Nextflow
+          Solves</h2>
+          <p>A real RNA-seq analysis is not one command. It is a
+          chain:</p>
           <pre class="text"><code>FASTQ files
-  -&gt; raw read QC
+  -&gt; read QC
   -&gt; trimming or filtering
   -&gt; strandedness checks
   -&gt; reference preparation
   -&gt; alignment or pseudoalignment
-  -&gt; gene or transcript quantification
-  -&gt; merged count matrices
+  -&gt; quantification
+  -&gt; merged expression matrices
   -&gt; MultiQC report
   -&gt; downstream statistics</code></pre>
-          <p>You can run those steps manually while learning. That is
-          useful. But manual commands become fragile when you have many
-          samples, many projects, multiple users, an HPC cluster, cloud
-          storage, containers, and reruns after failure.</p>
-          <p>The common failure is not that a tool never runs. The
-          common failure is that nobody can confidently answer:</p>
-          <pre class="text"><code>Which version ran?
-Which reference was used?
-Which samples failed QC?
-Which command produced this count matrix?
-Can I rerun only the failed step?
-Can another lab reproduce this?</code></pre>
+          <p>Running that by hand teaches you what the tools do. But for
+          real projects, hand-wired commands become fragile. You need to
+          know:</p>
+          <ul>
+          <li>which software versions ran</li>
+          <li>which reference genome and annotation were used</li>
+          <li>which samples failed QC</li>
+          <li>which command produced the count matrix</li>
+          <li>whether failed steps can resume without rerunning
+          everything</li>
+          <li>whether the same workflow can run on a laptop, HPC, or
+          AWS</li>
+          </ul>
           <p>Nextflow exists to make those questions answerable.</p>
           <h2 id="what-nextflow-is">What Nextflow Is</h2>
-          <p>Nextflow is a workflow system for scalable, portable, and
-          reproducible scientific pipelines. It uses a dataflow model:
-          tasks run when their inputs are available, and outputs flow
-          into the next step.</p>
-          <p>That is the key idea. You do not write:</p>
-          <pre class="text"><code>Run sample 1, then sample 2, then sample 3.</code></pre>
-          <p>You write:</p>
-          <pre class="text"><code>For every sample with FASTQ files, run the appropriate process.
-When outputs are ready, pass them to the next process.</code></pre>
-          <p>Nextflow handles scheduling. On your laptop, that may mean
-          local parallel jobs. On a cluster, that may mean submitting
-          jobs to Slurm or another scheduler. On cloud, that may mean
-          AWS Batch, Google Cloud Batch, Azure Batch, Kubernetes, or
-          another supported executor.</p>
-          <h2 id="the-five-concepts-to-learn-first">The Five Concepts To
-          Learn First</h2>
+          <p>Nextflow is a workflow engine. It connects computational
+          steps and decides when each step can run.</p>
+          <p>The mental model is:</p>
+          <pre class="text"><code>inputs become channels
+channels feed processes
+processes produce outputs
+outputs feed the next steps
+independent steps run in parallel</code></pre>
+          <p>You describe the analysis. Nextflow handles the
+          execution.</p>
+          <p>That distinction matters. A workflow engine is not trying
+          to replace <code>STAR</code>, <code>Salmon</code>,
+          <code>FastQC</code>, <code>samtools</code>, or
+          <code>DESeq2</code>. It coordinates those tools in a
+          reproducible way.</p>
+          <h2 id="why-bioinformaticians-use-it">Why Bioinformaticians
+          Use It</h2>
           <table>
           <thead>
           <tr>
-          <th>Concept</th>
-          <th>Plain-language meaning</th>
-          <th>RNA-seq example</th>
+          <th>Need</th>
+          <th>What Nextflow gives you</th>
           </tr>
           </thead>
           <tbody>
           <tr>
-          <td>Channel</td>
-          <td>a stream of values or files</td>
-          <td>sample metadata plus FASTQ paths</td>
-          </tr>
-          <tr>
-          <td>Process</td>
-          <td>one computational step</td>
-          <td>run FastQC on reads</td>
-          </tr>
-          <tr>
-          <td>Workflow</td>
-          <td>how processes connect</td>
-          <td>QC -&gt; trim -&gt; align -&gt; quantify</td>
-          </tr>
-          <tr>
-          <td>Module</td>
-          <td>reusable process definition</td>
-          <td>a standard FastQC module</td>
-          </tr>
-          <tr>
-          <td>Profile</td>
-          <td>execution environment</td>
-          <td>Docker locally, Singularity on HPC</td>
-          </tr>
-          </tbody>
-          </table>
-          <p>Once these click, Nextflow stops feeling like a black
-          box.</p>
-          <h2 id="a-tiny-nextflow-example">A Tiny Nextflow Example</h2>
-          <p>This simplified example is not nf-core/rnaseq. It is a
-          teaching version of the pattern.</p>
-          <pre class="nextflow"><code>process COUNT_LINES {
-  input:
-  path file_to_count
-
-  output:
-  path &quot;${file_to_count}.lines.txt&quot;
-
-  script:
-  &quot;&quot;&quot;
-  wc -l ${file_to_count} &gt; ${file_to_count}.lines.txt
-  &quot;&quot;&quot;
-}
-
-workflow {
-  Channel.fromPath(&quot;data/*.fastq.gz&quot;) | COUNT_LINES
-}</code></pre>
-          <p>Read it like this:</p>
-          <pre class="text"><code>Find every FASTQ file in data/.
-For each file, run COUNT_LINES independently.
-Write one output per input.</code></pre>
-          <p>If there are 20 FASTQ files and enough compute resources,
-          those jobs do not need to wait politely in a single-file line.
-          Nextflow can schedule independent tasks in parallel because
-          each task has its own input and output.</p>
-          <h2 id="why-nextflow-is-good-for-bioinformatics">Why Nextflow
-          Is Good For Bioinformatics</h2>
-          <p>Nextflow solves several problems that bioinformatics keeps
-          creating.</p>
-          <table>
-          <thead>
-          <tr>
-          <th>Problem</th>
-          <th>What Nextflow helps with</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-          <td>Many samples</td>
+          <td>many samples</td>
           <td>runs independent sample-level tasks in parallel</td>
           </tr>
           <tr>
-          <td>Many tools</td>
+          <td>many tools</td>
           <td>connects tools into a formal workflow</td>
           </tr>
           <tr>
-          <td>Fragile environments</td>
-          <td>supports Docker, Singularity/Apptainer, Conda, Podman, and
-          other runtimes</td>
+          <td>reproducibility</td>
+          <td>records logs, reports, parameters, versions, and task
+          traces</td>
           </tr>
           <tr>
-          <td>Reruns after failure</td>
-          <td>caches successful tasks and supports
+          <td>environment control</td>
+          <td>supports Docker, Singularity/Apptainer, Podman, Conda, and
+          more</td>
+          </tr>
+          <tr>
+          <td>failure recovery</td>
+          <td>caches completed tasks and resumes with
           <code>-resume</code></td>
           </tr>
           <tr>
-          <td>HPC and cloud execution</td>
-          <td>separates workflow logic from execution backend</td>
+          <td>portability</td>
+          <td>same pipeline logic can run locally, on HPC, or in
+          cloud</td>
           </tr>
           <tr>
-          <td>Hidden provenance</td>
-          <td>records reports, traces, timelines, parameters, and
-          logs</td>
-          </tr>
-          <tr>
-          <td>Collaboration</td>
-          <td>pipelines can be shared through Git repositories</td>
+          <td>collaboration</td>
+          <td>pipeline code, configs, and parameters can be
+          version-controlled</td>
           </tr>
           </tbody>
           </table>
-          <p>The practical win is not glamour. It is trust.</p>
-          <h2 id="the-pitfalls">The Pitfalls</h2>
-          <p>Nextflow is powerful, but beginners usually struggle in
-          predictable places.</p>
+          <p>The point is not that Nextflow makes analysis effortless.
+          The point is that it makes complex analysis
+          <strong>inspectable</strong>.</p>
+          <h2 id="what-it-competes-with">What It Competes With</h2>
+          <p>Nextflow is not the only workflow system.</p>
           <table>
           <thead>
           <tr>
-          <th>Pitfall</th>
-          <th>What it looks like</th>
-          <th>How to avoid it</th>
+          <th>Tool</th>
+          <th>Strength</th>
+          <th>Common fit</th>
           </tr>
           </thead>
           <tbody>
           <tr>
-          <td>confusing <code>params</code> and config</td>
-          <td>pipeline behaves differently than expected</td>
-          <td>pass pipeline parameters through CLI or
-          <code>-params-file</code></td>
+          <td>Nextflow</td>
+          <td>portable, strong cloud/HPC support, widely used in
+          bioinformatics, nf-core ecosystem</td>
+          <td>production bioinformatics workflows</td>
           </tr>
           <tr>
-          <td>treating <code>work/</code> as final output</td>
-          <td>lost in hashed task folders</td>
-          <td>use <code>--outdir</code> outputs for scientific
-          results</td>
+          <td>Snakemake</td>
+          <td>Pythonic, very readable for many researchers, strong
+          rule-based workflows</td>
+          <td>lab-scale pipelines and custom analysis</td>
           </tr>
           <tr>
-          <td>forgetting <code>-resume</code></td>
-          <td>reruns expensive completed tasks</td>
-          <td>use <code>-resume</code> after fixing a failed run</td>
+          <td>WDL/Cromwell</td>
+          <td>common in Broad/GATK-style environments</td>
+          <td>genomics workflows in WDL ecosystems</td>
           </tr>
           <tr>
-          <td>wrong profile</td>
-          <td>Docker command on HPC, Singularity command on laptop</td>
-          <td>choose profile for the environment</td>
+          <td>CWL</td>
+          <td>standards-focused and portable</td>
+          <td>formal workflow portability requirements</td>
           </tr>
           <tr>
-          <td>underestimating disk</td>
-          <td><code>work/</code> grows quickly</td>
-          <td>plan storage before full datasets</td>
-          </tr>
-          <tr>
-          <td>changing inputs silently</td>
-          <td>cached tasks no longer mean what you think</td>
-          <td>keep samplesheet, params, references, and command</td>
-          </tr>
-          <tr>
-          <td>mixing genome and annotation</td>
-          <td>low assignment or broken counting</td>
-          <td>record FASTA and GTF/GFF source and release</td>
+          <td>Galaxy</td>
+          <td>graphical, accessible, training-friendly</td>
+          <td>users who prefer web-based workflows</td>
           </tr>
           </tbody>
           </table>
-          <p>Most Nextflow problems are not syntax problems. They are
-          input, environment, and expectation problems.</p>
-          <h2 id="important-syntax-without-the-panic">Important Syntax
-          Without The Panic</h2>
-          <h3 id="channels">Channels</h3>
-          <p>A channel is a stream. It may contain paths, values, or
-          structured tuples.</p>
-          <pre class="nextflow"><code>Channel.fromPath(&quot;data/*.fastq.gz&quot;)</code></pre>
-          <p>In RNA-seq, a channel often carries a sample ID plus one or
-          two FASTQ files:</p>
-          <pre class="text"><code>[sample metadata, reads]</code></pre>
-          <p>That pairing matters. You do not want reads floating around
-          without their sample identity.</p>
-          <h3 id="processes">Processes</h3>
-          <p>A process is one step. It declares what it needs and what
-          it produces.</p>
-          <pre class="nextflow"><code>process FASTQC {
-  input:
-  tuple val(meta), path(reads)
-
-  output:
-  tuple val(meta), path(&quot;*_fastqc.html&quot;)
-
-  script:
-  &quot;&quot;&quot;
-  fastqc ${reads}
-  &quot;&quot;&quot;
-}</code></pre>
-          <p>The process says:</p>
-          <pre class="text"><code>Give me sample metadata and read files.
-Run FastQC.
-Return the sample metadata with the FastQC report.</code></pre>
-          <p>Keeping <code>meta</code> with outputs is how large
-          pipelines avoid losing sample identity.</p>
-          <h3 id="workflows">Workflows</h3>
-          <p>A workflow connects processes.</p>
-          <pre class="nextflow"><code>workflow {
-  reads_ch | FASTQC
-}</code></pre>
-          <p>nf-core/rnaseq uses much larger workflows and subworkflows,
-          but the idea is the same: channels enter, processes run,
-          outputs continue.</p>
-          <h3 id="operators">Operators</h3>
-          <p>Operators transform channels.</p>
-          <table>
-          <thead>
-          <tr>
-          <th>Operator</th>
-          <th>What it does</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-          <td><code>.map { }</code></td>
-          <td>changes each item</td>
-          </tr>
-          <tr>
-          <td><code>.filter { }</code></td>
-          <td>keeps selected items</td>
-          </tr>
-          <tr>
-          <td><code>.branch { }</code></td>
-          <td>splits a channel into named routes</td>
-          </tr>
-          <tr>
-          <td><code>.mix()</code></td>
-          <td>combines streams</td>
-          </tr>
-          <tr>
-          <td><code>.join()</code></td>
-          <td>combines streams by matching keys</td>
-          </tr>
-          <tr>
-          <td><code>.collect()</code></td>
-          <td>gathers items together</td>
-          </tr>
-          </tbody>
-          </table>
-          <p>These are how Nextflow supports modular, parallel
-          processing. Independent branches can run separately, then join
-          later when the workflow needs combined evidence.</p>
-          <h2 id="what-nf-core-adds">What nf-core Adds</h2>
-          <p>nf-core is a community project that provides curated
-          Nextflow pipelines for bioinformatics. It adds:</p>
+          <p>My practical recommendation:</p>
+          <pre class="text"><code>Use nf-core/Nextflow when a mature community pipeline exists.
+Use custom Nextflow when you need production portability and modular execution.
+Use Snakemake when a small lab pipeline needs to stay Python-adjacent and simple.
+Use Galaxy when accessibility and GUI training matter most.</code></pre>
+          <h2
+          id="local-hpc-and-aws-same-logic-different-execution">Local,
+          HPC, And AWS: Same Logic, Different Execution</h2>
+          <p>Nextflow separates workflow logic from execution
+          environment.</p>
+          <p>On a laptop, you might run:</p>
+          <div class="sourceCode" id="cb5"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/rnaseq <span class="dt">\</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> test,docker <span class="dt">\</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outdir</span> results/week-05-rnaseq-test <span class="dt">\</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-resume</span></span></code></pre></div>
+          <p>On an HPC cluster, the profile might use
+          Singularity/Apptainer and a scheduler such as Slurm:</p>
+          <div class="sourceCode" id="cb6"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/rnaseq <span class="dt">\</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> test,singularity <span class="dt">\</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outdir</span> results/week-05-rnaseq-test <span class="dt">\</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-resume</span></span></code></pre></div>
+          <p>On AWS, the same pipeline logic can run with AWS Batch or
+          through Seqera Platform. In cloud runs, input, output, and
+          work directories often live in S3:</p>
+          <div class="sourceCode" id="cb7"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/rnaseq <span class="dt">\</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input</span> s3://my-bucket/project/samplesheet.csv <span class="dt">\</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outdir</span> s3://my-bucket/project/results <span class="dt">\</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--fasta</span> s3://my-bucket/references/genome.fa <span class="dt">\</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--gtf</span> s3://my-bucket/references/genes.gtf <span class="dt">\</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> awsbatch <span class="dt">\</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">-resume</span></span></code></pre></div>
+          <p>The exact AWS profile depends on your infrastructure. The
+          big idea is stable:</p>
+          <pre class="text"><code>pipeline code stays the same
+executor changes
+storage location changes
+container strategy changes</code></pre>
+          <h2 id="caching-and--resume">Caching And
+          <code>-resume</code></h2>
+          <p>Nextflow automatically records task executions in a task
+          cache. On local/HPC runs, this is commonly stored under
+          <code>.nextflow/cache</code>; in cloud runs, cache behavior
+          can use cloud storage associated with the work directory.</p>
+          <p>When you run with:</p>
+          <div class="sourceCode" id="cb9"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-resume</span></span></code></pre></div>
+          <p>Nextflow checks which tasks already completed with the same
+          inputs, code, parameters, and environment. Completed tasks can
+          be reused. Failed or changed tasks run again.</p>
+          <p>This is why a failed 100-sample workflow does not always
+          need to restart from zero.</p>
+          <p>Things that can invalidate cache:</p>
           <ul>
-          <li>standardized pipeline templates</li>
-          <li>reusable modules and subworkflows</li>
-          <li>consistent documentation</li>
-          <li>parameter schemas</li>
+          <li>changing input files</li>
+          <li>changing process code</li>
+          <li>changing relevant parameters</li>
+          <li>changing container versions</li>
+          <li>moving paths in ways that affect task hashes</li>
+          <li>deleting the <code>work/</code> directory or cache
+          metadata</li>
+          </ul>
+          <p>Beginner rule:</p>
+          <pre class="text"><code>Use -resume after fixing a failed run.
+Do not delete work/ until you know you no longer need to resume or debug.</code></pre>
+          <h2 id="how-nextflow-parallelizes">How Nextflow
+          Parallelizes</h2>
+          <p>Nextflow runs tasks when their inputs are ready. If 24
+          samples each need FastQC, those 24 FastQC tasks are
+          independent. Nextflow can schedule them in parallel, limited
+          by your machine, cluster queue, cloud settings, and process
+          resource requests.</p>
+          <p>That is why workflow structure matters. This:</p>
+          <pre class="text"><code>sample_1 -&gt; FastQC
+sample_2 -&gt; FastQC
+sample_3 -&gt; FastQC
+...</code></pre>
+          <p>is naturally parallel. Later, a summary step such as
+          MultiQC waits until the QC files are ready:</p>
+          <pre class="text"><code>all FastQC outputs -&gt; MultiQC</code></pre>
+          <p>Parallel where possible. Join where necessary.</p>
+          <h2 id="what-nf-core-adds">What nf-core Adds</h2>
+          <p>nf-core is a community collection of curated Nextflow
+          pipelines. It adds:</p>
+          <ul>
+          <li>standard pipeline structure</li>
+          <li>documentation</li>
+          <li>stable releases</li>
           <li>test profiles</li>
           <li>container support</li>
-          <li>versioned releases</li>
-          <li>community review and maintenance</li>
+          <li>parameter schemas</li>
+          <li>reusable modules and subworkflows</li>
+          <li>community review</li>
           </ul>
-          <p>That matters because a pipeline is not only code. It is an
-          agreement about structure.</p>
-          <p>The nf-core ecosystem includes pipelines across many areas:
-          RNA-seq, variant calling, single-cell, methylation,
-          metagenomics, proteomics, viral reconstruction, and more. The
-          point is not that nf-core has one magic RNA-seq pipeline. The
-          point is that the community has built a shared pattern for
-          running complex bioscience workflows.</p>
-          <h2 id="how-nf-core-pipelines-are-structured">How nf-core
-          Pipelines Are Structured</h2>
-          <p>A typical nf-core pipeline has several layers:</p>
-          <pre class="text"><code>main.nf
-  -&gt; imports workflows and subworkflows
-workflows/
-  -&gt; defines the main analysis logic
-subworkflows/
-  -&gt; groups related steps
-modules/
-  -&gt; reusable tool-level processes
-conf/
-  -&gt; profiles and process-specific settings
-nextflow_schema.json
-  -&gt; parameter validation and launch forms
-assets/
-  -&gt; schemas, report text, templates, helper files</code></pre>
-          <p>That structure is why nf-core pipelines can be large
-          without becoming a single unreadable script.</p>
+          <p>That means you do not need to write a new RNA-seq pipeline
+          just to process ordinary bulk RNA-seq data. You can use
+          <code>nf-core/rnaseq</code>, then focus your attention on
+          experimental design, QC, and interpretation.</p>
           <h2 id="what-nf-corernaseq-does">What nf-core/rnaseq Does</h2>
           <p>nf-core/rnaseq analyzes RNA-seq data from organisms with a
-          reference genome and annotation. It accepts FASTQ files or
-          selected pre-aligned BAM workflows, runs QC and processing
-          steps, and produces expression outputs plus QC reports.</p>
+          reference genome and annotation. According to current pipeline
+          documentation, it takes a samplesheet and FASTQ files,
+          performs QC, trimming and alignment or pseudoalignment, and
+          produces a gene expression matrix plus extensive QC
+          reports.</p>
           <p>At a high level:</p>
           <pre class="text"><code>samplesheet.csv
-  -&gt; reference preparation
-  -&gt; raw FASTQ QC
-  -&gt; trimming/filtering/optional rRNA removal
+  -&gt; FastQC / read QC
+  -&gt; trimming and optional filtering
   -&gt; strandedness inference when requested
-  -&gt; STAR, HISAT2, Bowtie2+Salmon, Salmon, kallisto, or RSEM-style routes
+  -&gt; STAR / Salmon / RSEM / HISAT2-style routes depending on parameters
   -&gt; count and abundance outputs
-  -&gt; MultiQC report
+  -&gt; MultiQC
   -&gt; pipeline_info provenance</code></pre>
-          <p>It does <strong>not</strong> replace your biological
-          interpretation. It does <strong>not</strong> prove
-          differential expression by itself. It gets you to QC reports
-          and expression matrices so downstream analysis can begin
-          responsibly.</p>
+          <p>Important: nf-core/rnaseq does <strong>not</strong> perform
+          statistical differential expression testing. It produces count
+          and abundance outputs. For the statistical side, return to <a
+          href="week-04-bulk-rnaseq-differential-expression.html">Week
+          4</a>.</p>
           <h2 id="the-samplesheet-is-the-contract">The Samplesheet Is
           The Contract</h2>
-          <p>The samplesheet tells nf-core/rnaseq what biological files
-          exist and how they should be grouped.</p>
+          <p>A minimal paired-end samplesheet looks like:</p>
           <pre class="csv"><code>sample,fastq_1,fastq_2,strandedness,seq_platform
 CONTROL_REP1,data/fastq/control_rep1_R1.fastq.gz,data/fastq/control_rep1_R2.fastq.gz,auto,ILLUMINA
 CONTROL_REP2,data/fastq/control_rep2_R1.fastq.gz,data/fastq/control_rep2_R2.fastq.gz,auto,ILLUMINA
 TREATED_REP1,data/fastq/treated_rep1_R1.fastq.gz,data/fastq/treated_rep1_R2.fastq.gz,auto,ILLUMINA
 TREATED_REP2,data/fastq/treated_rep2_R1.fastq.gz,data/fastq/treated_rep2_R2.fastq.gz,auto,ILLUMINA</code></pre>
-          <p>The first columns matter:</p>
-          <table>
-          <thead>
-          <tr>
-          <th>Column</th>
-          <th>Meaning</th>
-          <th>Common mistake</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-          <td><code>sample</code></td>
-          <td>sample identifier</td>
-          <td>using filenames instead of stable sample names</td>
-          </tr>
-          <tr>
-          <td><code>fastq_1</code></td>
-          <td>R1 file or single-end FASTQ</td>
-          <td>path does not exist</td>
-          </tr>
-          <tr>
-          <td><code>fastq_2</code></td>
-          <td>R2 file for paired-end data</td>
-          <td>R1/R2 pairs mismatched</td>
-          </tr>
-          <tr>
-          <td><code>strandedness</code></td>
-          <td><code>forward</code>, <code>reverse</code>,
-          <code>unstranded</code>, or <code>auto</code></td>
-          <td>guessing instead of checking kit/QC</td>
-          </tr>
-          <tr>
-          <td><code>seq_platform</code></td>
-          <td>optional sequencing platform information</td>
-          <td>inconsistent spelling</td>
-          </tr>
-          </tbody>
-          </table>
-          <p>Rows with the same sample identifier can represent repeated
-          sequencing runs for the same sample; nf-core/rnaseq can merge
-          them before downstream steps. That is useful for technical
-          runs. It is not a license to collapse biological
-          replicates.</p>
-          <p>If <code>strandedness</code> is set to <code>auto</code>,
-          nf-core/rnaseq does not shrug and guess. Current documentation
-          describes a subsampling-based inference step that uses Salmon
-          and reports strandedness evidence in MultiQC. Treat that as a
-          QC result to inspect, especially if the library-prep kit says
-          one thing and the inferred result says another.</p>
-          <h2 id="a-real-pipeline-excerpt-top-level-wiring">A Real
-          Pipeline Excerpt: Top-Level Wiring</h2>
-          <p>In nf-core/rnaseq, the top-level <code>main.nf</code>
-          imports the main RNA-seq workflow and supporting subworkflows.
-          A shortened excerpt looks like this:</p>
-          <pre class="nextflow"><code>include { RNASEQ                  } from &#39;./workflows/rnaseq&#39;
-include { PREPARE_GENOME          } from &#39;./subworkflows/local/prepare_genome&#39;
-include { PIPELINE_INITIALISATION } from &#39;./subworkflows/local/utils_nfcore_rnaseq_pipeline&#39;
-include { PIPELINE_COMPLETION     } from &#39;./subworkflows/local/utils_nfcore_rnaseq_pipeline&#39;</code></pre>
-          <p>This teaches a big idea:</p>
-          <pre class="text"><code>The top-level pipeline does not do every tool step directly.
-It imports reusable workflows and coordinates them.</code></pre>
-          <p>Then the pipeline prepares reference files before launching
-          the main RNA-seq workflow:</p>
-          <pre class="nextflow"><code>PREPARE_GENOME(...)
-RNASEQ(ch_samplesheet, PREPARE_GENOME.out.fasta, PREPARE_GENOME.out.gtf, ...)</code></pre>
-          <p>That is the handoff pattern: one subworkflow emits
-          reference outputs; the main RNA-seq workflow consumes
-          them.</p>
-          <h2
-          id="a-real-pipeline-excerpt-branching-fastq-and-bam-inputs">A
-          Real Pipeline Excerpt: Branching FASTQ And BAM Inputs</h2>
-          <p>Inside the RNA-seq workflow, nf-core/rnaseq converts the
-          samplesheet into structured channel records. A shortened
-          teaching excerpt:</p>
-          <pre class="nextflow"><code>channel
-  .fromList(samplesheetToList(params.input, &quot;${projectDir}/assets/schema_input.json&quot;))
-  .map { meta, fastq_1, fastq_2, genome_bam, transcriptome_bam -&gt;
-    if (!fastq_2) {
-      return [ meta.id, meta + [ single_end:true ], [ fastq_1 ], genome_bam, transcriptome_bam ]
-    } else {
-      return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ], genome_bam, transcriptome_bam ]
-    }
-  }
-  .groupTuple()
-  .branch {
-    bam: params.skip_alignment &amp;&amp; (genome_bam || transcriptome_bam)
-    fastq: reads.size() &gt; 0 &amp;&amp; reads[0]
-  }</code></pre>
-          <p>Do not worry about every character. Read the shape:</p>
-          <pre class="text"><code>Read samplesheet.
-Attach metadata.
-Detect single-end vs paired-end.
-Group repeated rows for a sample.
-Branch inputs into BAM route or FASTQ route.</code></pre>
-          <p>This is how one pipeline supports multiple input styles
-          without becoming a pile of separate scripts.</p>
-          <h2 id="a-real-pipeline-excerpt-conditional-alignment">A Real
-          Pipeline Excerpt: Conditional Alignment</h2>
-          <p>nf-core/rnaseq does not blindly run every aligner. It
-          checks parameters and follows the selected route.</p>
-          <pre class="nextflow"><code>if (!params.skip_alignment &amp;&amp; (params.aligner == &#39;star_salmon&#39; || params.aligner == &#39;star_rsem&#39;)) {
-  ALIGN_STAR(...)
-}
-
-if (!params.skip_alignment &amp;&amp; params.aligner == &#39;hisat2&#39;) {
-  FASTQ_ALIGN_HISAT2(...)
-}</code></pre>
-          <p>That is modular processing in practice:</p>
-          <pre class="text"><code>If STAR route is selected, run STAR-related subworkflow.
-If HISAT2 route is selected, run HISAT2-related subworkflow.
-If alignment is skipped, do not waste time aligning.</code></pre>
-          <p>The same pipeline can behave differently based on
-          parameters while preserving the same overall structure.</p>
-          <h2 id="a-real-pipeline-excerpt-parallel-qc-evidence">A Real
-          Pipeline Excerpt: Parallel QC Evidence</h2>
-          <p>nf-core/rnaseq collects QC evidence from many places and
-          feeds it into MultiQC. You will see patterns like:</p>
-          <pre class="nextflow"><code>ch_multiqc_files = ch_multiqc_files.mix(FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS.out.multiqc_files)
-ch_multiqc_files = ch_multiqc_files.mix(ALIGN_STAR.out.log_final)</code></pre>
-          <p>Plain English:</p>
-          <pre class="text"><code>Take QC files from read-level processing.
-Take QC files from alignment.
-Mix them into the MultiQC input stream.</code></pre>
-          <p>That is why MultiQC can show read quality, trimming,
-          alignment, strandedness, duplication, assignment, and other
-          metrics in one report.</p>
-          <h2
-          id="profiles-same-pipeline-different-compute-reality">Profiles:
-          Same Pipeline, Different Compute Reality</h2>
-          <p>The same nf-core/rnaseq pipeline can run in different
-          environments.</p>
-          <table>
-          <thead>
-          <tr>
-          <th>Profile</th>
-          <th>Use when</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-          <td><code>docker</code></td>
-          <td>local laptop or workstation with Docker/Colima</td>
-          </tr>
-          <tr>
-          <td><code>singularity</code> / <code>apptainer</code></td>
-          <td>HPC where Docker is not allowed</td>
-          </tr>
-          <tr>
-          <td><code>conda</code></td>
-          <td>local learning or when containers are unavailable</td>
-          </tr>
-          <tr>
-          <td>institute profile</td>
-          <td>your organization has a maintained config</td>
-          </tr>
-          <tr>
-          <td>cloud profile</td>
-          <td>running through supported cloud infrastructure</td>
-          </tr>
-          </tbody>
-          </table>
-          <p>For a local test:</p>
-          <div class="sourceCode" id="cb24"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/rnaseq <span class="dt">\</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> test,docker <span class="dt">\</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outdir</span> results/week-05-nfcore-rnaseq-test <span class="dt">\</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-resume</span></span></code></pre></div>
-          <p>The <code>test</code> profile supplies a tiny input dataset
-          and reference files. The <code>docker</code> profile tells
-          Nextflow to use Docker containers. The <code>-resume</code>
-          flag tells Nextflow to reuse successful cached tasks if the
-          run is restarted.</p>
-          <p>If you are on an HPC cluster, the equivalent might be:</p>
-          <div class="sourceCode" id="cb25"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/rnaseq <span class="dt">\</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> test,singularity <span class="dt">\</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outdir</span> results/week-05-nfcore-rnaseq-test <span class="dt">\</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-resume</span></span></code></pre></div>
-          <p>Use the profile your computing environment supports.</p>
-          <h2 id="run-the-week-5-test-helper">Run The Week 5 Test
-          Helper</h2>
-          <p>The resource folder includes a small wrapper script:</p>
-          <div class="sourceCode" id="cb26"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># From the repository root:</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> content/resources/week-05/run_nfcore_rnaseq_test.sh</span></code></pre></div>
-          <p>Before using the Docker profile, make sure Docker Desktop
-          or Colima is running:</p>
-          <div class="sourceCode" id="cb27"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> info</span></code></pre></div>
-          <p>If that command cannot connect to Docker, start Docker
-          Desktop or run <code>colima start</code> before launching the
-          pipeline.</p>
-          <p>The script runs:</p>
-          <div class="sourceCode" id="cb28"><pre
-          class="sourceCode bash"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/rnaseq <span class="dt">\</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> <span class="st">&quot;test,docker&quot;</span> <span class="dt">\</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outdir</span> <span class="st">&quot;results/week-05-nfcore-rnaseq-test&quot;</span> <span class="dt">\</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-resume</span></span></code></pre></div>
-          <p>This is a pipeline machinery test, not a publishable
-          biological analysis. It answers:</p>
-          <pre class="text"><code>Can this machine run Nextflow?
-Can it pull the pipeline?
-Can it use the selected container profile?
-Can it produce the expected output structure?</code></pre>
-          <h2 id="what-happens-during-a-run">What Happens During A
-          Run</h2>
-          <p>When you launch a Nextflow pipeline, several things
-          happen:</p>
-          <table>
-          <thead>
-          <tr>
-          <th>Thing</th>
-          <th>Meaning</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-          <td><code>.nextflow.log</code></td>
-          <td>main run log</td>
-          </tr>
-          <tr>
-          <td><code>.nextflow/</code></td>
-          <td>Nextflow metadata</td>
-          </tr>
-          <tr>
-          <td><code>work/</code></td>
-          <td>task-level working directories and cache</td>
-          </tr>
-          <tr>
-          <td><code>results/</code> or your <code>--outdir</code></td>
-          <td>published results</td>
-          </tr>
-          <tr>
-          <td>execution report</td>
-          <td>resource and task summary</td>
-          </tr>
-          <tr>
-          <td>trace file</td>
-          <td>task-level runtime details</td>
-          </tr>
-          <tr>
-          <td>timeline file</td>
-          <td>when tasks ran</td>
-          </tr>
-          </tbody>
-          </table>
-          <p>The <code>work/</code> directory is important for caching
-          and debugging. It is not the folder you hand to a collaborator
-          as final results.</p>
-          <h2 id="output-folder-tour">Output Folder Tour</h2>
-          <p>The exact output structure depends on pipeline version and
-          parameters, but a typical RNA-seq run may include:</p>
-          <table>
-          <thead>
-          <tr>
-          <th>Output area</th>
-          <th>Why it matters</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-          <td><code>multiqc/</code></td>
-          <td>start here; one report summarizing many QC tools</td>
-          </tr>
-          <tr>
-          <td><code>fastqc/</code></td>
-          <td>raw and/or trimmed read quality</td>
-          </tr>
-          <tr>
-          <td>trimming folder</td>
-          <td>adapter removal and reads retained</td>
-          </tr>
-          <tr>
-          <td>aligner folder</td>
-          <td>mapping summaries, BAMs, logs, indexes</td>
-          </tr>
-          <tr>
-          <td>quantification folder</td>
-          <td>gene/transcript counts and abundance</td>
-          </tr>
-          <tr>
-          <td><code>rseqc/</code></td>
-          <td>strandedness and RNA-seq-specific QC when enabled</td>
-          </tr>
-          <tr>
-          <td><code>pipeline_info/</code></td>
-          <td>versions, parameters, reports, timeline, trace</td>
-          </tr>
-          </tbody>
-          </table>
-          <p>The resource file <code>output_folder_map.md</code> gives a
-          practical folder-by-folder checklist.</p>
-          <h2 id="how-to-read-the-first-multiqc-report">How To Read The
-          First MultiQC Report</h2>
-          <p>Open MultiQC before opening a count matrix.</p>
+          <p>Check before running:</p>
+          <ul>
+          <li>sample names are stable and unique</li>
+          <li>FASTQ paths exist</li>
+          <li>R1 and R2 files are correctly paired</li>
+          <li>strandedness is known or intentionally set to
+          <code>auto</code></li>
+          <li>genome FASTA and GTF/GFF annotation match</li>
+          <li>output directory has enough space</li>
+          </ul>
+          <p>If <code>strandedness</code> is <code>auto</code>, inspect
+          the inferred strandedness evidence in MultiQC. Do not treat
+          <code>auto</code> as a reason to ignore library prep.</p>
+          <h2 id="run-the-test-profile-first">Run The Test Profile
+          First</h2>
+          <p>From the repository root:</p>
+          <div class="sourceCode" id="cb15"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Confirm Nextflow is installed.</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> <span class="at">-version</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Confirm Docker Desktop or Colima is running.</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> info</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the official nf-core/rnaseq test profile.</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> content/resources/week-05/run_nfcore_rnaseq_test.sh</span></code></pre></div>
+          <p>The helper script runs:</p>
+          <div class="sourceCode" id="cb16"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/rnaseq <span class="dt">\</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> <span class="st">&quot;test,docker&quot;</span> <span class="dt">\</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outdir</span> <span class="st">&quot;results/week-05-nfcore-rnaseq-test&quot;</span> <span class="dt">\</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-resume</span></span></code></pre></div>
+          <p>This test answers:</p>
+          <pre class="text"><code>Can Nextflow run here?
+Can containers run here?
+Can the nf-core/rnaseq pipeline launch and finish?
+Can I find the output report?</code></pre>
+          <p>It is not a biological analysis.</p>
+          <h2 id="run-your-own-rna-seq-data">Run Your Own RNA-seq
+          Data</h2>
+          <p>Once the test profile works, a real run looks more
+          like:</p>
+          <div class="sourceCode" id="cb18"><pre
+          class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/rnaseq <span class="dt">\</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input</span> samplesheet.csv <span class="dt">\</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outdir</span> results/my_rnaseq_project <span class="dt">\</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--fasta</span> references/GRCh38.primary_assembly.fa.gz <span class="dt">\</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--gtf</span> references/gencode.v44.annotation.gtf.gz <span class="dt">\</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> docker <span class="dt">\</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">-resume</span></span></code></pre></div>
+          <p>For reproducibility, save:</p>
+          <ul>
+          <li>exact command</li>
+          <li>pipeline version</li>
+          <li>Nextflow version</li>
+          <li>samplesheet</li>
+          <li>params file, if used</li>
+          <li>FASTA and GTF/GFF source</li>
+          <li>MultiQC report</li>
+          <li><code>pipeline_info/</code></li>
+          </ul>
+          <h2 id="first-output-to-open">First Output To Open</h2>
+          <p>Open MultiQC before touching the count matrix.</p>
           <p>Look for:</p>
           <ul>
-          <li>Did all expected samples appear?</li>
-          <li>Are read qualities acceptable?</li>
-          <li>Is adapter content under control?</li>
-          <li>Did trimming remove a suspicious amount of data?</li>
-          <li>Are mapping rates reasonable for the organism and
-          assay?</li>
-          <li>Is strandedness consistent with the expected library
-          prep?</li>
-          <li>Are duplication levels plausible?</li>
-          <li>Are any samples extreme outliers?</li>
-          <li>Did assignment or quantification look unusually low?</li>
+          <li>missing samples</li>
+          <li>low read quality</li>
+          <li>adapter issues</li>
+          <li>suspicious trimming</li>
+          <li>poor mapping rate</li>
+          <li>strandedness mismatch</li>
+          <li>high duplication</li>
+          <li>failed assignment or quantification</li>
           </ul>
-          <p>If MultiQC is alarming, do not rush into DESeq2. A bad
-          count matrix still produces a volcano plot.</p>
-          <h2 id="where-week-5-hands-off-to-week-4">Where Week 5 Hands
-          Off To Week 4</h2>
-          <p>Week 5 is about producing and auditing the count
-          matrix.</p>
-          <p>Week 4 is about interpreting the count matrix
-          correctly:</p>
-          <pre class="text"><code>Week 5:
-FASTQ -&gt; nf-core/rnaseq -&gt; QC reports -&gt; count matrix
-
-Week 4:
-count matrix + metadata -&gt; DESeq2 model -&gt; cautious biological interpretation</code></pre>
-          <p>That separation matters. Pipelines create structured
-          evidence. Statistical models test biological questions.
-          Neither replaces experimental judgment.</p>
-          <h2 id="save-this-nextflow--nf-corernaseq-decision-map">Save
-          This: Nextflow + nf-core/rnaseq Decision Map</h2>
+          <p>A count matrix can look tidy even when the data behind it
+          is not trustworthy.</p>
+          <h2 id="save-this-week-5-decision-map">Save This: Week 5
+          Decision Map</h2>
           <table>
           <thead>
           <tr>
           <th>Decision</th>
-          <th>Good beginner default</th>
-          <th>Ask before changing</th>
+          <th>Good default</th>
+          <th>Why</th>
           </tr>
           </thead>
           <tbody>
           <tr>
-          <td>pipeline</td>
-          <td>nf-core/rnaseq stable release</td>
-          <td>Do I need a custom workflow or a community pipeline?</td>
-          </tr>
-          <tr>
           <td>first run</td>
           <td><code>-profile test,docker</code></td>
-          <td>Does my compute environment support Docker?</td>
+          <td>confirms the machine can run the pipeline</td>
           </tr>
           <tr>
-          <td>local containers</td>
+          <td>local execution</td>
           <td>Docker or Colima</td>
-          <td>Is Docker running and allowed?</td>
+          <td>easiest reproducible setup on a laptop</td>
           </tr>
           <tr>
-          <td>HPC containers</td>
+          <td>HPC execution</td>
           <td>Singularity/Apptainer</td>
-          <td>Does my cluster provide a profile?</td>
+          <td>common where Docker is restricted</td>
           </tr>
           <tr>
-          <td>input</td>
-          <td>validated samplesheet</td>
-          <td>Are sample names, FASTQs, and strandedness correct?</td>
+          <td>cloud execution</td>
+          <td>AWS Batch or Seqera Platform</td>
+          <td>scalable for larger projects</td>
           </tr>
           <tr>
-          <td>reference</td>
-          <td>matched FASTA + GTF/GFF</td>
-          <td>Are genome build and annotation compatible?</td>
-          </tr>
-          <tr>
-          <td>rerun</td>
+          <td>restart failed run</td>
           <td><code>-resume</code></td>
-          <td>Did I change inputs or parameters intentionally?</td>
+          <td>avoids rerunning completed tasks</td>
           </tr>
           <tr>
-          <td>first output to inspect</td>
+          <td>first report</td>
           <td>MultiQC</td>
-          <td>Do QC metrics support downstream analysis?</td>
+          <td>tells you whether outputs are believable</td>
           </tr>
           <tr>
-          <td>final handoff</td>
-          <td>count matrix + metadata + QC</td>
-          <td>Is this ready for DESeq2 or should I stop?</td>
+          <td>statistical testing</td>
+          <td>downstream DESeq2/edgeR/etc.</td>
+          <td>nf-core/rnaseq does not assign DE significance</td>
           </tr>
           </tbody>
           </table>
-          <h2 id="common-mistakes-worth-avoiding">Common Mistakes Worth
-          Avoiding</h2>
-          <ul>
-          <li>Running a full dataset before the test profile works.</li>
-          <li>Using Docker on a cluster where Docker is blocked.</li>
-          <li>Treating <code>auto</code> strandedness as a substitute
-          for checking the report.</li>
-          <li>Mixing <code>GRCh37</code> FASTA with <code>GRCh38</code>
-          annotation.</li>
-          <li>Deleting <code>work/</code> before a failed run is
-          debugged.</li>
-          <li>Forgetting to save the exact command, pipeline version,
-          and parameter file.</li>
-          <li>Assuming nf-core/rnaseq performs statistical differential
-          expression. It does not.</li>
-          <li>Trusting a count matrix before reading MultiQC.</li>
-          </ul>
-          <h2 id="what-to-watch-next">What To Watch Next</h2>
-          <p>Next, the natural follow-up is <strong>RNA-seq QC: When To
-          Trust, Pause, Or Re-run Your Analysis</strong>. That article
-          should be less about launching the pipeline and more about
-          reading the evidence: FastQC, MultiQC, mapping rate,
-          duplication, strandedness, assignment, sample swaps, and batch
-          patterns.</p>
+          <h2 id="what-comes-next">What Comes Next</h2>
+          <p>Week 6 goes under the hood. We will build a custom Nextflow
+          pipeline for Oxford Nanopore long-read data, step by step,
+          then compare that custom pipeline to the existing
+          nf-core/nanoseq pipeline.</p>
           <h2 id="credits-and-references">Credits and References</h2>
           <ul>
           <li>Nextflow documentation: <a
           href="https://docs.seqera.io/nextflow/">https://docs.seqera.io/nextflow/</a></li>
-          <li>Nextflow GitHub repository: <a
-          href="https://github.com/nextflow-io/nextflow">https://github.com/nextflow-io/nextflow</a></li>
+          <li>Nextflow workflow documentation: <a
+          href="https://docs.seqera.io/nextflow/workflow">https://docs.seqera.io/nextflow/workflow</a></li>
+          <li>Nextflow cache and resume documentation: <a
+          href="https://docs.seqera.io/platform-enterprise/launch/cache-resume">https://docs.seqera.io/platform-enterprise/launch/cache-resume</a></li>
           <li>nf-core website and documentation: <a
           href="https://nf-co.re/">https://nf-co.re/</a></li>
+          <li>nf-core terminology: <a
+          href="https://nf-co.re/docs/community/terminology">https://nf-co.re/docs/community/terminology</a></li>
           <li>nf-core/rnaseq documentation: <a
-          href="https://nf-co.re/rnaseq/3.26.0/">https://nf-co.re/rnaseq/3.26.0/</a></li>
-          <li>nf-core/rnaseq usage documentation: <a
-          href="https://nf-co.re/rnaseq/3.26.0/docs/usage/">https://nf-co.re/rnaseq/3.26.0/docs/usage/</a></li>
-          <li>nf-core/rnaseq output documentation: <a
-          href="https://nf-co.re/rnaseq/3.26.0/docs/output/">https://nf-co.re/rnaseq/3.26.0/docs/output/</a></li>
+          href="https://nf-co.re/rnaseq/">https://nf-co.re/rnaseq/</a></li>
           <li>nf-core/rnaseq source code: <a
           href="https://github.com/nf-core/rnaseq">https://github.com/nf-core/rnaseq</a></li>
-          <li>nf-core modules documentation: <a
-          href="https://nf-co.re/docs/contributing/modules">https://nf-co.re/docs/contributing/modules</a></li>
           <li>MultiQC documentation: <a
           href="https://docs.seqera.io/multiqc/">https://docs.seqera.io/multiqc/</a></li>
           <li>Ewels PA et al. The nf-core framework for
@@ -980,8 +582,8 @@ count matrix + metadata -&gt; DESeq2 model -&gt; cautious biological interpretat
                 Share this guide with someone learning bioinformatics, suggest an edit on GitHub,
                 or leave a question below.
               </p>
-              <div class="share-actions" data-share-title="Nextflow And
-nf-core/rnaseq: From FASTQ Files To A Reproducible Count Matrix">
+              <div class="share-actions" data-share-title="Nextflow For
+Bioinformatics: The Big Picture Before You Run nf-core/rnaseq">
                 <button class="share-button" type="button" data-share-native>
                   <i class="ri-share-forward-line" aria-hidden="true"></i>
                   Share

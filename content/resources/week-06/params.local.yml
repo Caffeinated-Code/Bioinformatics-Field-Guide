@@ -1,0 +1,7 @@
+input: "samplesheet_ont.csv"
+outdir: "results/ont_custom"
+reference: "references/genome.fa"
+annotation: "references/genes.gtf"
+minimap2_preset: "splice"
+strand_mode: "unknown"
+save_intermediate_bam: true

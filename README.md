@@ -24,7 +24,8 @@ This project turns those rough edges into guided, testable lessons:
 | 02 | [What Programming Languages Should A Bioinformatician Know?](https://caffeinated-code.github.io/Bioinformatics-Field-Guide/week-02-languages-for-bioinformatics.html) | Bash, Python, R, SQL, notebooks, AI-assisted learning | [Week 2 resources](content/resources/week-02/) |
 | 03 | [The Bioinformatics File Types You Must Know](https://caffeinated-code.github.io/Bioinformatics-Field-Guide/week-03-bioinformatics-file-types.html) | FASTQ, SAM/BAM/CRAM, VCF, GTF/GFF, BED, bedGraph, bigWig, metadata | [Week 3 resources](content/resources/week-03/) |
 | 04 | [Bulk RNA-seq Field Guide: From Reads To Rigorous Differential Expression](https://caffeinated-code.github.io/Bioinformatics-Field-Guide/week-04-bulk-rnaseq-differential-expression.html) | nf-core/rnaseq, raw counts, TPM/FPKM, DESeq2 design formulas, replicates, assumptions, outliers | [Week 4 resources](content/resources/week-04/) |
-| 05 | [Nextflow And nf-core/rnaseq: From FASTQ Files To A Reproducible Count Matrix](https://caffeinated-code.github.io/Bioinformatics-Field-Guide/week-05-nextflow-nfcore-rnaseq.html) | Nextflow channels, processes, workflows, profiles, nf-core structure, pipeline excerpts, test profile, output map | [Week 5 resources](content/resources/week-05/) |
+| 05 | [Nextflow For Bioinformatics: The Big Picture Before You Run nf-core/rnaseq](https://caffeinated-code.github.io/Bioinformatics-Field-Guide/week-05-nextflow-nfcore-rnaseq.html) | workflow-engine concepts, local/HPC/AWS execution, caching, parallelization, nf-core, nf-core/rnaseq test run | [Week 5 resources](content/resources/week-05/) |
+| 06 | [Build Your First Custom Nextflow Pipeline For Oxford Nanopore Data](https://caffeinated-code.github.io/Bioinformatics-Field-Guide/week-06-build-custom-nextflow-ont-pipeline.html) | DSL2 structure, modules, profiles, ONT FASTQ alignment, custom pipeline skeleton, nf-core/nanoseq comparison | [Week 6 resources](content/resources/week-06/) |
 
 Only published guides are listed here. Draft and future articles are intentionally hidden from this landing page until they are ready.
 
@@ -36,9 +37,10 @@ If you are new to bioinformatics:
 2. Use **Week 2** to understand when to use Bash, Python, R, and SQL.
 3. Spend extra time on **Week 3** because file literacy is where many real projects succeed or fail.
 4. Use **Week 4** to understand how bulk RNA-seq processing connects to differential expression statistics.
-5. Use **Week 5** to understand how Nextflow and nf-core/rnaseq produce reproducible RNA-seq outputs.
+5. Use **Week 5** to understand how workflow engines and nf-core/rnaseq fit into real analysis.
+6. Use **Week 6** to build your first custom Nextflow pipeline for Oxford Nanopore data.
 
-If you already work in bioinformatics, jump directly to Week 5 for the Nextflow and nf-core/rnaseq deep dive.
+If you already work in bioinformatics, jump directly to Week 6 for the custom Nextflow pipeline lab.
 
 ## Repository Structure
 
@@ -56,4 +58,4 @@ Each article supports GitHub-powered discussion through giscus. If something is 
 
 ## Status
 
-Published through **Week 5**. Future guides will be added only after review, testing, and cleanup.
+Published through **Week 6**. Future guides will be added only after review, testing, and cleanup.

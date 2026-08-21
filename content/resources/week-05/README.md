@@ -1,12 +1,12 @@
-# Week 5 Resources: Nextflow And nf-core/rnaseq
+# Week 5 Resources: Nextflow Big Picture And nf-core/rnaseq
 
-These files support the Week 5 guide on Nextflow and nf-core/rnaseq.
+These files support the Week 5 guide on the high-level view of Nextflow and running nf-core/rnaseq.
 
 | File | Purpose |
 |---|---|
 | `samplesheet_tiny_demo.csv` | Example samplesheet shape for a paired-end RNA-seq project |
 | `run_nfcore_rnaseq_test.sh` | Runs the official nf-core/rnaseq test profile |
-| `nextflow_syntax_cheatsheet.md` | Short guide to channels, processes, workflows, profiles, and operators |
+| `nextflow_syntax_cheatsheet.md` | Short orientation to channels, processes, workflows, profiles, and operators. Week 6 goes deeper. |
 | `output_folder_map.md` | Practical map of common nf-core/rnaseq output folders |
 
 ## Quick Start
