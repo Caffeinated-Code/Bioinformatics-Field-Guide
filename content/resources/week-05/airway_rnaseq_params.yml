@@ -1,0 +1,9 @@
+input: "results/fetchngs/airway_subset/samplesheet/samplesheet.csv"
+outdir: "results/rnaseq/airway_subset"
+fasta: "references/GRCh38.primary_assembly.fa.gz"
+gtf: "references/gencode.v44.annotation.gtf.gz"
+aligner: "star_salmon"
+pseudo_aligner: "salmon"
+skip_trimming: false
+skip_qc: false
+save_reference: false

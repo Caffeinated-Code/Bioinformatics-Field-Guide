@@ -1,0 +1,5 @@
+run_accession	sample_id	cell_line	condition	treatment	paired_design_note
+SRR1039508	N61311_untrt	N61311	control	untreated	baseline sample for cell line N61311
+SRR1039509	N61311_dex	N61311	treated	dexamethasone	paired treated sample for cell line N61311
+SRR1039512	N052611_untrt	N052611	control	untreated	baseline sample for cell line N052611
+SRR1039513	N052611_dex	N052611	treated	dexamethasone	paired treated sample for cell line N052611

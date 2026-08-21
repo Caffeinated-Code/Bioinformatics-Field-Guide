@@ -284,6 +284,231 @@ Can I find the output report?
 
 It is not a biological analysis.
 
+## Public Dataset Tutorial: Airway RNA-seq
+
+Now use the same machinery on a real public dataset.
+
+We will use a small subset of the **Himes et al. airway smooth muscle RNA-seq study**. The full study measured transcriptome changes in human airway smooth muscle cells after dexamethasone treatment. This dataset is useful for learning because it has:
+
+- a clear biological question
+- public FASTQ accessions
+- treated and untreated samples
+- paired cell-line structure
+- a known connection to DESeq2 teaching material
+
+Biological question:
+
+```text
+How does dexamethasone treatment change gene expression in human airway smooth muscle cells?
+```
+
+Week 5 only runs the pipeline and interprets processing outputs. The statistical model belongs to [Week 4](week-04-bulk-rnaseq-differential-expression.html), where we discussed raw counts, design formulas, replicates, p-values, and adjusted p-values.
+
+### Step 1: Curate The Public Accessions
+
+The resource folder includes a four-run subset:
+
+```text
+content/resources/week-05/public_airway_accessions.txt
+```
+
+```text
+SRR1039508
+SRR1039509
+SRR1039512
+SRR1039513
+```
+
+These runs represent two airway smooth muscle cell lines, each with untreated and dexamethasone-treated samples:
+
+| Run | Sample | Cell line | Condition |
+|---|---|---|---|
+| `SRR1039508` | `N61311_untrt` | N61311 | untreated control |
+| `SRR1039509` | `N61311_dex` | N61311 | dexamethasone treated |
+| `SRR1039512` | `N052611_untrt` | N052611 | untreated control |
+| `SRR1039513` | `N052611_dex` | N052611 | dexamethasone treated |
+
+Save the biological metadata separately:
+
+```text
+content/resources/week-05/airway_curated_metadata.tsv
+```
+
+Why separate metadata matters:
+
+```text
+SRA run accession tells you where the reads came from.
+Biological metadata tells you what comparison is meaningful.
+```
+
+Do not rely on filenames alone for treatment labels.
+
+### Step 2: Use nf-core/fetchngs To Download Data
+
+`nf-core/fetchngs` can fetch public FASTQ files and create an `nf-core/rnaseq`-compatible samplesheet.
+
+```bash
+# From the repository root:
+nextflow run nf-core/fetchngs \
+  --input content/resources/week-05/public_airway_accessions.txt \
+  --outdir results/fetchngs/airway_subset \
+  --nf_core_pipeline rnaseq \
+  -profile docker \
+  -resume
+```
+
+Expected outputs include:
+
+```text
+results/fetchngs/airway_subset/
+  fastq/
+  samplesheet/
+  pipeline_info/
+```
+
+Open the generated samplesheet:
+
+```bash
+sed -n '1,10p' results/fetchngs/airway_subset/samplesheet/samplesheet.csv
+```
+
+Check:
+
+- do all four runs appear?
+- did paired-end files become `fastq_1` and `fastq_2` columns?
+- is `strandedness` set intentionally, often `auto`?
+- are sample names readable enough, or do you need a cleaner mapping table?
+
+### Step 3: Prepare References
+
+nf-core/rnaseq needs a reference genome and annotation unless you use a supported genome key or prebuilt reference setup.
+
+For a human GRCh38-style run, your params file might look like:
+
+```yaml
+input: "results/fetchngs/airway_subset/samplesheet/samplesheet.csv"
+outdir: "results/rnaseq/airway_subset"
+fasta: "references/GRCh38.primary_assembly.fa.gz"
+gtf: "references/gencode.v44.annotation.gtf.gz"
+aligner: "star_salmon"
+pseudo_aligner: "salmon"
+skip_trimming: false
+skip_qc: false
+```
+
+The template lives here:
+
+```text
+content/resources/week-05/airway_rnaseq_params.yml
+```
+
+Before running:
+
+```bash
+# Confirm the reference files exist.
+test -f references/GRCh38.primary_assembly.fa.gz
+test -f references/gencode.v44.annotation.gtf.gz
+```
+
+If you do not have these references locally, stop and download compatible FASTA/GTF files first. Do not mix genome builds. A GRCh38 FASTA needs a GRCh38-compatible annotation.
+
+### Step 4: Run nf-core/rnaseq
+
+```bash
+nextflow run nf-core/rnaseq \
+  -profile docker \
+  -params-file content/resources/week-05/airway_rnaseq_params.yml \
+  -resume
+```
+
+Or use the helper script:
+
+```bash
+bash content/resources/week-05/run_public_airway_nfcore.sh
+```
+
+This is a real pipeline run. It may take time and disk space. Start with the four-run subset before scaling to the full study.
+
+### Step 5: Interpret The Pipeline Outputs
+
+Start here:
+
+```text
+results/rnaseq/airway_subset/multiqc/
+results/rnaseq/airway_subset/pipeline_info/
+```
+
+Open the MultiQC report first. Ask:
+
+| Check | What you want to know |
+|---|---|
+| sample presence | did all four runs complete? |
+| read quality | are base qualities acceptable? |
+| adapter/trimming | did trimming remove a reasonable amount? |
+| strandedness | does inferred strandedness make sense? |
+| mapping rate | do samples map well to the human reference? |
+| assignment/quantification | are reads being counted or quantified successfully? |
+| sample consistency | does any sample look unlike the others? |
+
+Only after this should you inspect expression matrices.
+
+### Step 6: Connect Back To Week 4
+
+The pipeline may produce several expression-related outputs, depending on parameters. Before downstream analysis, classify each output:
+
+| Output type | Use |
+|---|---|
+| raw gene count matrix | DESeq2 or edgeR-style differential expression |
+| TPM/abundance values | descriptive expression summaries, not DESeq2 input |
+| normalized or transformed values | visualization/QC, not raw count modeling |
+| MultiQC report | evidence that pipeline outputs are trustworthy |
+
+For this airway subset, the statistical design is paired by cell line:
+
+```r
+design = ~ cell_line + condition
+```
+
+The comparison of interest is:
+
+```r
+results(dds, contrast = c("condition", "treated", "control"))
+```
+
+That model asks:
+
+```text
+After accounting for baseline differences between airway smooth muscle cell lines,
+which genes change with dexamethasone treatment?
+```
+
+Do not use:
+
+```r
+design = ~ condition
+```
+
+if the paired cell-line structure is important. That would ignore a major part of the experiment.
+
+### Step 7: What You Can Say After Week 5
+
+After this tutorial, a careful interpretation sounds like:
+
+```text
+I curated four public airway RNA-seq runs, downloaded FASTQ files with nf-core/fetchngs,
+processed them with nf-core/rnaseq against a documented human reference,
+checked MultiQC and pipeline provenance, and identified the count matrix that is appropriate
+for downstream paired differential expression analysis.
+```
+
+Do not say:
+
+```text
+I found differentially expressed genes.
+```
+
+That claim requires the Week 4 statistical workflow.
+
 ## Run Your Own RNA-seq Data
 
 Once the test profile works, a real run looks more like:
@@ -351,6 +576,10 @@ Week 6 goes under the hood. We will build a custom Nextflow pipeline for Oxford 
 - nf-core terminology: https://nf-co.re/docs/community/terminology
 - nf-core/rnaseq documentation: https://nf-co.re/rnaseq/
 - nf-core/rnaseq source code: https://github.com/nf-core/rnaseq
+- nf-core/fetchngs documentation: https://nf-co.re/fetchngs/
+- Himes BE et al. RNA-Seq Transcriptome Profiling Identifies CRISPLD2 as a Glucocorticoid Responsive Gene that Modulates Cytokine Function in Airway Smooth Muscle Cells. PLoS ONE. 2014. https://doi.org/10.1371/journal.pone.0099625
+- GEO record for GSE52778: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE52778
+- Bioconductor airway package vignette: https://bioconductor.org/packages/release/data/experiment/vignettes/airway/inst/doc/airway.html
 - MultiQC documentation: https://docs.seqera.io/multiqc/
 - Ewels PA et al. The nf-core framework for community-curated bioinformatics pipelines. Nature Biotechnology. 2020. https://doi.org/10.1038/s41587-020-0439-x
 - Di Tommaso P et al. Nextflow enables reproducible computational workflows. Nature Biotechnology. 2017. https://doi.org/10.1038/nbt.3820
