@@ -13,7 +13,7 @@ asset: "Custom ONT Nextflow pipeline skeleton with modules, config profiles, sam
 
 If Week 5 was the high-level map, this is the workshop bench.
 
-## What We Are Building
+## Pipeline Goal
 
 We will build a small custom pipeline for Oxford Nanopore long-read FASTQ data:
 
@@ -28,7 +28,7 @@ ONT FASTQ
 
 This is not trying to beat `nf-core/nanoseq`. It is a learning pipeline that shows how pieces fit together. After you understand the pieces, you can decide whether to use an existing pipeline, customize one, or build a specialized method for a specific research problem.
 
-## When Should You Build A Custom Pipeline?
+## Build Or Reuse?
 
 Build custom when:
 
@@ -49,7 +49,7 @@ Use an existing pipeline when:
 
 For Oxford Nanopore data, always check `nf-core/nanoseq` before building from scratch.
 
-## The Strategy For ONT Long Reads
+## ONT Long-Read Strategy
 
 Nanopore reads differ from short-read RNA-seq in important ways:
 
@@ -79,7 +79,7 @@ Which isoform calls are redundant?
 
 That is why a custom pipeline should keep the BAM, QC metrics, and read-to-isoform handoff clean.
 
-## The Folder Structure
+## Project Structure
 
 The Week 6 resources include this mini-pipeline:
 
@@ -106,7 +106,7 @@ This is a simplified DSL2 structure:
 - `samplesheet_ont.csv` defines samples.
 - `modules/local/*.nf` define individual reusable steps.
 
-## Step 1: The Samplesheet
+## Samplesheet Contract
 
 The samplesheet is the contract between your biological samples and your pipeline.
 
@@ -132,7 +132,7 @@ For real projects, consider adding:
 
 Good metadata saves projects. Bad metadata quietly ruins them.
 
-## Step 2: The Parameter File
+## Parameter File
 
 Use a parameter file instead of a very long command:
 
@@ -160,7 +160,7 @@ The important choices:
 
 For real ONT transcript analysis, reference and annotation compatibility matter just as much as they did in [Week 4](week-04-bulk-rnaseq-differential-expression.html).
 
-## Step 3: The Main Workflow
+## Main Workflow
 
 The `main.nf` file starts with imports:
 
@@ -214,7 +214,7 @@ Each emitted item looks conceptually like:
 
 That metadata travels with the file through the pipeline.
 
-## Step 4: The Read QC Module
+## Read QC Module
 
 The QC module accepts sample metadata and a FASTQ:
 
@@ -246,7 +246,7 @@ What to notice:
 - `tuple val(meta), path(fastq)` keeps sample identity with the file.
 - `emit: report` names the output for later use.
 
-## Step 5: The Alignment Module
+## Minimap2 Alignment Module
 
 For ONT RNA/cDNA reads, minimap2 is a common aligner:
 
@@ -279,7 +279,7 @@ process ALIGN_MINIMAP2 {
 
 For transcript-aware alignment, `-ax splice` is the basic starting point. Direct RNA may need additional care, including strand-aware options. Do not treat the preset as a magic truth machine. Always inspect alignment behavior at known loci.
 
-## Step 6: Sort, Index, And QC The BAM
+## BAM Sorting And QC
 
 Downstream transcript tools usually expect sorted and indexed BAM files:
 
@@ -300,7 +300,7 @@ ALIGN_MINIMAP2
 
 That separation is useful. You may later swap the aligner, but still keep the sorting and QC steps.
 
-## Step 7: The Isoform-Collapse Handoff
+## Isoform-Collapse Handoff
 
 The final module is intentionally a placeholder:
 
@@ -332,7 +332,7 @@ sorted BAM
 
 The key idea is to make isoform collapse mostly about **splice structure**, not raw sequence identity. ONT errors should not create new transcript models just because a read has small indels.
 
-## Step 8: The Config File
+## Execution Config
 
 The `nextflow.config` file controls execution:
 
@@ -364,7 +364,7 @@ process_high gets 8 CPUs and 32 GB.
 
 That makes the pipeline easier to tune.
 
-## Step 9: Profiles
+## Local, HPC, And AWS Profiles
 
 Profiles let the same pipeline run in different environments:
 
@@ -396,7 +396,7 @@ profiles {
 
 For local learning, use Docker if it is available. For HPC, Singularity/Apptainer is often the right path. For AWS, configure Batch, S3 work storage, region, queues, IAM, and containers carefully before running production data.
 
-## Step 10: Run It
+## Run The Pipeline
 
 From the Week 6 resource folder:
 
@@ -426,7 +426,7 @@ test -f references/genes.gtf
 test -f data/ont/control_1.fastq.gz
 ```
 
-## Advanced Options To Add Later
+## Production Features To Add Later
 
 Once the skeleton works, add features deliberately:
 
@@ -484,7 +484,7 @@ Use your custom pipeline when:
 
 The mature move is not to reject nf-core. It is to know when to use it, when to extend it, and when to build a focused tool beside it.
 
-## Congratulations: You Built Your Own Pipeline Skeleton
+## Pipeline Skeleton Complete
 
 At this point, you have the shape of a real pipeline:
 
@@ -502,7 +502,7 @@ samplesheet
 
 That is the core of production bioinformatics engineering: clear inputs, modular steps, explicit environments, reproducible outputs, and honest limitations.
 
-## Save This: Custom Pipeline Design Checklist
+## Custom Pipeline Checklist
 
 | Question | Good answer |
 |---|---|
@@ -516,7 +516,7 @@ That is the core of production bioinformatics engineering: clear inputs, modular
 | What is tested? | syntax, tiny data, containers, expected outputs |
 | What is not solved yet? | isoform-collapse accuracy and benchmarking |
 
-## What Comes Next
+## Next In The Series
 
 Week 7 will cover CI/CD in bioinformatics: how to test pipelines, validate small datasets, run GitHub Actions, pin environments, publish releases, and keep scientific code from silently breaking.
 

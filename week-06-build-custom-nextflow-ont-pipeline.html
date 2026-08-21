@@ -93,59 +93,52 @@ config profiles, samplesheet, and parameter file</p>
           Your First Custom Nextflow Pipeline For Oxford Nanopore
           Data</a>
           <ul>
-          <li><a href="#what-we-are-building"
-          id="toc-what-we-are-building">What We Are Building</a></li>
-          <li><a href="#when-should-you-build-a-custom-pipeline"
-          id="toc-when-should-you-build-a-custom-pipeline">When Should
-          You Build A Custom Pipeline?</a></li>
-          <li><a href="#the-strategy-for-ont-long-reads"
-          id="toc-the-strategy-for-ont-long-reads">The Strategy For ONT
-          Long Reads</a></li>
-          <li><a href="#the-folder-structure"
-          id="toc-the-folder-structure">The Folder Structure</a></li>
-          <li><a href="#step-1-the-samplesheet"
-          id="toc-step-1-the-samplesheet">Step 1: The
-          Samplesheet</a></li>
-          <li><a href="#step-2-the-parameter-file"
-          id="toc-step-2-the-parameter-file">Step 2: The Parameter
-          File</a></li>
-          <li><a href="#step-3-the-main-workflow"
-          id="toc-step-3-the-main-workflow">Step 3: The Main
+          <li><a href="#pipeline-goal" id="toc-pipeline-goal">Pipeline
+          Goal</a></li>
+          <li><a href="#build-or-reuse" id="toc-build-or-reuse">Build Or
+          Reuse?</a></li>
+          <li><a href="#ont-long-read-strategy"
+          id="toc-ont-long-read-strategy">ONT Long-Read
+          Strategy</a></li>
+          <li><a href="#project-structure"
+          id="toc-project-structure">Project Structure</a></li>
+          <li><a href="#samplesheet-contract"
+          id="toc-samplesheet-contract">Samplesheet Contract</a></li>
+          <li><a href="#parameter-file"
+          id="toc-parameter-file">Parameter File</a></li>
+          <li><a href="#main-workflow" id="toc-main-workflow">Main
           Workflow</a></li>
-          <li><a href="#step-4-the-read-qc-module"
-          id="toc-step-4-the-read-qc-module">Step 4: The Read QC
+          <li><a href="#read-qc-module" id="toc-read-qc-module">Read QC
           Module</a></li>
-          <li><a href="#step-5-the-alignment-module"
-          id="toc-step-5-the-alignment-module">Step 5: The Alignment
+          <li><a href="#minimap2-alignment-module"
+          id="toc-minimap2-alignment-module">Minimap2 Alignment
           Module</a></li>
-          <li><a href="#step-6-sort-index-and-qc-the-bam"
-          id="toc-step-6-sort-index-and-qc-the-bam">Step 6: Sort, Index,
-          And QC The BAM</a></li>
-          <li><a href="#step-7-the-isoform-collapse-handoff"
-          id="toc-step-7-the-isoform-collapse-handoff">Step 7: The
-          Isoform-Collapse Handoff</a></li>
-          <li><a href="#step-8-the-config-file"
-          id="toc-step-8-the-config-file">Step 8: The Config
-          File</a></li>
-          <li><a href="#step-9-profiles" id="toc-step-9-profiles">Step
-          9: Profiles</a></li>
-          <li><a href="#step-10-run-it" id="toc-step-10-run-it">Step 10:
-          Run It</a></li>
-          <li><a href="#advanced-options-to-add-later"
-          id="toc-advanced-options-to-add-later">Advanced Options To Add
-          Later</a></li>
+          <li><a href="#bam-sorting-and-qc"
+          id="toc-bam-sorting-and-qc">BAM Sorting And QC</a></li>
+          <li><a href="#isoform-collapse-handoff"
+          id="toc-isoform-collapse-handoff">Isoform-Collapse
+          Handoff</a></li>
+          <li><a href="#execution-config"
+          id="toc-execution-config">Execution Config</a></li>
+          <li><a href="#local-hpc-and-aws-profiles"
+          id="toc-local-hpc-and-aws-profiles">Local, HPC, And AWS
+          Profiles</a></li>
+          <li><a href="#run-the-pipeline" id="toc-run-the-pipeline">Run
+          The Pipeline</a></li>
+          <li><a href="#production-features-to-add-later"
+          id="toc-production-features-to-add-later">Production Features
+          To Add Later</a></li>
           <li><a href="#compare-with-nf-corenanoseq"
           id="toc-compare-with-nf-corenanoseq">Compare With
           nf-core/nanoseq</a></li>
-          <li><a
-          href="#congratulations-you-built-your-own-pipeline-skeleton"
-          id="toc-congratulations-you-built-your-own-pipeline-skeleton">Congratulations:
-          You Built Your Own Pipeline Skeleton</a></li>
-          <li><a href="#save-this-custom-pipeline-design-checklist"
-          id="toc-save-this-custom-pipeline-design-checklist">Save This:
-          Custom Pipeline Design Checklist</a></li>
-          <li><a href="#what-comes-next" id="toc-what-comes-next">What
-          Comes Next</a></li>
+          <li><a href="#pipeline-skeleton-complete"
+          id="toc-pipeline-skeleton-complete">Pipeline Skeleton
+          Complete</a></li>
+          <li><a href="#custom-pipeline-checklist"
+          id="toc-custom-pipeline-checklist">Custom Pipeline
+          Checklist</a></li>
+          <li><a href="#next-in-the-series"
+          id="toc-next-in-the-series">Next In The Series</a></li>
           <li><a href="#credits-and-references"
           id="toc-credits-and-references">Credits and
           References</a></li>
@@ -165,7 +158,7 @@ config profiles, samplesheet, and parameter file</p>
           existing community pipeline.</p>
           <p>If Week 5 was the high-level map, this is the workshop
           bench.</p>
-          <h2 id="what-we-are-building">What We Are Building</h2>
+          <h2 id="pipeline-goal">Pipeline Goal</h2>
           <p>We will build a small custom pipeline for Oxford Nanopore
           long-read FASTQ data:</p>
           <pre class="text"><code>ONT FASTQ
@@ -179,8 +172,7 @@ config profiles, samplesheet, and parameter file</p>
           After you understand the pieces, you can decide whether to use
           an existing pipeline, customize one, or build a specialized
           method for a specific research problem.</p>
-          <h2 id="when-should-you-build-a-custom-pipeline">When Should
-          You Build A Custom Pipeline?</h2>
+          <h2 id="build-or-reuse">Build Or Reuse?</h2>
           <p>Build custom when:</p>
           <ul>
           <li>your assay is unusual</li>
@@ -202,8 +194,7 @@ config profiles, samplesheet, and parameter file</p>
           </ul>
           <p>For Oxford Nanopore data, always check
           <code>nf-core/nanoseq</code> before building from scratch.</p>
-          <h2 id="the-strategy-for-ont-long-reads">The Strategy For ONT
-          Long Reads</h2>
+          <h2 id="ont-long-read-strategy">ONT Long-Read Strategy</h2>
           <p>Nanopore reads differ from short-read RNA-seq in important
           ways:</p>
           <table>
@@ -250,7 +241,7 @@ Which reads are partial?
 Which isoform calls are redundant?</code></pre>
           <p>That is why a custom pipeline should keep the BAM, QC
           metrics, and read-to-isoform handoff clean.</p>
-          <h2 id="the-folder-structure">The Folder Structure</h2>
+          <h2 id="project-structure">Project Structure</h2>
           <p>The Week 6 resources include this mini-pipeline:</p>
           <pre class="text"><code>content/resources/week-06/
   main.nf
@@ -274,7 +265,7 @@ Which isoform calls are redundant?</code></pre>
           <li><code>modules/local/*.nf</code> define individual reusable
           steps.</li>
           </ul>
-          <h2 id="step-1-the-samplesheet">Step 1: The Samplesheet</h2>
+          <h2 id="samplesheet-contract">Samplesheet Contract</h2>
           <p>The samplesheet is the contract between your biological
           samples and your pipeline.</p>
           <pre class="csv"><code>sample,fastq,protocol,condition
@@ -296,8 +287,7 @@ ONT_TREATED_2,data/ont/treated_2.fastq.gz,cDNA,treated</code></pre>
           </ul>
           <p>Good metadata saves projects. Bad metadata quietly ruins
           them.</p>
-          <h2 id="step-2-the-parameter-file">Step 2: The Parameter
-          File</h2>
+          <h2 id="parameter-file">Parameter File</h2>
           <p>Use a parameter file instead of a very long command:</p>
           <div class="sourceCode" id="cb6"><pre
           class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">input</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;samplesheet_ont.csv&quot;</span></span>
@@ -351,8 +341,7 @@ ONT_TREATED_2,data/ont/treated_2.fastq.gz,cDNA,treated</code></pre>
           compatibility matter just as much as they did in <a
           href="week-04-bulk-rnaseq-differential-expression.html">Week
           4</a>.</p>
-          <h2 id="step-3-the-main-workflow">Step 3: The Main
-          Workflow</h2>
+          <h2 id="main-workflow">Main Workflow</h2>
           <p>The <code>main.nf</code> file starts with imports:</p>
           <pre class="nextflow"><code>include { FASTQ_QC } from &#39;./modules/local/fastq_qc&#39;
 include { ALIGN_MINIMAP2 } from &#39;./modules/local/align_minimap2&#39;
@@ -386,8 +375,7 @@ Emit one tuple per sample.</code></pre>
 ]</code></pre>
           <p>That metadata travels with the file through the
           pipeline.</p>
-          <h2 id="step-4-the-read-qc-module">Step 4: The Read QC
-          Module</h2>
+          <h2 id="read-qc-module">Read QC Module</h2>
           <p>The QC module accepts sample metadata and a FASTQ:</p>
           <pre class="nextflow"><code>process FASTQ_QC {
   tag &quot;${meta.id}&quot;
@@ -417,7 +405,7 @@ Emit one tuple per sample.</code></pre>
           <li><code>emit: report</code> names the output for later
           use.</li>
           </ul>
-          <h2 id="step-5-the-alignment-module">Step 5: The Alignment
+          <h2 id="minimap2-alignment-module">Minimap2 Alignment
           Module</h2>
           <p>For ONT RNA/cDNA reads, minimap2 is a common aligner:</p>
           <pre class="nextflow"><code>process ALIGN_MINIMAP2 {
@@ -449,8 +437,7 @@ Emit one tuple per sample.</code></pre>
           including strand-aware options. Do not treat the preset as a
           magic truth machine. Always inspect alignment behavior at
           known loci.</p>
-          <h2 id="step-6-sort-index-and-qc-the-bam">Step 6: Sort, Index,
-          And QC The BAM</h2>
+          <h2 id="bam-sorting-and-qc">BAM Sorting And QC</h2>
           <p>Downstream transcript tools usually expect sorted and
           indexed BAM files:</p>
           <pre class="nextflow"><code>samtools sort -o sample.sorted.bam sample.sam
@@ -463,8 +450,8 @@ samtools idxstats sample.sorted.bam</code></pre>
   -&gt; ALIGNMENT_QC</code></pre>
           <p>That separation is useful. You may later swap the aligner,
           but still keep the sorting and QC steps.</p>
-          <h2 id="step-7-the-isoform-collapse-handoff">Step 7: The
-          Isoform-Collapse Handoff</h2>
+          <h2 id="isoform-collapse-handoff">Isoform-Collapse
+          Handoff</h2>
           <p>The final module is intentionally a placeholder:</p>
           <pre class="text"><code>ISOFORM_COLLAPSE_PLACEHOLDER</code></pre>
           <p>This is where a real project might call:</p>
@@ -490,7 +477,7 @@ samtools idxstats sample.sorted.bam</code></pre>
           <strong>splice structure</strong>, not raw sequence identity.
           ONT errors should not create new transcript models just
           because a read has small indels.</p>
-          <h2 id="step-8-the-config-file">Step 8: The Config File</h2>
+          <h2 id="execution-config">Execution Config</h2>
           <p>The <code>nextflow.config</code> file controls
           execution:</p>
           <pre class="nextflow"><code>process {
@@ -510,7 +497,8 @@ samtools idxstats sample.sorted.bam</code></pre>
           <p>The config says:</p>
           <pre class="text"><code>process_high gets 8 CPUs and 32 GB.</code></pre>
           <p>That makes the pipeline easier to tune.</p>
-          <h2 id="step-9-profiles">Step 9: Profiles</h2>
+          <h2 id="local-hpc-and-aws-profiles">Local, HPC, And AWS
+          Profiles</h2>
           <p>Profiles let the same pipeline run in different
           environments:</p>
           <pre class="nextflow"><code>profiles {
@@ -540,7 +528,7 @@ samtools idxstats sample.sorted.bam</code></pre>
           Singularity/Apptainer is often the right path. For AWS,
           configure Batch, S3 work storage, region, queues, IAM, and
           containers carefully before running production data.</p>
-          <h2 id="step-10-run-it">Step 10: Run It</h2>
+          <h2 id="run-the-pipeline">Run The Pipeline</h2>
           <p>From the Week 6 resource folder:</p>
           <div class="sourceCode" id="cb22"><pre
           class="sourceCode bash"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> content/resources/week-06</span>
@@ -560,8 +548,8 @@ samtools idxstats sample.sorted.bam</code></pre>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="bu">test</span> <span class="at">-f</span> references/genome.fa</span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="bu">test</span> <span class="at">-f</span> references/genes.gtf</span>
 <span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="bu">test</span> <span class="at">-f</span> data/ont/control_1.fastq.gz</span></code></pre></div>
-          <h2 id="advanced-options-to-add-later">Advanced Options To Add
-          Later</h2>
+          <h2 id="production-features-to-add-later">Production Features
+          To Add Later</h2>
           <p>Once the skeleton works, add features deliberately:</p>
           <table>
           <thead>
@@ -654,9 +642,8 @@ samtools idxstats sample.sorted.bam</code></pre>
           <p>The mature move is not to reject nf-core. It is to know
           when to use it, when to extend it, and when to build a focused
           tool beside it.</p>
-          <h2
-          id="congratulations-you-built-your-own-pipeline-skeleton">Congratulations:
-          You Built Your Own Pipeline Skeleton</h2>
+          <h2 id="pipeline-skeleton-complete">Pipeline Skeleton
+          Complete</h2>
           <p>At this point, you have the shape of a real pipeline:</p>
           <pre class="text"><code>samplesheet
   -&gt; channel of sample metadata + FASTQ
@@ -670,8 +657,8 @@ samtools idxstats sample.sorted.bam</code></pre>
           <p>That is the core of production bioinformatics engineering:
           clear inputs, modular steps, explicit environments,
           reproducible outputs, and honest limitations.</p>
-          <h2 id="save-this-custom-pipeline-design-checklist">Save This:
-          Custom Pipeline Design Checklist</h2>
+          <h2 id="custom-pipeline-checklist">Custom Pipeline
+          Checklist</h2>
           <table>
           <thead>
           <tr>
@@ -719,7 +706,7 @@ samtools idxstats sample.sorted.bam</code></pre>
           </tr>
           </tbody>
           </table>
-          <h2 id="what-comes-next">What Comes Next</h2>
+          <h2 id="next-in-the-series">Next In The Series</h2>
           <p>Week 7 will cover CI/CD in bioinformatics: how to test
           pipelines, validate small datasets, run GitHub Actions, pin
           environments, publish releases, and keep scientific code from

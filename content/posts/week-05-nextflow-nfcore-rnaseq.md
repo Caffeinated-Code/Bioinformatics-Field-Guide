@@ -284,7 +284,7 @@ Can I find the output report?
 
 It is not a biological analysis.
 
-## Public Dataset Tutorial: Airway RNA-seq
+## Public Airway RNA-seq Walkthrough
 
 Now use the same machinery on a real public dataset.
 
@@ -304,7 +304,7 @@ How does dexamethasone treatment change gene expression in human airway smooth m
 
 Week 5 only runs the pipeline and interprets processing outputs. The statistical model belongs to [Week 4](week-04-bulk-rnaseq-differential-expression.html), where we discussed raw counts, design formulas, replicates, p-values, and adjusted p-values.
 
-### Step 1: Curate The Public Accessions
+### Curate Accessions And Metadata
 
 The resource folder includes a four-run subset:
 
@@ -343,7 +343,7 @@ Biological metadata tells you what comparison is meaningful.
 
 Do not rely on filenames alone for treatment labels.
 
-### Step 2: Use nf-core/fetchngs To Download Data
+### Download FASTQs With nf-core/fetchngs
 
 `nf-core/fetchngs` can fetch public FASTQ files and create an `nf-core/rnaseq`-compatible samplesheet.
 
@@ -379,7 +379,7 @@ Check:
 - is `strandedness` set intentionally, often `auto`?
 - are sample names readable enough, or do you need a cleaner mapping table?
 
-### Step 3: Prepare References
+### Prepare Compatible References
 
 nf-core/rnaseq needs a reference genome and annotation unless you use a supported genome key or prebuilt reference setup.
 
@@ -412,7 +412,7 @@ test -f references/gencode.v44.annotation.gtf.gz
 
 If you do not have these references locally, stop and download compatible FASTA/GTF files first. Do not mix genome builds. A GRCh38 FASTA needs a GRCh38-compatible annotation.
 
-### Step 4: Run nf-core/rnaseq
+### Run nf-core/rnaseq
 
 ```bash
 nextflow run nf-core/rnaseq \
@@ -429,7 +429,7 @@ bash content/resources/week-05/run_public_airway_nfcore.sh
 
 This is a real pipeline run. It may take time and disk space. Start with the four-run subset before scaling to the full study.
 
-### Step 5: Interpret The Pipeline Outputs
+### Read MultiQC Before Counts
 
 Start here:
 
@@ -452,7 +452,7 @@ Open the MultiQC report first. Ask:
 
 Only after this should you inspect expression matrices.
 
-### Step 6: Connect Back To Week 4
+### Choose The Right Downstream Matrix
 
 The pipeline may produce several expression-related outputs, depending on parameters. Before downstream analysis, classify each output:
 
@@ -490,7 +490,7 @@ design = ~ condition
 
 if the paired cell-line structure is important. That would ignore a major part of the experiment.
 
-### Step 7: What You Can Say After Week 5
+### Careful Claims After Processing
 
 After this tutorial, a careful interpretation sounds like:
 
@@ -509,7 +509,7 @@ I found differentially expressed genes.
 
 That claim requires the Week 4 statistical workflow.
 
-## Run Your Own RNA-seq Data
+## Adapt This For Your Data
 
 Once the test profile works, a real run looks more like:
 
@@ -534,7 +534,7 @@ For reproducibility, save:
 - MultiQC report
 - `pipeline_info/`
 
-## First Output To Open
+## Start With MultiQC
 
 Open MultiQC before touching the count matrix.
 
@@ -551,7 +551,7 @@ Look for:
 
 A count matrix can look tidy even when the data behind it is not trustworthy.
 
-## Save This: Week 5 Decision Map
+## Nextflow Run Checklist
 
 | Decision | Good default | Why |
 |---|---|---|
@@ -563,7 +563,7 @@ A count matrix can look tidy even when the data behind it is not trustworthy.
 | first report | MultiQC | tells you whether outputs are believable |
 | statistical testing | downstream DESeq2/edgeR/etc. | nf-core/rnaseq does not assign DE significance |
 
-## What Comes Next
+## Next In The Series
 
 Week 6 goes under the hood. We will build a custom Nextflow pipeline for Oxford Nanopore long-read data, step by step, then compare that custom pipeline to the existing nf-core/nanoseq pipeline.
 
