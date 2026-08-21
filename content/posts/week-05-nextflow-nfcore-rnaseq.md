@@ -11,7 +11,7 @@ asset: "nf-core/rnaseq test runner, samplesheet template, and output folder map"
 
 **Takeaway:** Nextflow is not an RNA-seq tool. It is the workflow engine that makes complex bioinformatics analyses portable, parallel, resumable, and easier to audit.
 
-If you need a refresher on what bulk RNA-seq measures, what raw counts mean, or why TPM should not go into DESeq2, start with [Week 4: Bulk RNA-seq Field Guide](week-04-bulk-rnaseq-differential-expression.html). This week answers a different question:
+If you need a refresher on [what bulk RNA-seq measures](week-04-bulk-rnaseq-differential-expression.html#what-bulk-rna-seq-measures), [what raw counts mean](week-04-bulk-rnaseq-differential-expression.html#raw-counts), or [why TPM should not go into DESeq2](week-04-bulk-rnaseq-differential-expression.html#data-that-does-not-belong-in-deseq2), start with [Week 4: Bulk RNA-seq Field Guide](week-04-bulk-rnaseq-differential-expression.html). This week answers a different question:
 
 ```text
 How do professional bioinformatics pipelines run the same analysis across many samples without becoming chaos?
@@ -205,7 +205,7 @@ nf-core is a community collection of curated Nextflow pipelines. It adds:
 - reusable modules and subworkflows
 - community review
 
-That means you do not need to write a new RNA-seq pipeline just to process ordinary bulk RNA-seq data. You can use `nf-core/rnaseq`, then focus your attention on experimental design, QC, and interpretation.
+That means you do not need to write a new RNA-seq pipeline just to process ordinary bulk RNA-seq data. You can use `nf-core/rnaseq`, then focus your attention on [experimental design, QC, and interpretation](week-04-bulk-rnaseq-differential-expression.html#what-a-good-bulk-rna-seq-result-includes).
 
 ## What nf-core/rnaseq Does
 
@@ -224,7 +224,7 @@ samplesheet.csv
   -> pipeline_info provenance
 ```
 
-Important: nf-core/rnaseq does **not** perform statistical differential expression testing. It produces count and abundance outputs. For the statistical side, return to [Week 4](week-04-bulk-rnaseq-differential-expression.html).
+Important: nf-core/rnaseq does **not** perform statistical differential expression testing. It produces count and abundance outputs. For the statistical side, return to Week 4 sections on [hypothesis testing](week-04-bulk-rnaseq-differential-expression.html#hypothesis-testing-what-are-we-testing), [DESeq2 models](week-04-bulk-rnaseq-differential-expression.html#the-deseq2-model-in-plain-english), and [design formulas](week-04-bulk-rnaseq-differential-expression.html#deseq2-design-formulas-you-will-actually-use).
 
 ## The Samplesheet Is The Contract
 
@@ -243,11 +243,11 @@ Check before running:
 - sample names are stable and unique
 - FASTQ paths exist
 - R1 and R2 files are correctly paired
-- strandedness is known or intentionally set to `auto`
-- genome FASTA and GTF/GFF annotation match
+- [strandedness](week-04-bulk-rnaseq-differential-expression.html#strandedness-why-the-samplesheet-asks) is known or intentionally set to `auto`
+- [genome FASTA and GTF/GFF annotation match](week-04-bulk-rnaseq-differential-expression.html#genome-build-and-annotation-must-match)
 - output directory has enough space
 
-If `strandedness` is `auto`, inspect the inferred strandedness evidence in MultiQC. Do not treat `auto` as a reason to ignore library prep.
+If `strandedness` is `auto`, inspect the inferred strandedness evidence in MultiQC. Do not treat `auto` as a reason to ignore [library-prep strand behavior](week-04-bulk-rnaseq-differential-expression.html#strandedness-why-the-samplesheet-asks).
 
 ## Run The Test Profile First
 
@@ -302,7 +302,7 @@ Biological question:
 How does dexamethasone treatment change gene expression in human airway smooth muscle cells?
 ```
 
-Week 5 only runs the pipeline and interprets processing outputs. The statistical model belongs to [Week 4](week-04-bulk-rnaseq-differential-expression.html), where we discussed raw counts, design formulas, replicates, p-values, and adjusted p-values.
+Week 5 only runs the pipeline and interprets processing outputs. The statistical model belongs to Week 4, where we discussed [raw counts](week-04-bulk-rnaseq-differential-expression.html#raw-counts), [design formulas](week-04-bulk-rnaseq-differential-expression.html#deseq2-design-formulas-you-will-actually-use), [replicates](week-04-bulk-rnaseq-differential-expression.html#replicates-the-part-people-underestimate), [p-values](week-04-bulk-rnaseq-differential-expression.html#hypothesis-testing-what-are-we-testing), and [adjusted p-values](week-04-bulk-rnaseq-differential-expression.html#common-p-value-adjustment-methods).
 
 ### Curate Accessions And Metadata
 
@@ -410,7 +410,7 @@ test -f references/GRCh38.primary_assembly.fa.gz
 test -f references/gencode.v44.annotation.gtf.gz
 ```
 
-If you do not have these references locally, stop and download compatible FASTA/GTF files first. Do not mix genome builds. A GRCh38 FASTA needs a GRCh38-compatible annotation.
+If you do not have these references locally, stop and download compatible FASTA/GTF files first. Do not mix genome builds. A GRCh38 FASTA needs a GRCh38-compatible annotation; Week 4 explains why [genome build and annotation compatibility](week-04-bulk-rnaseq-differential-expression.html#genome-build-and-annotation-must-match) is a quiet failure point.
 
 ### Run nf-core/rnaseq
 
@@ -450,7 +450,7 @@ Open the MultiQC report first. Ask:
 | assignment/quantification | are reads being counted or quantified successfully? |
 | sample consistency | does any sample look unlike the others? |
 
-Only after this should you inspect expression matrices.
+Only after this should you inspect expression matrices. Week 4 has a fuller checklist for [outliers and sample-level QC](week-04-bulk-rnaseq-differential-expression.html#outliers-do-not-let-one-sample-write-the-story).
 
 ### Choose The Right Downstream Matrix
 
@@ -458,12 +458,12 @@ The pipeline may produce several expression-related outputs, depending on parame
 
 | Output type | Use |
 |---|---|
-| raw gene count matrix | DESeq2 or edgeR-style differential expression |
-| TPM/abundance values | descriptive expression summaries, not DESeq2 input |
-| normalized or transformed values | visualization/QC, not raw count modeling |
+| [raw gene count matrix](week-04-bulk-rnaseq-differential-expression.html#the-count-matrix-is-the-hand-off) | DESeq2 or edgeR-style differential expression |
+| [TPM/abundance values](week-04-bulk-rnaseq-differential-expression.html#tpm) | descriptive expression summaries, not DESeq2 input |
+| [normalized or transformed values](week-04-bulk-rnaseq-differential-expression.html#vst-rlog-and-other-transformed-counts) | visualization/QC, not raw count modeling |
 | MultiQC report | evidence that pipeline outputs are trustworthy |
 
-For this airway subset, the statistical design is paired by cell line:
+For this airway subset, the statistical design is [paired by cell line](week-04-bulk-rnaseq-differential-expression.html#3-paired-design):
 
 ```r
 design = ~ cell_line + condition
@@ -488,7 +488,7 @@ Do not use:
 design = ~ condition
 ```
 
-if the paired cell-line structure is important. That would ignore a major part of the experiment.
+if the paired cell-line structure is important. That would ignore a major part of the experiment; Week 4’s [design-matrix lab](week-04-bulk-rnaseq-differential-expression.html#a-tiny-design-matrix-lab) shows how formulas become model coefficients.
 
 ### Careful Claims After Processing
 
@@ -507,7 +507,7 @@ Do not say:
 I found differentially expressed genes.
 ```
 
-That claim requires the Week 4 statistical workflow.
+That claim requires the Week 4 statistical workflow: [DESeq2 model setup](week-04-bulk-rnaseq-differential-expression.html#the-deseq2-model-in-plain-english), [design formulas](week-04-bulk-rnaseq-differential-expression.html#deseq2-design-formulas-you-will-actually-use), and [multiple-testing interpretation](week-04-bulk-rnaseq-differential-expression.html#common-p-value-adjustment-methods).
 
 ## Adapt This For Your Data
 
@@ -530,7 +530,7 @@ For reproducibility, save:
 - Nextflow version
 - samplesheet
 - params file, if used
-- FASTA and GTF/GFF source
+- [FASTA and GTF/GFF source](week-04-bulk-rnaseq-differential-expression.html#genome-build-and-annotation-must-match)
 - MultiQC report
 - `pipeline_info/`
 
@@ -549,7 +549,7 @@ Look for:
 - high duplication
 - failed assignment or quantification
 
-A count matrix can look tidy even when the data behind it is not trustworthy.
+A count matrix can look tidy even when the data behind it is not trustworthy. Before modeling, revisit Week 4’s sections on [the count-matrix handoff](week-04-bulk-rnaseq-differential-expression.html#the-count-matrix-is-the-hand-off) and [assumptions and caveats](week-04-bulk-rnaseq-differential-expression.html#assumptions-and-caveats).
 
 ## Nextflow Run Checklist
 

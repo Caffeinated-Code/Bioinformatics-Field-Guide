@@ -154,9 +154,13 @@ output folder map</p>
           It is the workflow engine that makes complex bioinformatics
           analyses portable, parallel, resumable, and easier to
           audit.</p>
-          <p>If you need a refresher on what bulk RNA-seq measures, what
-          raw counts mean, or why TPM should not go into DESeq2, start
-          with <a
+          <p>If you need a refresher on <a
+          href="week-04-bulk-rnaseq-differential-expression.html#what-bulk-rna-seq-measures">what
+          bulk RNA-seq measures</a>, <a
+          href="week-04-bulk-rnaseq-differential-expression.html#raw-counts">what
+          raw counts mean</a>, or <a
+          href="week-04-bulk-rnaseq-differential-expression.html#data-that-does-not-belong-in-deseq2">why
+          TPM should not go into DESeq2</a>, start with <a
           href="week-04-bulk-rnaseq-differential-expression.html">Week
           4: Bulk RNA-seq Field Guide</a>. This week answers a different
           question:</p>
@@ -391,8 +395,9 @@ sample_3 -&gt; FastQC
           </ul>
           <p>That means you do not need to write a new RNA-seq pipeline
           just to process ordinary bulk RNA-seq data. You can use
-          <code>nf-core/rnaseq</code>, then focus your attention on
-          experimental design, QC, and interpretation.</p>
+          <code>nf-core/rnaseq</code>, then focus your attention on <a
+          href="week-04-bulk-rnaseq-differential-expression.html#what-a-good-bulk-rna-seq-result-includes">experimental
+          design, QC, and interpretation</a>.</p>
           <h2 id="what-nf-corernaseq-does">What nf-core/rnaseq Does</h2>
           <p>nf-core/rnaseq analyzes RNA-seq data from organisms with a
           reference genome and annotation. According to current pipeline
@@ -411,9 +416,14 @@ sample_3 -&gt; FastQC
   -&gt; pipeline_info provenance</code></pre>
           <p>Important: nf-core/rnaseq does <strong>not</strong> perform
           statistical differential expression testing. It produces count
-          and abundance outputs. For the statistical side, return to <a
-          href="week-04-bulk-rnaseq-differential-expression.html">Week
-          4</a>.</p>
+          and abundance outputs. For the statistical side, return to
+          Week 4 sections on <a
+          href="week-04-bulk-rnaseq-differential-expression.html#hypothesis-testing-what-are-we-testing">hypothesis
+          testing</a>, <a
+          href="week-04-bulk-rnaseq-differential-expression.html#the-deseq2-model-in-plain-english">DESeq2
+          models</a>, and <a
+          href="week-04-bulk-rnaseq-differential-expression.html#deseq2-design-formulas-you-will-actually-use">design
+          formulas</a>.</p>
           <h2 id="the-samplesheet-is-the-contract">The Samplesheet Is
           The Contract</h2>
           <p>A minimal paired-end samplesheet looks like:</p>
@@ -427,14 +437,19 @@ TREATED_REP2,data/fastq/treated_rep2_R1.fastq.gz,data/fastq/treated_rep2_R2.fast
           <li>sample names are stable and unique</li>
           <li>FASTQ paths exist</li>
           <li>R1 and R2 files are correctly paired</li>
-          <li>strandedness is known or intentionally set to
-          <code>auto</code></li>
-          <li>genome FASTA and GTF/GFF annotation match</li>
+          <li><a
+          href="week-04-bulk-rnaseq-differential-expression.html#strandedness-why-the-samplesheet-asks">strandedness</a>
+          is known or intentionally set to <code>auto</code></li>
+          <li><a
+          href="week-04-bulk-rnaseq-differential-expression.html#genome-build-and-annotation-must-match">genome
+          FASTA and GTF/GFF annotation match</a></li>
           <li>output directory has enough space</li>
           </ul>
           <p>If <code>strandedness</code> is <code>auto</code>, inspect
           the inferred strandedness evidence in MultiQC. Do not treat
-          <code>auto</code> as a reason to ignore library prep.</p>
+          <code>auto</code> as a reason to ignore <a
+          href="week-04-bulk-rnaseq-differential-expression.html#strandedness-why-the-samplesheet-asks">library-prep
+          strand behavior</a>.</p>
           <h2 id="run-the-test-profile-first">Run The Test Profile
           First</h2>
           <p>From the repository root:</p>
@@ -477,10 +492,18 @@ Can I find the output report?</code></pre>
           <p>Biological question:</p>
           <pre class="text"><code>How does dexamethasone treatment change gene expression in human airway smooth muscle cells?</code></pre>
           <p>Week 5 only runs the pipeline and interprets processing
-          outputs. The statistical model belongs to <a
-          href="week-04-bulk-rnaseq-differential-expression.html">Week
-          4</a>, where we discussed raw counts, design formulas,
-          replicates, p-values, and adjusted p-values.</p>
+          outputs. The statistical model belongs to Week 4, where we
+          discussed <a
+          href="week-04-bulk-rnaseq-differential-expression.html#raw-counts">raw
+          counts</a>, <a
+          href="week-04-bulk-rnaseq-differential-expression.html#deseq2-design-formulas-you-will-actually-use">design
+          formulas</a>, <a
+          href="week-04-bulk-rnaseq-differential-expression.html#replicates-the-part-people-underestimate">replicates</a>,
+          <a
+          href="week-04-bulk-rnaseq-differential-expression.html#hypothesis-testing-what-are-we-testing">p-values</a>,
+          and <a
+          href="week-04-bulk-rnaseq-differential-expression.html#common-p-value-adjustment-methods">adjusted
+          p-values</a>.</p>
           <h3 id="curate-accessions-and-metadata">Curate Accessions And
           Metadata</h3>
           <p>The resource folder includes a four-run subset:</p>
@@ -589,8 +612,11 @@ Biological metadata tells you what comparison is meaningful.</code></pre>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="bu">test</span> <span class="at">-f</span> references/gencode.v44.annotation.gtf.gz</span></code></pre></div>
           <p>If you do not have these references locally, stop and
           download compatible FASTA/GTF files first. Do not mix genome
-          builds. A GRCh38 FASTA needs a GRCh38-compatible
-          annotation.</p>
+          builds. A GRCh38 FASTA needs a GRCh38-compatible annotation;
+          Week 4 explains why <a
+          href="week-04-bulk-rnaseq-differential-expression.html#genome-build-and-annotation-must-match">genome
+          build and annotation compatibility</a> is a quiet failure
+          point.</p>
           <h3 id="run-nf-corernaseq">Run nf-core/rnaseq</h3>
           <div class="sourceCode" id="cb29"><pre
           class="sourceCode bash"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/rnaseq <span class="dt">\</span></span>
@@ -647,7 +673,10 @@ results/rnaseq/airway_subset/pipeline_info/</code></pre>
           </tr>
           </tbody>
           </table>
-          <p>Only after this should you inspect expression matrices.</p>
+          <p>Only after this should you inspect expression matrices.
+          Week 4 has a fuller checklist for <a
+          href="week-04-bulk-rnaseq-differential-expression.html#outliers-do-not-let-one-sample-write-the-story">outliers
+          and sample-level QC</a>.</p>
           <h3 id="choose-the-right-downstream-matrix">Choose The Right
           Downstream Matrix</h3>
           <p>The pipeline may produce several expression-related
@@ -662,15 +691,21 @@ results/rnaseq/airway_subset/pipeline_info/</code></pre>
           </thead>
           <tbody>
           <tr>
-          <td>raw gene count matrix</td>
+          <td><a
+          href="week-04-bulk-rnaseq-differential-expression.html#the-count-matrix-is-the-hand-off">raw
+          gene count matrix</a></td>
           <td>DESeq2 or edgeR-style differential expression</td>
           </tr>
           <tr>
-          <td>TPM/abundance values</td>
+          <td><a
+          href="week-04-bulk-rnaseq-differential-expression.html#tpm">TPM/abundance
+          values</a></td>
           <td>descriptive expression summaries, not DESeq2 input</td>
           </tr>
           <tr>
-          <td>normalized or transformed values</td>
+          <td><a
+          href="week-04-bulk-rnaseq-differential-expression.html#vst-rlog-and-other-transformed-counts">normalized
+          or transformed values</a></td>
           <td>visualization/QC, not raw count modeling</td>
           </tr>
           <tr>
@@ -679,8 +714,9 @@ results/rnaseq/airway_subset/pipeline_info/</code></pre>
           </tr>
           </tbody>
           </table>
-          <p>For this airway subset, the statistical design is paired by
-          cell line:</p>
+          <p>For this airway subset, the statistical design is <a
+          href="week-04-bulk-rnaseq-differential-expression.html#3-paired-design">paired
+          by cell line</a>:</p>
           <div class="sourceCode" id="cb32"><pre
           class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>design <span class="ot">=</span> <span class="er">~</span> cell_line <span class="sc">+</span> condition</span></code></pre></div>
           <p>The comparison of interest is:</p>
@@ -693,7 +729,9 @@ which genes change with dexamethasone treatment?</code></pre>
           <div class="sourceCode" id="cb35"><pre
           class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>design <span class="ot">=</span> <span class="er">~</span> condition</span></code></pre></div>
           <p>if the paired cell-line structure is important. That would
-          ignore a major part of the experiment.</p>
+          ignore a major part of the experiment; Week 4’s <a
+          href="week-04-bulk-rnaseq-differential-expression.html#a-tiny-design-matrix-lab">design-matrix
+          lab</a> shows how formulas become model coefficients.</p>
           <h3 id="careful-claims-after-processing">Careful Claims After
           Processing</h3>
           <p>After this tutorial, a careful interpretation sounds
@@ -704,7 +742,13 @@ checked MultiQC and pipeline provenance, and identified the count matrix that is
 for downstream paired differential expression analysis.</code></pre>
           <p>Do not say:</p>
           <pre class="text"><code>I found differentially expressed genes.</code></pre>
-          <p>That claim requires the Week 4 statistical workflow.</p>
+          <p>That claim requires the Week 4 statistical workflow: <a
+          href="week-04-bulk-rnaseq-differential-expression.html#the-deseq2-model-in-plain-english">DESeq2
+          model setup</a>, <a
+          href="week-04-bulk-rnaseq-differential-expression.html#deseq2-design-formulas-you-will-actually-use">design
+          formulas</a>, and <a
+          href="week-04-bulk-rnaseq-differential-expression.html#common-p-value-adjustment-methods">multiple-testing
+          interpretation</a>.</p>
           <h2 id="adapt-this-for-your-data">Adapt This For Your
           Data</h2>
           <p>Once the test profile works, a real run looks more
@@ -724,7 +768,9 @@ for downstream paired differential expression analysis.</code></pre>
           <li>Nextflow version</li>
           <li>samplesheet</li>
           <li>params file, if used</li>
-          <li>FASTA and GTF/GFF source</li>
+          <li><a
+          href="week-04-bulk-rnaseq-differential-expression.html#genome-build-and-annotation-must-match">FASTA
+          and GTF/GFF source</a></li>
           <li>MultiQC report</li>
           <li><code>pipeline_info/</code></li>
           </ul>
@@ -742,7 +788,12 @@ for downstream paired differential expression analysis.</code></pre>
           <li>failed assignment or quantification</li>
           </ul>
           <p>A count matrix can look tidy even when the data behind it
-          is not trustworthy.</p>
+          is not trustworthy. Before modeling, revisit Week 4’s sections
+          on <a
+          href="week-04-bulk-rnaseq-differential-expression.html#the-count-matrix-is-the-hand-off">the
+          count-matrix handoff</a> and <a
+          href="week-04-bulk-rnaseq-differential-expression.html#assumptions-and-caveats">assumptions
+          and caveats</a>.</p>
           <h2 id="nextflow-run-checklist">Nextflow Run Checklist</h2>
           <table>
           <thead>
