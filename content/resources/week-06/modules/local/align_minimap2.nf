@@ -13,7 +13,7 @@ process ALIGN_MINIMAP2 {
   val strand_mode
 
   output:
-  tuple val(meta), path("${meta.id}.sam"), emit: bam
+  tuple val(meta), path("${meta.id}.sam"), emit: sam
 
   script:
   def extra = strand_mode == 'directRNA' ? '-uf' : ''

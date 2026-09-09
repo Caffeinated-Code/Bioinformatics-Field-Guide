@@ -5,20 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="A step-by-step, hand-held guide to DSL2 structure,
-modules, profiles, parameters, long-read strategy, and how your custom
-ONT pipeline compares with nf-core/nanoseq"
+      content="A practical guide to DSL2 structure, modules, profiles,
+parameters, long-read QC, SQANTI3 annotation, and how custom ONT
+pipelines compare with nf-core/nanoseq"
     />
-    <meta property="og:title" content="Build Your First Custom Nextflow
-Pipeline For Oxford Nanopore Data" />
+    <meta property="og:title" content="Build A Custom Nextflow Pipeline
+For Oxford Nanopore Data" />
     <meta
       property="og:description"
-      content="A step-by-step, hand-held guide to DSL2 structure,
-modules, profiles, parameters, long-read strategy, and how your custom
-ONT pipeline compares with nf-core/nanoseq"
+      content="A practical guide to DSL2 structure, modules, profiles,
+parameters, long-read QC, SQANTI3 annotation, and how custom ONT
+pipelines compare with nf-core/nanoseq"
     />
     <meta property="og:type" content="article" />
-    <title>Build Your First Custom Nextflow Pipeline For Oxford Nanopore
+    <title>Build A Custom Nextflow Pipeline For Oxford Nanopore
 Data | Bioinformatics Field Guide</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -60,12 +60,12 @@ Data | Bioinformatics Field Guide</title>
           <div>
             <a class="back-link" href="index.html"><i class="ri-arrow-left-line" aria-hidden="true"></i> Field Guide home</a>
             <p class="eyebrow">Week 6 · Deep dive + builder lab</p>
-            <h1>Build Your First Custom Nextflow Pipeline For Oxford
-Nanopore Data</h1>
-                        <p class="article-hero__subtitle">A
-step-by-step, hand-held guide to DSL2 structure, modules, profiles,
-parameters, long-read strategy, and how your custom ONT pipeline
-compares with nf-core/nanoseq</p>
+            <h1>Build A Custom Nextflow Pipeline For Oxford Nanopore
+Data</h1>
+                        <p class="article-hero__subtitle">A practical
+guide to DSL2 structure, modules, profiles, parameters, long-read QC,
+SQANTI3 annotation, and how custom ONT pipelines compare with
+nf-core/nanoseq</p>
                         <div class="article-meta">
               <span><i class="ri-user-smile-line" aria-hidden="true"></i> Beginner friendly</span>
               <span><i class="ri-terminal-box-line" aria-hidden="true"></i> Tested commands</span>
@@ -88,10 +88,9 @@ config profiles, samplesheet, and parameter file</p>
           <p class="toc__title">On this page</p>
           <ul>
           <li><a
-          href="#build-your-first-custom-nextflow-pipeline-for-oxford-nanopore-data"
-          id="toc-build-your-first-custom-nextflow-pipeline-for-oxford-nanopore-data">Build
-          Your First Custom Nextflow Pipeline For Oxford Nanopore
-          Data</a>
+          href="#build-a-custom-nextflow-pipeline-for-oxford-nanopore-data"
+          id="toc-build-a-custom-nextflow-pipeline-for-oxford-nanopore-data">Build
+          A Custom Nextflow Pipeline For Oxford Nanopore Data</a>
           <ul>
           <li><a href="#pipeline-goal" id="toc-pipeline-goal">Pipeline
           Goal</a></li>
@@ -156,9 +155,8 @@ config profiles, samplesheet, and parameter file</p>
 
         <article class="article-content">
           <h1
-          id="build-your-first-custom-nextflow-pipeline-for-oxford-nanopore-data">Build
-          Your First Custom Nextflow Pipeline For Oxford Nanopore
-          Data</h1>
+          id="build-a-custom-nextflow-pipeline-for-oxford-nanopore-data">Build
+          A Custom Nextflow Pipeline For Oxford Nanopore Data</h1>
           <p><strong>Takeaway:</strong> Nextflow becomes much less
           mysterious once you build a small pipeline yourself. In this
           guide, you will build the skeleton of a custom Oxford Nanopore
@@ -521,7 +519,7 @@ Emit one tuple per sample.</code></pre>
   val strand_mode
 
   output:
-  tuple val(meta), path(&quot;${meta.id}.sam&quot;), emit: bam
+  tuple val(meta), path(&quot;${meta.id}.sam&quot;), emit: sam
 
   script:
   def extra = strand_mode == &#39;directRNA&#39; ? &#39;-uf&#39; : &#39;&#39;
@@ -1006,8 +1004,8 @@ SQANTI3 annotates, classifies, QC-checks, filters, and helps curate those models
                 Share this guide with someone learning bioinformatics, suggest an edit on GitHub,
                 or leave a question below.
               </p>
-              <div class="share-actions" data-share-title="Build Your
-First Custom Nextflow Pipeline For Oxford Nanopore Data">
+              <div class="share-actions" data-share-title="Build A
+Custom Nextflow Pipeline For Oxford Nanopore Data">
                 <button class="share-button" type="button" data-share-native>
                   <i class="ri-share-forward-line" aria-hidden="true"></i>
                   Share

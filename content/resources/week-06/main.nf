@@ -54,7 +54,7 @@ workflow {
     params.strand_mode
   )
 
-  SORT_INDEX_BAM(ALIGN_MINIMAP2.out.bam)
+  SORT_INDEX_BAM(ALIGN_MINIMAP2.out.sam)
 
   ALIGNMENT_QC(SORT_INDEX_BAM.out.bam)
 

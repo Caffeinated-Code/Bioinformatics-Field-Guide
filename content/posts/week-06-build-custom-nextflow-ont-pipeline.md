@@ -1,13 +1,13 @@
 ---
-title: "Build Your First Custom Nextflow Pipeline For Oxford Nanopore Data"
-subtitle: "A step-by-step, hand-held guide to DSL2 structure, modules, profiles, parameters, long-read strategy, and how your custom ONT pipeline compares with nf-core/nanoseq"
+title: "Build A Custom Nextflow Pipeline For Oxford Nanopore Data"
+subtitle: "A practical guide to DSL2 structure, modules, profiles, parameters, long-read QC, SQANTI3 annotation, and how custom ONT pipelines compare with nf-core/nanoseq"
 week: 6
 audience: ["beginner", "practitioner", "researcher"]
 reading_time: "Deep dive + builder lab"
 asset: "Custom ONT Nextflow pipeline skeleton with modules, config profiles, samplesheet, and parameter file"
 ---
 
-# Build Your First Custom Nextflow Pipeline For Oxford Nanopore Data
+# Build A Custom Nextflow Pipeline For Oxford Nanopore Data
 
 **Takeaway:** Nextflow becomes much less mysterious once you build a small pipeline yourself. In this guide, you will build the skeleton of a custom Oxford Nanopore long-read pipeline and understand when to use it instead of an existing community pipeline.
 
@@ -297,7 +297,7 @@ process ALIGN_MINIMAP2 {
   val strand_mode
 
   output:
-  tuple val(meta), path("${meta.id}.sam"), emit: bam
+  tuple val(meta), path("${meta.id}.sam"), emit: sam
 
   script:
   def extra = strand_mode == 'directRNA' ? '-uf' : ''
