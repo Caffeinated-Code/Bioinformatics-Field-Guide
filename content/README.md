@@ -12,6 +12,7 @@ This folder contains the current Bioinformatics Field Guide articles and support
 | 04 | [Bulk RNA-seq Field Guide: From Reads To Rigorous Differential Expression](posts/week-04-bulk-rnaseq-differential-expression.md) | [Week 4 RNA-seq and DESeq2 resources](resources/week-04/) |
 | 05 | [Nextflow For Bioinformatics: The Big Picture Before You Run nf-core/rnaseq](posts/week-05-nextflow-nfcore-rnaseq.md) | [Week 5 Nextflow and nf-core/rnaseq resources](resources/week-05/) |
 | 06 | [Build A Custom Nextflow Pipeline For Oxford Nanopore Data](posts/week-06-build-custom-nextflow-ont-pipeline.md) | [Week 6 custom ONT Nextflow resources](resources/week-06/) |
+| 07 | [Nextflow, Snakemake, WDL, Or CWL? Choosing Workflow Tools And Running Nextflow On AWS](posts/week-07-rnaseq-in-seven-minutes.md) | [Week 7 workflow manager and AWS resources](resources/week-07/) |
 
 Future articles are not listed here until they are publication-ready.
 

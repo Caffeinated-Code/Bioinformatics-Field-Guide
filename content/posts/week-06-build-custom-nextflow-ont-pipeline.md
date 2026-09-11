@@ -80,6 +80,40 @@ Which isoform calls are redundant?
 
 That is why a custom pipeline should keep the BAM, QC metrics, read-to-isoform handoff, and SQANTI3 annotation layer clean.
 
+## Direct RNA, Direct cDNA, And PCR-cDNA
+
+Before choosing tools, know what molecule your reads came from. Oxford Nanopore can sequence native RNA or cDNA made from RNA. Those are not interchangeable protocols.
+
+```mermaid
+flowchart LR
+  sample["RNA sample"] --> direct["Direct RNA"]
+  sample --> cdna["Reverse transcription"]
+  cdna --> directcdna["Direct cDNA"]
+  cdna --> pcr["PCR-cDNA"]
+
+  direct --> native["Native RNA signal, modifications possible, lower input tolerance"]
+  directcdna --> full["cDNA molecules, no PCR amplification, better yield than direct RNA"]
+  pcr --> amplified["Amplified cDNA, lower input possible, PCR bias possible"]
+```
+
+Read this table like a protocol map, not a ranking:
+
+| Protocol | What is sequenced | Strength | Main caution |
+|---|---|---|---|
+| direct RNA | native RNA molecule | can preserve RNA-modification signal and native molecule direction | lower throughput, RNA degradation matters, basecalling and alignment need extra care |
+| direct cDNA | cDNA made from RNA without PCR amplification | useful for long transcript structure with less PCR bias | reverse-transcription artifacts and incomplete cDNA still matter |
+| PCR-cDNA | amplified cDNA | works with lower input and often gives more material | PCR duplicates, amplification bias, and chimeras can distort isoform support |
+| PacBio Iso-Seq | long-read cDNA on PacBio chemistry | strong mature tooling for high-quality consensus isoforms | platform and library-prep assumptions differ from ONT |
+
+The practical implication is simple:
+
+```text
+Protocol choice changes QC expectations, strandedness assumptions,
+alignment options, duplicate interpretation, and isoform evidence thresholds.
+```
+
+For example, direct RNA reads are strand-specific and may need minimap2 options such as `-uf` with splice alignment. cDNA protocols can be more forgiving for yield, but they can introduce reverse-transcription and amplification artifacts. If you collapse isoforms, protocol metadata should travel with every read from the samplesheet into the final report.
+
 ## ONT-Specific QC Checklist
 
 ONT long-read RNA QC needs more than "did the command finish?"
@@ -680,7 +714,7 @@ That is the core of production bioinformatics engineering: clear inputs, modular
 
 ## Next In The Series
 
-Week 7 will cover CI/CD in bioinformatics: how to test pipelines, validate small datasets, run GitHub Actions, pin environments, publish releases, and keep scientific code from silently breaking.
+Week 7 compares Nextflow with other workflow managers and shows how to run Nextflow on AWS efficiently without learning cloud cost lessons the painful way.
 
 ## Credits and References
 
@@ -693,6 +727,7 @@ Week 7 will cover CI/CD in bioinformatics: how to test pipelines, validate small
 - SG-NEx AWS Open Data Registry: https://registry.opendata.aws/sgnex/
 - SG-NEx data repository: https://github.com/GoekeLab/sg-nex-data
 - Chen Y et al. A systematic benchmark of Nanopore long-read RNA sequencing for transcript-level analysis in human cell lines. Nature Methods. 2025. https://doi.org/10.1038/s41592-025-02623-4
+- Grunberger F et al. Nanopore sequencing of RNA and cDNA molecules in Escherichia coli. RNA. 2022. https://doi.org/10.1261/rna.079086.121
 - SQANTI3 GitHub repository and documentation: https://github.com/ConesaLab/SQANTI3
 - SQANTI3 paper: Pardo-Palacios FJ et al. SQANTI3: curation of long-read transcriptomes for accurate identification of known and novel isoforms. Nature Methods. 2024. https://doi.org/10.1038/s41592-024-02229-2
 - Oxford Nanopore EPI2ME workflows: https://epi2me.nanoporetech.com/wfindex/
